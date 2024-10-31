@@ -1,0 +1,53 @@
+body {
+    background-color: #f5f5f5;
+}
+
+.login-card {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #800000;
+    border-color: #800000;
+}
+
+.btn-primary:hover {
+    background-color: #660000;
+    border-color: #660000;
+}
+
+.text-danger {
+    color: #800000 !important;
+}
+
+
+#iconoMostrarContrasena {
+    font-size: 1.25rem;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.8);
+}
+
+#botonMostrarContrasena {
+    padding: 0 8px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.link-registrate {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.link-registrate:hover {
+    text-decoration: underline;
+}
+
+.icono-candado {
+    transform: scaleX(1.2);
+    font-size: 1.1rem; 
+}
