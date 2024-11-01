@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="card p-4 registro-card">
+    <div class="card p-4 registro-card shadow">
         <h3 class="text-center mb-4 fw-bold">Registrarse</h3>
 
         <form action="" method="POST">
