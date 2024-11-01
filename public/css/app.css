@@ -1,0 +1,116 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 1rem;
+    background-color: #ffffff;
+}
+
+#contenedor-principal {
+    display: flex;
+    margin-top: 70px;
+}
+
+#barra-lateral {
+    width: 250px;
+    min-height: calc(100vh - 70px);
+    border-right: 1px solid #ddd;
+    background-color: #fff;
+    color: #413c3c;
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 70px;
+}
+
+#barra-lateral.oculto {
+    display: none; 
+}
+
+#barra-lateral .nav-link {
+    color: #413c3c;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 4px;
+    outline: none;
+}
+
+#barra-lateral .nav-link:hover,
+#barra-lateral .nav-link:focus {
+    background-color: #660000;
+    color: #fff;
+}
+
+.nav-link.activo {
+    background-color: #800000;
+    color: #fff;
+}
+
+#barra-lateral .nav-item.text-muted {
+    padding: 10px 15px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #f5f5f5;
+}
+
+#contenido-principal {
+    flex-grow: 1;
+    transition: all 0.3s ease;
+}
+
+.navbar .form-control {
+    max-width: 250px;
+    background-color: #f8f9fa;
+    border: none;
+}
+
+.navbar .btn-outline-dark {
+    color: #800000;
+    border-color: #800000;
+}
+
+.navbar .btn-outline-dark:hover {
+    background-color: #660000;
+    color: #fff;
+    border-color: #660000;
+}
+
+.badge {
+    font-size: 1rem;
+    background-color: #800000;
+    color: #fff;
+}
+
+@media (max-width: 767px) {
+    #boton-toggle-superior {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+    }
+
+    #barra-lateral {
+        display: none; 
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 250px;
+        height: calc(100vh - 60px);
+        z-index: 10;
+        background-color: #fff;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    #barra-lateral.visible {
+        display: block; 
+        transform: translateX(0);
+    }
+
+    #contenido-principal {
+        width: 100%;
+        margin-top: 60px;
+    }
+}
