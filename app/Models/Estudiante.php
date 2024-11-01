@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-//Tienes que usar el use para llamar a la clase User y la clase Seccion.
-//No se usara una clase Usuario, ya que se utilizara la clase User de Laravel.
+use App\Models\User;
+use App\Models\Seccion;
+
 
 class Estudiante extends Model
 {
@@ -21,7 +22,7 @@ class Estudiante extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(Usuario::class, 'id_usuario');
+        return $this->belongsTo(User::class, 'id_usuario');
     }
 
     public function seccion()
