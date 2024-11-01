@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Estado extends Model
 {
     use HasFactory;
+    protected $table = 'Estados';
+    protected $primaryKey= 'id_estado';
+
+
 
     protected $fillable =
     [
