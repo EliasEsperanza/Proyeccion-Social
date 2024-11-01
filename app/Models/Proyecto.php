@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 class Proyecto extends Model
 {
     use HasFactory;
+    protected $table = 'Proyectos';
+    protected $primaryKey= 'id_proyecto';
+
 
     protected $fillable =
     [
@@ -28,7 +32,7 @@ class Proyecto extends Model
             'lugar' => 'required|string|max:255',
             'coordinador' => 'required|integer',
         ])->validate();
-    
+
         return self::create($validarCampos);
     }
 
