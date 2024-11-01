@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Seccion; 
 use App\Models\Departamento; 
 use Illuminate\Http\Request;
@@ -35,7 +37,7 @@ class SeccionController extends Controller
     {
         $request->validate([
             'nombre_seccion' => 'required|string|max:255',
-            'id_departamento' => 'required|exists:departamentos,id',
+            'id_departamento' => 'required|exists:departamentos,id_departamento',
         ]);
 
         Seccion::create($request->all()); 
@@ -48,8 +50,8 @@ class SeccionController extends Controller
      */
     public function show($id): View
     {
-        // Buscamos una sección por su ID.
-        $seccion = Seccion::find($id); 
+        // Buscamos una sección por su ID o lanzamos 404 si no existe.
+        $seccion = Seccion::findOrFail($id);
 
         return view('secciones.show', compact('seccion'));
     }
@@ -59,8 +61,8 @@ class SeccionController extends Controller
      */
     public function edit($id): View
     {
-        // Buscamos una sección por su ID.
-        $seccion = Seccion::find($id);
+        // Buscamos una sección por su ID o lanzamos 404 si no existe.
+        $seccion = Seccion::findOrFail($id);
         $departamentos = Departamento::all(); 
 
         return view('secciones.edit', compact('seccion', 'departamentos'));
@@ -69,11 +71,11 @@ class SeccionController extends Controller
     /**
      * Actualiza una sección en la base de datos.
      */
-    public function update(Request $request, Seccion $seccion): RedirectResponse // Cambiado a singular
+    public function update(Request $request, Seccion $seccion): RedirectResponse
     {
         $request->validate([
             'nombre_seccion' => 'required|string|max:255',
-            'id_departamento' => 'required|exists:departamentos,id',
+            'id_departamento' => 'required|exists:departamentos,id_departamento',
         ]);
 
         $seccion->update($request->all()); 
@@ -86,9 +88,10 @@ class SeccionController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
-        // Buscamos una sección por su ID.
-        $seccion = Seccion::find($id);
+        // Buscamos una sección por su ID o lanzamos 404 si no existe.
+        $seccion = Seccion::findOrFail($id);
         $seccion->delete();
+
         return redirect()->route('secciones.index');
     }
 }

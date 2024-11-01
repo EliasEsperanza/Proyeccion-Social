@@ -9,7 +9,9 @@ class Seccion extends Model
 {
     protected $perPage = 20;
 
-    // Tabla
+    protected $table = 'Secciones';
+
+    //columnas
     protected $fillable = ['id_seccion', 'nombre_seccion', 'id_departamento'];
 
     /**
