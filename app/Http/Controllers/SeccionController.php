@@ -1,21 +1,19 @@
 <?php
-
 namespace App\Http\Controllers;
-
-use App\Models\Secciones;
-use App\Models\Departamentos;
+use App\Models\Seccion; 
+use App\Models\Departamento; 
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class SeccionesController extends Controller
+class SeccionController extends Controller 
 {
     /**
      * Muestra una lista de las secciones.
      */
     public function index(Request $request): View
     {
-        $secciones = Secciones::paginate(20); // Usamos la paginación definida en el modelo
+        $secciones = Seccion::paginate(20); 
 
         return view('secciones.index', compact('secciones'));
     }
@@ -25,8 +23,8 @@ class SeccionesController extends Controller
      */
     public function create(): View
     {
-        $seccion = new Secciones();
-        $departamentos = Departamentos::all();
+        $seccion = new Seccion(); 
+        $departamentos = Departamento::all(); 
         return view('secciones.create', compact('seccion', 'departamentos'));
     }
 
@@ -40,8 +38,7 @@ class SeccionesController extends Controller
             'id_departamento' => 'required|exists:departamentos,id',
         ]);
 
-        Secciones::create($request->all());
-
+        Seccion::create($request->all()); 
 
         return redirect()->route('secciones.index');
     }
@@ -51,8 +48,8 @@ class SeccionesController extends Controller
      */
     public function show($id): View
     {
-        // Buscamos una sección por su ID. 
-        $seccion = Secciones::find($id);
+        // Buscamos una sección por su ID.
+        $seccion = Seccion::find($id); 
 
         return view('secciones.show', compact('seccion'));
     }
@@ -62,9 +59,9 @@ class SeccionesController extends Controller
      */
     public function edit($id): View
     {
-        // Buscamos una sección por su ID. 
-        $seccion = Secciones::find($id);
-        $departamentos = Departamentos::all();
+        // Buscamos una sección por su ID.
+        $seccion = Seccion::find($id);
+        $departamentos = Departamento::all(); 
 
         return view('secciones.edit', compact('seccion', 'departamentos'));
     }
@@ -72,14 +69,14 @@ class SeccionesController extends Controller
     /**
      * Actualiza una sección en la base de datos.
      */
-    public function update(Request $request, Secciones $seccion): RedirectResponse
+    public function update(Request $request, Seccion $seccion): RedirectResponse // Cambiado a singular
     {
         $request->validate([
             'nombre_seccion' => 'required|string|max:255',
             'id_departamento' => 'required|exists:departamentos,id',
         ]);
 
-        $seccion->update($request->all());
+        $seccion->update($request->all()); 
 
         return redirect()->route('secciones.index');
     }
@@ -89,8 +86,8 @@ class SeccionesController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
-        // Buscamos una sección por su ID. 
-        $seccion = Secciones::find($id);
+        // Buscamos una sección por su ID.
+        $seccion = Seccion::find($id);
         $seccion->delete();
         return redirect()->route('secciones.index');
     }
