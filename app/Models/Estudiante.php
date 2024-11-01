@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+//Tienes que usar el use para llamar a la clase User y la clase Seccion.
+//No se usara una clase Usuario, ya que se utilizara la clase User de Laravel.
 
 class Estudiante extends Model
 {
