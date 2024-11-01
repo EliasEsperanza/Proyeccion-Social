@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Proyecto;
+use App\Models\Estudiante;
+use App\Models\Tutor;
 
 class Asignacion extends Model
 {
-    protected $table = 'asignaciones'; 
-    protected $primaryKey = 'id_asignacion'; 
+    protected $table = 'asignaciones';
+    protected $primaryKey = 'id_asignacion';
+    public $incrementing = true;
+    protected $keyType = 'int';
     public $timestamps = false;
 
     protected $fillable = [
@@ -17,7 +22,6 @@ class Asignacion extends Model
         'fecha_asignacion'
     ];
 
-    
     public function proyecto()
     {
         return $this->belongsTo(Proyecto::class, 'id_proyecto');
