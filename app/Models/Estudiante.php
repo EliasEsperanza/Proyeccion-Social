@@ -9,6 +9,8 @@ class Estudiante extends Model
 {
     use HasFactory;
 
+    //Te falta llamar a la tabla que usara este modelo
+
     protected $fillable = [
         'id_usuario',
         'id_seccion',
