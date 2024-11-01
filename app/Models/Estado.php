@@ -4,10 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Proyecto;
 
 class Estado extends Model
 {
     use HasFactory;
+    protected $table = 'Estados';
+    protected $primaryKey= 'id_estado';
+
+
 
     protected $fillable =
     [

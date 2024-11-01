@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Estado;
 use Illuminate\Http\Request;
 
-
 class EstadoController extends Controller
 {
     /**
@@ -14,7 +13,7 @@ class EstadoController extends Controller
     public function index()
     {
         $ListEstados = Estado::all();
-        return view("", compact("ListEstados"));
+        return view("estado.index", compact("ListEstados")); 
     }
 
     /**
@@ -22,7 +21,7 @@ class EstadoController extends Controller
      */
     public function create()
     {
-        //
+        return view("estado.create"); 
     }
 
     /**
@@ -30,7 +29,12 @@ class EstadoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'nombre_estado' => 'required|string|max:50',
+        ]);
+
+        $proyecto = Estado::crearProyecto($data);
+        return response()->json($proyecto, 201);    
     }
 
     /**
@@ -38,7 +42,8 @@ class EstadoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $estado = Estado::find($id);
+        return view("estado.show", compact('estado')); 
     }
 
     /**
@@ -46,15 +51,31 @@ class EstadoController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $estado = Estado::find($id); 
+
+        if (!$estado) {
+            return response()->json(['message' => 'Estado no encontrado'], 404);
+        }
+        return view("", compact('estado')); 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'nombre_estado' => 'required|string|max:50',
+        ]);
+    
+        $estado = Estado::find($id);
+    
+        if (!$estado) {
+            return response()->json(['message' => 'Estado no encontrado'], 404);
+        }
+    
+        $estado->update($data);
+        return response()->json($estado, 200);
     }
 
     /**
@@ -62,6 +83,12 @@ class EstadoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $estado = Estado::find($id);
+        if (!$estado) {
+            return response()->json(['message' => 'Estado no encontrado'], 404);
+        }
+        
+        $estado->delete(); 
+        return response()->json(['message' => 'Estado eliminado con éxito'], 200);
     }
 }
