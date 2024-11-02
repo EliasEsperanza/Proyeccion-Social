@@ -3,6 +3,7 @@
 @section('title', 'Lista de Usuarios')
 
 @section('content')
+<!-- se aplico font para iconos  -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="container-fluid mt-1">
