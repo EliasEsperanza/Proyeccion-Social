@@ -114,3 +114,23 @@
         margin-top: 60px;
     }
 }
+
+.btn-yei{
+    margin-left: 80%;
+    background-color:#800000;
+    color: #ffffff;
+}
+
+.btn-yei:hover{
+    color: #ffffff;
+    background-color:#660000;
+}
+
+.bi-pencil{
+    padding: 10px;
+}
+
+.bi-trash-fill{
+    padding: 10px;
+}
+
