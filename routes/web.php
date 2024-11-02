@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DepartamentoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,3 +19,11 @@ Route::get('/gestion-proyecto', function () {
     return view('gestionProyectos.gestionProyectos');
 });
 
+
+Route::get('/ExportDptExcel', [DepartamentoController::class, 'exportarAllDepartamentos_Excel'])->name('Departamaento.Exportexcel');
+Route::get('/ExportDptPdf', [DepartamentoController::class, 'exportarAllDepartamentos_Pdf'])->name('Departamaento.ExportPdf');
+
+
+Route::get('/tests', function () {
+    return view('Kev.Tests');
+});

@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Exports\DepartamentoExport;
 use App\Models\Departamento;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+
+
 
 class DepartamentoController extends Controller
 {
@@ -88,4 +93,16 @@ class DepartamentoController extends Controller
 
         return redirect()->route('departamentos.index');
     }
+
+        //export a excel/pdf
+        public function exportarAllDepartamentos_Excel()
+        {
+            return Excel::download(new DepartamentoExport, 'Departamentos.xlsx');
+        }
+
+        public function exportarAllDepartamentos_Pdf()
+        {
+            return Excel::download(new DepartamentoExport, 'Departamentos.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+        }
+    
 }

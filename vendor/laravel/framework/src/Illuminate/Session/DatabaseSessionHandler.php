@@ -205,7 +205,7 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
     protected function addUserInformation(&$payload)
     {
         if ($this->container->bound(Guard::class)) {
-            $payload['id_usuario'] = $this->userId();
+            $payload['user_id'] = $this->userId();
         }
 
         return $this;
