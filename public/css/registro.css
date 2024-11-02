@@ -1,0 +1,30 @@
+.registro-card {
+    max-width: 450px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 1);
+}
+
+.btn-registrarse {
+    background-color: #800000;
+    border: none;
+}
+
+.btn-registrarse:hover {
+    background-color: #660000;
+    border-color: #660000;
+}
+
+.link-inicar-sesion{
+    color: #800000;
+    text-decoration: none;
+}
+
+.link-inicar-sesion:hover{
+    text-decoration: underline;
+}
+
+.icono-candado {
+    transform: scaleX(1.2);
+    font-size: 1.1rem; 
+}
