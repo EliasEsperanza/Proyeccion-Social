@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     @yield('styles')
 </head>
 <body>
@@ -43,8 +44,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="establecerActivo(this)">
+                    <a class="nav-link" href="{{ route('usuarios') }}" onclick="establecerActivo(this)">
                         <i class="bi bi-people me-2"></i> Usuarios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('crear') }}" onclick="establecerActivo(this)">
+                        <i class="bi bi-people me-2"></i> Gestión de Usuarios
                     </a>
                 </li>
                 <li class="nav-item">
@@ -64,7 +70,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('proyecto-disponible') }}" onclick="establecerActivo(this)">
+                    <a class="nav-link" href="#" onclick="establecerActivo(this)">
                         <i class="bi bi-folder2 me-2"></i> Proyectos Disponibles
                     </a>
                 </li>
