@@ -18,10 +18,3 @@ Route::get('/gestion-proyecto', function () {
     return view('gestionProyectos.gestionProyectos');
 });
 
-Route::get('/proyecto', function () {
-    return view('proyecto.publicar-proyecto');
-})->name('proyecto');
-
-Route::get('/layouts', function () {
-    return view('layouts.gestion-de-roles');
-})->name('roles');
