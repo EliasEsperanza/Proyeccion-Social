@@ -33,8 +33,8 @@ class EstadoController extends Controller
             'nombre_estado' => 'required|string|max:50',
         ]);
 
-        $proyecto = Estado::crearProyecto($data);
-        return response()->json($proyecto, 201);    
+        Estado::crearEstado($data);
+        return redirect()->route('estado.index')->with('success', 'Estado creado con éxito');  
     }
 
     /**
@@ -54,9 +54,9 @@ class EstadoController extends Controller
         $estado = Estado::find($id); 
 
         if (!$estado) {
-            return response()->json(['message' => 'Estado no encontrado'], 404);
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
         }
-        return view("", compact('estado')); 
+        return view("estado.edit", compact('estado')); 
     }
 
     /**
@@ -71,11 +71,11 @@ class EstadoController extends Controller
         $estado = Estado::find($id);
     
         if (!$estado) {
-            return response()->json(['message' => 'Estado no encontrado'], 404);
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
         }
     
         $estado->update($data);
-        return response()->json($estado, 200);
+        return redirect()->route('estado.index')->with('success', 'Estado actualizado con éxito');
     }
 
     /**
@@ -85,10 +85,10 @@ class EstadoController extends Controller
     {
         $estado = Estado::find($id);
         if (!$estado) {
-            return response()->json(['message' => 'Estado no encontrado'], 404);
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
         }
         
         $estado->delete(); 
-        return response()->json(['message' => 'Estado eliminado con éxito'], 200);
+        return redirect()->route('estado.index')->with('success', 'Estado eliminado con éxito');
     }
 }
