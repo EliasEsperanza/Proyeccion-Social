@@ -59,7 +59,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="establecerActivo(this)">
+                    <a class="nav-link" href="{{ route('proyecto-disponible') }}" onclick="establecerActivo(this)">
                         <i class="bi bi-folder2-open me-2"></i> Proyectos Disponibles
                     </a>
                 </li>
