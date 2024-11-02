@@ -14,11 +14,7 @@ Route::get('/proyecto', function () {
     return view('proyecto.publicar-proyecto');
 })->name('proyecto');
 
+Route::get('/gestion-proyecto', function () {
+    return view('gestionProyectos.gestionProyectos');
+});
 
-Route::get('/disponible', function () {
-    return view('proyecto.proyecto-disponible');
-})->name('proyecto-disponible');
-
-Route::get('/detalle', function () {
-    return view('proyecto.detalle-proyecto');
-})->name('detalle');
