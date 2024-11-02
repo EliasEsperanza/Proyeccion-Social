@@ -15,7 +15,7 @@ return new class extends Migration
         $table->id('id_asignacion'); 
         $table->foreignId('id_proyecto')->constrained('proyectos', 'id_proyecto'); 
         $table->foreignId('id_estudiante')->constrained('estudiantes', 'id_estudiante');
-        $table->foreignId('id_tutor')->constrained('usuarios', 'id_usuario'); 
+        $table->foreignId('id_tutor')->constrained('users', 'id_usuario'); 
         $table->date('fecha_asignacion'); 
         $table->timestamps(); 
     });
