@@ -72,6 +72,7 @@ return [
     ],
 
     'column_names' => [
+        'model_morph_key' => 'id_usuario',
         /*
          * Change this if you want to name the related pivots other than defaults
          */
