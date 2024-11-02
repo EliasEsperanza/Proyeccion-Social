@@ -10,3 +10,10 @@ Route::get('/registro', function () {
     return view('registro.registro');
 });
 
+Route::get('/proyecto', function () {
+    return view('proyecto.publicar-proyecto');
+})->name('proyecto');
+
+Route::get('/layouts', function () {
+    return view('layouts.gestion-de-roles');
+})->name('roles');

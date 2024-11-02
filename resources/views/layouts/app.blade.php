@@ -48,7 +48,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="establecerActivo(this)">
+                    <a class="nav-link" href="{{ route('roles') }}" onclick="establecerActivo(this)">
                         <i class="bi bi-person-badge me-2"></i> Gestión de Roles
                     </a>
                 </li>
