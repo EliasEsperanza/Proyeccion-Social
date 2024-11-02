@@ -12,14 +12,20 @@ class NotificationController extends Controller
     public function index($userId)
     {
         $notifications = Notification::where('id_usuario', $userId)->get();
-        return response()->json($notifications);
+        return view('notificaciones.index', compact('notificaciones'));
     }
 
     //Obtener una notificacion en especifico
     public function show($id)
     {
         $notification = Notification::findOrFail($id);
-        return response()->json($notification);
+        return view('notificaciones.show', compact('notification'));
+    }
+
+    //Form para crear una notificacion
+    public function create()
+    {
+        return view('notificaciones.create');
     }
 
     //Crear una nueva notificacion
@@ -33,7 +39,14 @@ class NotificationController extends Controller
         ]);
 
         $notification = Notification::create($request->all());
-        return response()->json($notification, 201);
+        return redirect()->route('notificaciones.index')->with('success', 'Notificación creada exitosamente');
+    }
+
+    //Form para Editar Notificacion
+    public function edit($id)
+    {
+        $notification = Notification::findOrFail($id);
+        return view('notificaciones.edit', compact('notification'));
     }
 
     //Actualizar una notificacion
@@ -49,7 +62,7 @@ class NotificationController extends Controller
         $notification = Notification::findOrFail($id);
         $notification->update($request->all());
 
-        return response()->json(['message' => 'Notificación actualizada', 'data' => $notification]);
+        return redirect()->route('notificaciones.index')->with('success', 'Notificación actualizada exitosamente');
     }
 
     //Eliminar una notificacion
@@ -58,7 +71,7 @@ class NotificationController extends Controller
         $notification = Notification::findOrFail($id);
         $notification->delete();
 
-        return response()->json(['message' => 'Notificación eliminada']);
+        return redirect()->route('notificaciones.index')->with('success', 'Notificación eliminada exitosamente');
     }
 }
 

@@ -4,17 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Notification extends Model
 {
     use HasFactory;
-
-    
     protected $table = 'Notificaciones';
     protected $primaryKey = 'id_notificacion';
-
-    // Deshabilitar timestamps automáticos si no se utilizan
-    public $timestamps = false;
 
     
     protected $fillable = [
@@ -27,6 +23,6 @@ class Notification extends Model
     
     public function user()
     {
-        return $this->belongsTo(Usuario::class, 'id_usuario');
+        return $this->belongsTo(User::class, 'id_usuario');
     }
 }
