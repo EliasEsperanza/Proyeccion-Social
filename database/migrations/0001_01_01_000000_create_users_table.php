@@ -25,7 +25,13 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('id_usuario')->constrained('users')->nullable()->index();
+            // Aquí está el cambio clave
+            $table->unsignedBigInteger('id_usuario')->nullable();
+            $table->foreign('id_usuario')
+                ->references('id_usuario')
+                ->on('users')
+                ->onDelete('cascade');
+            
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
@@ -35,8 +41,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };
