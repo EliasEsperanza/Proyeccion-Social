@@ -13,9 +13,13 @@ return new class extends Migration
     {
         Schema::create('notificaciones', function (Blueprint $table) {
             $table->id('id_notificacion');
-            $table->foreignId('id_usuario')->constrained('usuarios');
+            $table->unsignedBigInteger('id_usuario');
+            $table->foreign('id_usuario')
+                ->references('id_usuario')
+                ->on('users')
+                ->onDelete('cascade');
             $table->text('mensaje');
-            $table->string('estado');
+            $table->text('estado');
             $table->date('fecha_envio');
             $table->timestamps();
         });

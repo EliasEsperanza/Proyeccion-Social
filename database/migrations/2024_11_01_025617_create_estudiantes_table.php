@@ -13,9 +13,17 @@ return new class extends Migration
     {
         Schema::create('estudiantes', function (Blueprint $table) {
             $table->id('id_estudiante');
-            $table->foreignId('id_usuario')->constrained('usuarios');
-            $table->foreignId('id_seccion')->constrained('secciones');
-            $table->decimal('porcentaje_completado', 5, 2);
+            $table->unsignedBigInteger('id_usuario');
+            $table->foreign('id_usuario')
+                ->references('id_usuario')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->unsignedBigInteger('id_seccion');
+            $table->foreign('id_seccion')
+                ->references('id_seccion')
+                ->on('secciones')
+                ->onDelete('cascade');
+            $table->decimal('porcentaje_completado');
             $table->integer('horas_sociales_completadas');
             $table->timestamps();
         });
