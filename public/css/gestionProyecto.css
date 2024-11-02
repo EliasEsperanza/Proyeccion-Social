@@ -1,0 +1,9 @@
+.btn-gestion {
+    background-color: #800000;
+    border: none;
+}
+
+.btn-gestion:hover {
+    background-color: #660000;
+    border-color: #660000;
+}

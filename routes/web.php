@@ -14,6 +14,10 @@ Route::get('/proyecto', function () {
     return view('proyecto.publicar-proyecto');
 })->name('proyecto');
 
+Route::get('/gestion-proyecto', function () {
+    return view('gestionProyectos.gestionProyectos');
+});
+
 Route::get('/recuperarcontraseña', function () {
     return view('auth.recupassword');
 });
