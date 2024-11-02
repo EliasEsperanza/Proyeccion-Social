@@ -21,7 +21,7 @@ class ProyectoController extends Controller
      */
     public function create()
     {
-        return view("Proyecto.CreateProyecto");
+        return view("Proyecto.createProyecto");
     }
 
     /**
@@ -37,8 +37,8 @@ class ProyectoController extends Controller
             'coordinador' => 'required|integer',
         ]);
     
-        $proyecto = Proyecto::crearProyecto($data);
-        return response()->json($proyecto, 201);
+        Proyecto::crearProyecto($data);
+        return redirect()->route('proyecto.index')->with('success', 'Proyecto creado con éxito');
     }
 
     /**
@@ -47,7 +47,7 @@ class ProyectoController extends Controller
     public function show(string $id)
     {
         $proyecto = Proyecto::find($id);
-        return view('Proyecto.ShowProyecto', compact('proyecto'));
+        return view('Proyecto.showProyecto', compact('proyecto'));
     }
 
     /**
@@ -58,9 +58,9 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::find($id); 
 
         if (!$proyecto) {
-            return response()->json(['message' => 'Proyecto no encontrado'], 404);
+            return redirect()->route('proyecto.index')->with('error', 'Proyecto no encontrado');
         }
-        return view("Proyecto.EditProyecto", compact('proyecto')); 
+        return view("Proyecto.editProyecto", compact('proyecto')); 
     }
 
     /**
@@ -79,11 +79,11 @@ class ProyectoController extends Controller
         $proyecto = Proyecto::find($id);
     
         if (!$proyecto) {
-            return response()->json(['message' => 'Proyecto no encontrado'], 404);
+            return redirect()->route('proyecto.index')->with('error', 'Proyecto no encontrado');
         }
     
         $proyecto->update($data);
-        return response()->json($proyecto, 200);
+        return redirect()->route('proyecto.index')->with('success', 'Proyecto actualizado con éxito');
     }
 
     /**
@@ -93,10 +93,10 @@ class ProyectoController extends Controller
     {
         $proyecto = Proyecto::find($id);
         if (!$proyecto) {
-            return response()->json(['message' => 'Proyecto no encontrado'], 404);
+            return redirect()->route('proyecto.index')->with('error', 'Proyecto no encontrado');
         }
         
         $proyecto->delete(); 
-        return response()->json(['message' => 'Proyecto eliminado con éxito'], 200);
+        return redirect()->route('proyecto.index')->with('success', 'Proyecto eliminado con éxito');
     }
 }

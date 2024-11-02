@@ -2,78 +2,93 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Estudiante;
+use App\Models\Estado;
 use Illuminate\Http\Request;
 
-class EstudianteController extends Controller
+class EstadoController extends Controller
 {
-
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $estudiantes = Estudiante::all();
-        return view('estudiantes.index', compact('estudiantes'));
+        $ListEstados = Estado::all();
+        return view("estado.index", compact("ListEstados")); 
     }
 
-    public function getByUsuario($id_usuario)
-    {
-        $estudiantes = Estudiante::where('id_usuario', $id_usuario)->get();
-        return view('estudiantes.index', compact('estudiantes'));
-    }
-
-    public function getBySeccion($id_seccion)
-    {
-        $estudiantes = Estudiante::where('id_seccion', $id_seccion)->get();
-        return view('estudiantes.index', compact('estudiantes'));
-    }
-
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('estudiantes.create');
+        return view("estado.create"); 
     }
 
-public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'id_usuario' => 'required|integer',
-        'id_seccion' => 'required|integer',
-        'porcentaje_completado' => 'required|numeric|min:0|max:100',
-        'horas_sociales_completadas' => 'required|integer|min:0',
-    ]);
-
-    Estudiante::create($validatedData);
-
-    return redirect()->route('estudiantes.index');
-}
-
-
-    public function show(Estudiante $estudiante)
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
-        return view('estudiantes.show', compact('estudiante'));
-    }
-
-    public function edit(Estudiante $estudiante)
-    {
-        return view('estudiantes.edit', compact('estudiante'));
-    }
-
-    public function update(Request $request, Estudiante $estudiante)
-    {
-        $validatedData = $request->validate([
-            'id_usuario' => 'required|integer',
-            'id_seccion' => 'required|integer',
-            'porcentaje_completado' => 'required|numeric|min:0|max:100',
-            'horas_sociales_completadas' => 'required|integer|min:0',
+        $data = $request->validate([
+            'nombre_estado' => 'required|string|max:50',
         ]);
 
-        $estudiante->update($validatedData);
-
-        return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado correctamente.');
+        Estado::crearEstado($data);
+        return redirect()->route('estado.index')->with('success', 'Estado creado con éxito');  
     }
 
-    public function destroy(Estudiante $estudiante)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
     {
-        $estudiante->delete();
+        $estado = Estado::find($id);
+        return view("estado.show", compact('estado')); 
+    }
 
-        return redirect()->route('estudiantes.index')->with('success', 'Estudiante eliminado correctamente.');
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $estado = Estado::find($id); 
+
+        if (!$estado) {
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        }
+        return view("estado.edit", compact('estado')); 
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'nombre_estado' => 'required|string|max:50',
+        ]);
+    
+        $estado = Estado::find($id);
+    
+        if (!$estado) {
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        }
+    
+        $estado->update($data);
+        return redirect()->route('estado.index')->with('success', 'Estado actualizado con éxito');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $estado = Estado::find($id);
+        if (!$estado) {
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        }
+        
+        $estado->delete(); 
+        return redirect()->route('estado.index')->with('success', 'Estado eliminado con éxito');
     }
 }
