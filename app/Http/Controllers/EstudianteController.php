@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Estado;
+use App\Models\Estudiante;
 use Illuminate\Http\Request;
 
-class EstadoController extends Controller
+class EstudianteController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $ListEstados = Estado::all();
-        return view("estado.index", compact("ListEstados")); 
+        $ListEstudiantes = Estudiante::all();
+        return view("estudiante.index", compact("ListEstudiantes")); 
     }
 
     /**
@@ -21,7 +21,7 @@ class EstadoController extends Controller
      */
     public function create()
     {
-        return view("estado.create"); 
+        return view("estudiante.create"); 
     }
 
     /**
@@ -30,11 +30,15 @@ class EstadoController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nombre_estado' => 'required|string|max:50',
+            'id_usuario' => 'required|integer|exists:users,id',
+            'id_seccion' => 'required|integer|exists:secciones,id',
+            'porcentaje_completado' => 'required|numeric|min:0|max:100',
+            'horas_sociales_completadas' => 'required|integer|min:0'
         ]);
 
-        Estado::crearEstado($data);
-        return redirect()->route('estado.index')->with('success', 'Estado creado con éxito');  
+        Estudiante::create($data);
+
+        return redirect()->route('estudiante.index')->with('success', 'Estudiante creado con éxito');  
     }
 
     /**
@@ -42,8 +46,13 @@ class EstadoController extends Controller
      */
     public function show(string $id)
     {
-        $estado = Estado::find($id);
-        return view("estado.show", compact('estado')); 
+        $estudiante = Estudiante::find($id);
+
+        if (!$estudiante) {
+            return redirect()->route('estudiante.index')->with('error', 'Estudiante no encontrado');
+        }
+
+        return view("estudiante.show", compact('estudiante')); 
     }
 
     /**
@@ -51,31 +60,36 @@ class EstadoController extends Controller
      */
     public function edit(string $id)
     {
-        $estado = Estado::find($id); 
+        $estudiante = Estudiante::find($id);
 
-        if (!$estado) {
-            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        if (!$estudiante) {
+            return redirect()->route('estudiante.index')->with('error', 'Estudiante no encontrado');
         }
-        return view("estado.edit", compact('estado')); 
+
+        return view("estudiante.edit", compact('estudiante')); 
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
-        $data = $request->validate([
-            'nombre_estado' => 'required|string|max:50',
-        ]);
-    
-        $estado = Estado::find($id);
-    
-        if (!$estado) {
-            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        $estudiante = Estudiante::find($id);
+
+        if (!$estudiante) {
+            return redirect()->route('estudiante.index')->with('error', 'Estudiante no encontrado');
         }
-    
-        $estado->update($data);
-        return redirect()->route('estado.index')->with('success', 'Estado actualizado con éxito');
+
+        $data = $request->validate([
+            'id_usuario' => 'required|integer|exists:users,id',
+            'id_seccion' => 'required|integer|exists:secciones,id',
+            'porcentaje_completado' => 'required|numeric|min:0|max:100',
+            'horas_sociales_completadas' => 'required|integer|min:0'
+        ]);
+
+        $estudiante->update($data);
+
+        return redirect()->route('estudiante.index')->with('success', 'Estudiante actualizado con éxito');
     }
 
     /**
@@ -83,12 +97,15 @@ class EstadoController extends Controller
      */
     public function destroy(string $id)
     {
-        $estado = Estado::find($id);
-        if (!$estado) {
-            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        $estudiante = Estudiante::find($id);
+
+        if (!$estudiante) {
+            return redirect()->route('estudiante.index')->with('error', 'Estudiante no encontrado');
         }
-        
-        $estado->delete(); 
-        return redirect()->route('estado.index')->with('success', 'Estado eliminado con éxito');
+
+        $estudiante->delete();
+
+        return redirect()->route('estudiante.index')->with('success', 'Estudiante eliminado con éxito');
     }
 }
+
