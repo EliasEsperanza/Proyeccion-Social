@@ -10,32 +10,43 @@ class AsignacionController extends Controller
     public function index()
     {
         $asignaciones = Asignacion::all();
-        return response()->json($asignaciones);
+        return view('asignaciones.index', compact('asignaciones'));
+    }
+
+    public function create()
+    {
+        return view('asignaciones.create');
     }
 
     public function store(Request $request)
     {
         $asignacion = Asignacion::create($request->all());
-        return response()->json($asignacion, 201);
+        return redirect()->route('asignaciones.index')->with('success', 'Asignación creada con éxito');
     }
 
     public function show($id)
     {
         $asignacion = Asignacion::findOrFail($id);
-        return response()->json($asignacion);
+        return view('asignaciones.show', compact('asignacion'));
+    }
+
+    public function edit($id)
+    {
+        $asignacion = Asignacion::findOrFail($id);
+        return view('asignaciones.edit', compact('asignacion'));
     }
 
     public function update(Request $request, $id)
     {
         $asignacion = Asignacion::findOrFail($id);
         $asignacion->update($request->all());
-        return response()->json($asignacion);
+        return redirect()->route('asignaciones.index')->with('success', 'Asignación actualizada con éxito');
     }
 
     public function destroy($id)
     {
         $asignacion = Asignacion::findOrFail($id);
         $asignacion->delete();
-        return response()->json(null, 204);
+        return redirect()->route('asignaciones.index')->with('success', 'Asignación eliminada con éxito');
     }
 }
