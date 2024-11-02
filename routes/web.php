@@ -18,3 +18,14 @@ Route::get('/gestion-proyecto', function () {
     return view('gestionProyectos.gestionProyectos');
 });
 
+Route::get('/crear', function () {
+    return view('usuarios.crearUsuario');
+})->name('crear');
+
+Route::get('/usuarios', function () {
+    return view('usuarios.listaUsuario');
+})->name('usuarios');
+
+Route::get('/layouts', function () {
+    return view('layouts.gestion-de-roles');
+})->name('roles');

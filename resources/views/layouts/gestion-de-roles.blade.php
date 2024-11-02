@@ -8,8 +8,7 @@
     .btn-custom {
         background-color: #8B0000;
         color: white;
-        padding: 0.5rem 1.25rem;
-        width: 100%; /* Asegura que el botón ocupe el ancho de la paginación */
+        padding: 0.5rem 1.5rem; /* Botón más largo */
     }
     .pagination-custom .page-link {
         color: #8B0000;
@@ -91,7 +90,7 @@
                     </div>
                 </div>
                 <div class="pagination-container">
-                    <nav aria-label="Pagination" class="pagination-custom mb-2" style="width: 100%;">
+                    <nav aria-label="Pagination" class="pagination-custom mb-2">
                         <ul class="pagination mb-0">
                             <li class="page-item active"><a class="page-link" href="#">1</a></li>
                             <li class="page-item"><a class="page-link" href="#">2</a></li>
@@ -101,7 +100,7 @@
                             <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
                         </ul>
                     </nav>
-                    <button type="submit" class="btn btn-custom" style="width: 100%;">Crear Rol</button>
+                    <button type="submit" class="btn btn-custom mt-2" style="width: auto;">Crear Rol</button>
                 </div>
             </form>
         </div>
