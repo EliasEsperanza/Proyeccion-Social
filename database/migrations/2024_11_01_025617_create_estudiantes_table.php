@@ -26,6 +26,7 @@ return new class extends Migration
             $table->decimal('porcentaje_completado');
             $table->integer('horas_sociales_completadas');
             $table->timestamps();
+            //
         });
     }
 

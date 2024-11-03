@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        //
         Schema::create('notificaciones', function (Blueprint $table) {
             $table->id('id_notificacion');
             $table->unsignedBigInteger('id_usuario');
