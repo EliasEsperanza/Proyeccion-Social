@@ -16,7 +16,7 @@ class DepartamentoController extends Controller
         // Obtener los parámetros de búsqueda y ordenación desde la solicitud
         $search = $request->input('search');
         $sortOrder = $request->input('sort', 'asc'); // Orden ascendente por defecto
-    
+
         // Filtrar y ordenar los departamentos
         $departamentos = Departamento::query()
             ->when($search, function ($query) use ($search) {
@@ -24,9 +24,25 @@ class DepartamentoController extends Controller
             })
             ->orderBy('nombre_departamento', $sortOrder)
             ->paginate(20);
-    
+
         // Pasar los datos a la vista
         return view('departamentos.index', compact('departamentos', 'search', 'sortOrder'));
+    }
+
+    /**
+     * Función para buscar departamentos por nombre.
+     */
+    public function searchByName(Request $request): View
+    {
+        // Obtener el parámetro de búsqueda desde la solicitud
+        $search = $request->input('search');
+
+        // Filtrar los departamentos cuyo nombre coincida con la búsqueda
+        $departamentos = Departamento::where('nombre_departamento', 'like', '%' . $search . '%')
+            ->paginate(20);
+
+        // Retornar la vista con los resultados de búsqueda
+        return view('departamentos.index', compact('departamentos', 'search'));
     }
     
 
