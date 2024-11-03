@@ -14,7 +14,7 @@
     <div class="card p-4 shadow login-card">
         <h3 class="text-center mb-4 fw-bold">Iniciar sesión</h3>
         
-        <form action="" method="POST">
+        <form action="gestion-proyecto" method="GET">
             @csrf
             <div class="mb-3">
                 <label for="correo" class="form-label">Correo Electrónico</label>

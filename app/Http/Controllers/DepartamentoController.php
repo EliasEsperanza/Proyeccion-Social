@@ -13,10 +13,22 @@ class DepartamentoController extends Controller
      */
     public function index(Request $request): View
     {
-        $departamentos = Departamento::paginate(20);
-
-        return view('departamentos.index', compact('departamentos'));
+        // Obtener los parámetros de búsqueda y ordenación desde la solicitud
+        $search = $request->input('search');
+        $sortOrder = $request->input('sort', 'asc'); // Orden ascendente por defecto
+    
+        // Filtrar y ordenar los departamentos
+        $departamentos = Departamento::query()
+            ->when($search, function ($query) use ($search) {
+                $query->where('nombre_departamento', 'like', '%' . $search . '%');
+            })
+            ->orderBy('nombre_departamento', $sortOrder)
+            ->paginate(20);
+    
+        // Pasar los datos a la vista
+        return view('departamentos.index', compact('departamentos', 'search', 'sortOrder'));
     }
+    
 
     /**
      * Muestra el formulario para crear un nuevo departamento.
