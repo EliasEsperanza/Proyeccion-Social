@@ -7,9 +7,23 @@ use App\Models\Documento;
 
 class DocumentoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $documentos = Documento::all();
+        $query = Documento::query();
+    
+        // Filtro por proyecto si se recibe un `id_proyecto` en la solicitud
+        if ($request->has('id_proyecto') && !empty($request->id_proyecto)) {
+            $query->where('id_proyecto', $request->id_proyecto);
+        }
+    
+        // Filtro por tipo de documento si se recibe un `tipo_documento` en la solicitud
+        if ($request->has('tipo_documento') && !empty($request->tipo_documento)) {
+            $query->where('tipo_documento', 'like', '%' . $request->tipo_documento . '%');
+        }
+    
+        // Paginación: mostramos 10 documentos por página
+        $documentos = $query->paginate(10);
+    
         return view('documentos.index', compact('documentos'));
     }
 
