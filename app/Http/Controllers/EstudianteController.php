@@ -1,94 +1,113 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Estado;
+use App\Models\Estudiante;
 use Illuminate\Http\Request;
 
-class EstadoController extends Controller
+class EstudianteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Método que maneja la búsqueda de estudiantes
+    private function buscarEstudiantes($query)
     {
-        $ListEstados = Estado::all();
-        return view("estado.index", compact("ListEstados")); 
+        if ($query) {
+            return Estudiante::where('nombre', 'LIKE', "%{$query}%")
+                ->orWhereHas('seccion', function ($q) use ($query) {
+                    $q->where('nombre', 'LIKE', "%{$query}%");
+                })
+                ->get();
+        } else {
+            return Estudiante::all();
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Método que valida los datos de los estudiantes
+    private function validarEstudiante(Request $request)
+    {
+        return $request->validate([
+            'id_usuario' => 'required|integer|exists:users,id',
+            'id_seccion' => 'required|integer|exists:secciones,id',
+            'porcentaje_completado' => 'required|numeric|min:0|max:100',
+            'horas_sociales_completadas' => 'required|integer|min:0',
+            'nombre' => 'required|string|max:255',
+        ]);
+    }
+
+    // Método para mostrar la lista de estudiantes (con o sin búsqueda)
+    public function index(Request $request)
+    {
+        $query = $request->input('query');
+        $ListEstudiantes = $this->buscarEstudiantes($query);
+
+        return view("estudiante.index", compact("ListEstudiantes")); 
+    }
+
+    // Mostrar formulario para crear un nuevo estudiante
     public function create()
     {
-        return view("estado.create"); 
+        return view("estudiante.create");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Almacenar un nuevo estudiante en la base de datos
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'nombre_estado' => 'required|string|max:50',
-        ]);
+        $data = $this->validarEstudiante($request);
 
-        Estado::crearEstado($data);
-        return redirect()->route('estado.index')->with('success', 'Estado creado con éxito');  
+        Estudiante::create($data);
+
+        return redirect()->route('estudiante.index')->with('success', 'Estudiante creado con éxito');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // Mostrar un estudiante específico por su ID
     public function show(string $id)
     {
-        $estado = Estado::find($id);
-        return view("estado.show", compact('estado')); 
+        $estudiante = Estudiante::find($id);
+
+        if (!$estudiante) {
+            return redirect()->route('estudiante.index')->with('error', 'Estudiante no encontrado');
+        }
+
+        return view("estudiante.show", compact('estudiante')); 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Mostrar formulario para editar un estudiante
     public function edit(string $id)
     {
-        $estado = Estado::find($id); 
+        $estudiante = Estudiante::find($id);
 
-        if (!$estado) {
-            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        if (!$estudiante) {
+            return redirect()->route('estudiante.index')->with('error', 'Estudiante no encontrado');
         }
-        return view("estado.edit", compact('estado')); 
+
+        return view("estudiante.edit", compact('estudiante'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
+    // Actualizar los datos de un estudiante existente
+    public function update(Request $request, string $id)
     {
-        $data = $request->validate([
-            'nombre_estado' => 'required|string|max:50',
-        ]);
-    
-        $estado = Estado::find($id);
-    
-        if (!$estado) {
-            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        $estudiante = Estudiante::find($id);
+
+        if (!$estudiante) {
+            return redirect()->route('estudiante.index')->with('error', 'Estudiante no encontrado');
         }
-    
-        $estado->update($data);
-        return redirect()->route('estado.index')->with('success', 'Estado actualizado con éxito');
+
+        $data = $this->validarEstudiante($request);
+
+        $estudiante->update($data);
+
+        return redirect()->route('estudiante.index')->with('success', 'Estudiante actualizado con éxito');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Eliminar un estudiante
     public function destroy(string $id)
     {
-        $estado = Estado::find($id);
-        if (!$estado) {
-            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
+        $estudiante = Estudiante::find($id);
+
+        if (!$estudiante) {
+            return redirect()->route('estudiante.index')->with('error', 'Estudiante no encontrado');
         }
-        
-        $estado->delete(); 
-        return redirect()->route('estado.index')->with('success', 'Estado eliminado con éxito');
+
+        $estudiante->delete();
+
+        return redirect()->route('estudiante.index')->with('success', 'Estudiante eliminado con éxito');
     }
 }

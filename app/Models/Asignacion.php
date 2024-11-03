@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Proyecto;
 use App\Models\Estudiante;
-use App\Models\Tutor;
+use App\Models\User;
 
 class Asignacion extends Model
 {
@@ -34,6 +34,6 @@ class Asignacion extends Model
 
     public function tutor()
     {
-        return $this->belongsTo(Tutor::class, 'id_tutor');
+        return $this->belongsTo(User::class, 'id_tutor');
     }
 }

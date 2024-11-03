@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AsignacionExport;
 use App\Models\Asignacion;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AsignacionController extends Controller
 {
     public function index()
     {
-        $asignaciones = Asignacion::all();
+        $asignaciones = Asignacion::paginate(10);
         return view('asignaciones.index', compact('asignaciones'));
     }
 
@@ -48,5 +51,17 @@ class AsignacionController extends Controller
         $asignacion = Asignacion::findOrFail($id);
         $asignacion->delete();
         return redirect()->route('asignaciones.index')->with('success', 'Asignación eliminada con éxito');
+    }
+
+    public function exportExcel() 
+    {
+        return Excel::download(new AsignacionExport, 'asignaciones.xlsx');
+    }
+
+    public function exportPDF(){
+        $asignaciones=Asignacion::all();
+       
+        $pdf= Pdf::loadView('exports.asignaciones', ['asignaciones' =>$asignaciones]);
+        return $pdf->download('asignaciones.pdf');
     }
 }
