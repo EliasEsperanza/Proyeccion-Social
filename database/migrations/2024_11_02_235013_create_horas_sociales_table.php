@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('horas_sociales', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_hora_social');
+            $table->unsignedBigInteger('id_estudiante');
+            $table->foreign('id_estudiante')
+                ->references('id_estudiante')
+                ->on('estudiantes')
+                ->onDelete('cascade');
+            $table->integer('horas_completadas');
+            $table->date('fecha_registro');
             $table->timestamps();
         });
     }
