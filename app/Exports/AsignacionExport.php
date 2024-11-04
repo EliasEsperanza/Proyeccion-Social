@@ -17,22 +17,21 @@ class AsignacionExport implements FromView,WithColumnWidths
     public function columnWidths(): array
     {
         return [
-            'ID Asignacion' => 25,
-            'ID Proyecto' => 25,
-            'Nombre Proyecto' => 55,           
-            'ID Estudiante' => 25,
-            'Nombre Estudiante' => 55,  
-            'ID Tutor' => 25,
-            'Nombre Tutor' =>55,
-            'Fecha Asignacion' =>50,
-
+            'ID Asignacion' => 100,
+            'ID Proyecto' => 100,
+            'Nombre Proyecto' => 100,           
+            'ID Estudiante' => 100,
+            'Nombre Estudiante' => 100,  
+            'ID Tutor' => 100,
+            'Nombre Tutor' =>100,
+            'Fecha Asignacion' =>100,
         ];
     }
 
     public function view():View
     {
-        $asignaciones=Asignacion::all();
-        return view('exports.asignaciones', [
+        $asignaciones = Asignacion::all();
+        return view('exports.asignacionesExcel', [
             'asignaciones' => $asignaciones
         ]);
     }

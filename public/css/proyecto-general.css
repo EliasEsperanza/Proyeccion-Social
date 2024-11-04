@@ -1,0 +1,58 @@
+/* Estilo general */
+.container {
+    margin-top: 20px;
+}
+
+/* Estilos de la tabla */
+.table-hover tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Alinear los botones a la derecha */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    font-weight: bold;
+    padding: 8px 15px;
+}
+
+.btn-success {
+    background-color: #800000; /* Color original del botón PDF */
+    border-color: #800000;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #b22222; /* Rojo más intenso en hover */
+    border-color: #b22222;
+    color: white;
+}
+
+.btn-primary {
+    background-color: #21813c; /* Color original del botón Excel */
+    border-color: #21813c;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #22803d; /* Verde oscuro en hover */
+    border-color: #22803d;  
+    color: white;
+}
+
+/* Botones de acciones en la tabla */
+.table .btn-outline-secondary, .table .btn-outline-danger {
+    font-size: 0.875rem;
+    padding: 3px 10px;
+}

@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Exports\EstudianteExport;
 use App\Models\Estudiante;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EstudianteController extends Controller
 {
@@ -109,5 +112,17 @@ class EstudianteController extends Controller
         $estudiante->delete();
 
         return redirect()->route('estudiante.index')->with('success', 'Estudiante eliminado con éxito');
+    }
+
+    public function exportExcel() 
+    {
+        return Excel::download(new EstudianteExport, 'estudiantes.xlsx');
+    }
+    
+    public function exportPDF(){
+        $estudiantes=Estudiante::all();
+       
+        $pdf= Pdf::loadView('exports.estudiantesPDF', ['estudiantes' =>$estudiantes]);
+        return $pdf->download('estudiantes.pdf');
     }
 }

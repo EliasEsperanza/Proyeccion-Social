@@ -590,6 +590,7 @@ class ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39
 
     public static $classMap = array (
         'App\\Exports\\AsignacionExport' => __DIR__ . '/../..' . '/app/Exports/AsignacionExport.php',
+        'App\\Exports\\EstudianteExport' => __DIR__ . '/../..' . '/app/Exports/EstudianteExport.php',
         'App\\Http\\Controllers\\AsignacionController' => __DIR__ . '/../..' . '/app/Http/Controllers/AsignacionController.php',
         'App\\Http\\Controllers\\ChatDocumentoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ChatDocumentoController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
@@ -599,6 +600,7 @@ class ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39
         'App\\Http\\Controllers\\EstudianteController' => __DIR__ . '/../..' . '/app/Http/Controllers/EstudianteController.php',
         'App\\Http\\Controllers\\HorasSocialesController' => __DIR__ . '/../..' . '/app/Http/Controllers/HorasSocialesController.php',
         'App\\Http\\Controllers\\ProyectoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProyectoController.php',
+        'App\\Http\\Controllers\\ProyectosDocumentosController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProyectosDocumentosController.php',
         'App\\Http\\Controllers\\ProyectosEstudiantesController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProyectosEstudiantesController.php',
         'App\\Http\\Controllers\\SeccionController' => __DIR__ . '/../..' . '/app/Http/Controllers/SeccionController.php',
         'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',
@@ -612,6 +614,7 @@ class ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39
         'App\\Models\\Estudiante' => __DIR__ . '/../..' . '/app/Models/Estudiante.php',
         'App\\Models\\HorasSociales' => __DIR__ . '/../..' . '/app/Models/HorasSociales.php',
         'App\\Models\\Proyecto' => __DIR__ . '/../..' . '/app/Models/Proyecto.php',
+        'App\\Models\\ProyectosDocumentos' => __DIR__ . '/../..' . '/app/Models/ProyectosDocumentos.php',
         'App\\Models\\ProyectosEstudiantes' => __DIR__ . '/../..' . '/app/Models/ProyectosEstudiantes.php',
         'App\\Models\\Seccion' => __DIR__ . '/../..' . '/app/Models/Seccion.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',

@@ -39,7 +39,7 @@ class ProyectosEstudiantesController extends Controller
 
         ProyectosEstudiantes::create($validacion);
 
-        return redirect()->route('proyectos_estudiantes.index');
+        return redirect()->route('proyectos_estudiantes.index')->with('success','Asignacion de estudiante a proyecto exitosa');
     }
 
 
@@ -54,7 +54,7 @@ class ProyectosEstudiantesController extends Controller
         $proyectos_estudiantes = ProyectosEstudiantes::find($id);
 
         if (!$proyectos_estudiantes) {
-            return response()->json(['message' => 'Proyectos Estudiantes no encontrado'], 404);
+            return redirect()->route('proyectos_estudiantes.index')->with('error','No se econtró ese Proyecto');
         }
         return view("proyectos_estudiantes.edit", compact('proyectos_estudiantes'));
     }
@@ -70,11 +70,11 @@ class ProyectosEstudiantesController extends Controller
         $proyectos_estudiantes = ProyectosEstudiantes::find($id);
 
         if (!$proyectos_estudiantes) {
-            return response()->json(['message' => 'Proyectos Estudiantes no encontrado'], 404);
+            return redirect()->route('proyectos_estudiantes.index')->with('error','No se econtró ese Proyecto');
         }
 
         $proyectos_estudiantes->update($validacion);
-        return response()->json($proyectos_estudiantes, 200);
+        return redirect()->route('proyectos_estudiantes.index')->with('success','Modificacion de asignacion de estudiante a proyecto exitosa');
     }
 
 
@@ -83,11 +83,11 @@ class ProyectosEstudiantesController extends Controller
         $proyectos_estudiantes = ProyectosEstudiantes::find($id);
 
         if (!$proyectos_estudiantes) {
-            return response()->json(['message' => 'Proyectos Estudiantes no encontrado'], 404);
+            return redirect()->route('proyectos_estudiantes.index')->with('error','No se econtró ese Proyecto');
         }
 
         $proyectos_estudiantes->delete();
-        return response()->json(['message' => 'Proyectos Estudiantes eliminado'], 200);
+        return redirect()->route('proyectos_estudiantes.index')->with('success','Elminacion de asignacion de estudiante a proyecto exitosa');;
 
     }
 }

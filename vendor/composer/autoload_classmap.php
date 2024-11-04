@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Exports\\AsignacionExport' => $baseDir . '/app/Exports/AsignacionExport.php',
+    'App\\Exports\\EstudianteExport' => $baseDir . '/app/Exports/EstudianteExport.php',
     'App\\Http\\Controllers\\AsignacionController' => $baseDir . '/app/Http/Controllers/AsignacionController.php',
     'App\\Http\\Controllers\\ChatDocumentoController' => $baseDir . '/app/Http/Controllers/ChatDocumentoController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
@@ -16,6 +17,7 @@ return array(
     'App\\Http\\Controllers\\EstudianteController' => $baseDir . '/app/Http/Controllers/EstudianteController.php',
     'App\\Http\\Controllers\\HorasSocialesController' => $baseDir . '/app/Http/Controllers/HorasSocialesController.php',
     'App\\Http\\Controllers\\ProyectoController' => $baseDir . '/app/Http/Controllers/ProyectoController.php',
+    'App\\Http\\Controllers\\ProyectosDocumentosController' => $baseDir . '/app/Http/Controllers/ProyectosDocumentosController.php',
     'App\\Http\\Controllers\\ProyectosEstudiantesController' => $baseDir . '/app/Http/Controllers/ProyectosEstudiantesController.php',
     'App\\Http\\Controllers\\SeccionController' => $baseDir . '/app/Http/Controllers/SeccionController.php',
     'App\\Http\\Controllers\\UserController' => $baseDir . '/app/Http/Controllers/UserController.php',
@@ -29,6 +31,7 @@ return array(
     'App\\Models\\Estudiante' => $baseDir . '/app/Models/Estudiante.php',
     'App\\Models\\HorasSociales' => $baseDir . '/app/Models/HorasSociales.php',
     'App\\Models\\Proyecto' => $baseDir . '/app/Models/Proyecto.php',
+    'App\\Models\\ProyectosDocumentos' => $baseDir . '/app/Models/ProyectosDocumentos.php',
     'App\\Models\\ProyectosEstudiantes' => $baseDir . '/app/Models/ProyectosEstudiantes.php',
     'App\\Models\\Seccion' => $baseDir . '/app/Models/Seccion.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
