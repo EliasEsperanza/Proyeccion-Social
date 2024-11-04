@@ -80,7 +80,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="establecerActivo(this)">
+                    <a class="nav-link" href="{{ route('proyecto-general') }}" onclick="establecerActivo(this)">
                         <i class="bi bi-briefcase me-2"></i> Proyectos
                     </a>
                 </li>

@@ -28,26 +28,24 @@
 }
 
 .btn-success {
-    background-color: #800000; /* Color original del botón PDF */
-    border-color: #800000;
-    color: white;
+    background-color: #800000;
+    border: none;
 }
 
 .btn-success:hover {
-    background-color: #b22222; /* Rojo más intenso en hover */
-    border-color: #b22222;
-    color: white;
+    background-color: #660000;
+    border-color: #660000;
 }
 
 .btn-primary {
-    background-color: #21813c; /* Color original del botón Excel */
+    background-color: #21813c;
     border-color: #21813c;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #22803d; /* Verde oscuro en hover */
-    border-color: #22803d;  
+    background-color: #1d6c34; /* Verde oscuro en hover */
+    border-color: #1d6c34;  
     color: white;
 }
 
@@ -56,3 +54,27 @@
     font-size: 0.875rem;
     padding: 3px 10px;
 }
+
+/* Estilos de la barra de búsqueda */
+.search-bar {
+    max-width: 300px;
+}
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .page-numbers {
+    display: flex;
+  }
+  
+  .page-numbers li {
+    list-style: none;
+    margin: 0 5px;
+  }
+  
+  .page-numbers li.active a {
+    font-weight: bold;
+  }
+  

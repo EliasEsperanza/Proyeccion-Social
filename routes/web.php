@@ -35,7 +35,7 @@ Route::get('/resetearcontraseña', function () {
 
 Route::get('/proyecto-general', function () {
     return view('proyecto.proyecto-general');
-});
+})->name('proyecto-general');
 
 Route::get('/crear', function () {
     return view('usuarios.crearUsuario');
