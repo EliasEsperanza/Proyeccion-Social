@@ -1702,16 +1702,17 @@ trait Date
     public function setUnitNoOverflow(string $valueUnit, int $value, string $overflowUnit): static
     {
         try {
-            $original = $this->avoidMutation();
+            $start = $this->avoidMutation()->startOf($overflowUnit);
+            $end = $this->avoidMutation()->endOf($overflowUnit);
             /** @var static $date */
             $date = $this->$valueUnit($value);
-            $start = $original->avoidMutation()->startOf($overflowUnit);
-            $end = $original->avoidMutation()->endOf($overflowUnit);
 
             if ($date < $start) {
-                $date = $date->setDateTimeFrom($start);
-            } elseif ($date > $end) {
-                $date = $date->setDateTimeFrom($end);
+                return $date->mutateIfMutable($start);
+            }
+
+            if ($date > $end) {
+                return $date->mutateIfMutable($end);
             }
 
             return $date;
@@ -2952,5 +2953,19 @@ trait Date
     private static function floorZeroPad(int|float $value, int $length): string
     {
         return str_pad((string) floor($value), $length, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * @template T of CarbonInterface
+     *
+     * @param T $date
+     *
+     * @return T
+     */
+    private function mutateIfMutable(CarbonInterface $date): CarbonInterface
+    {
+        return $this instanceof DateTimeImmutable
+            ? $this
+            : $this->modify('@'.$date->rawFormat('U.u'))->setTimezone($date->getTimezone());
     }
 }

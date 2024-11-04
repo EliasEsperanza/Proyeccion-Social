@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39
+class ComposerStaticInit76f39ceb361f53d48a0fe5ec264ab81f
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -368,8 +368,8 @@ class ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -590,18 +590,21 @@ class ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39
 
     public static $classMap = array (
         'App\\Exports\\AsignacionExport' => __DIR__ . '/../..' . '/app/Exports/AsignacionExport.php',
+        'App\\Exports\\EstudianteExport' => __DIR__ . '/../..' . '/app/Exports/EstudianteExport.php',
         'App\\Http\\Controllers\\AsignacionController' => __DIR__ . '/../..' . '/app/Http/Controllers/AsignacionController.php',
         'App\\Http\\Controllers\\ChatDocumentoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ChatDocumentoController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DepartamentoController' => __DIR__ . '/../..' . '/app/Http/Controllers/DepartamentoController.php',
         'App\\Http\\Controllers\\DocumentoController' => __DIR__ . '/../..' . '/app/Http/Controllers/DocumentoController.php',
         'App\\Http\\Controllers\\EstadoController' => __DIR__ . '/../..' . '/app/Http/Controllers/EstadoController.php',
-        'App\\Http\\Controllers\\ProyectosDocumentosController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProyectosDocumentosController.php',
+        'App\\Http\\Controllers\\EstudianteController' => __DIR__ . '/../..' . '/app/Http/Controllers/EstudianteController.php',
         'App\\Http\\Controllers\\HorasSocialesController' => __DIR__ . '/../..' . '/app/Http/Controllers/HorasSocialesController.php',
         'App\\Http\\Controllers\\ProyectoController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProyectoController.php',
+        'App\\Http\\Controllers\\ProyectosDocumentosController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProyectosDocumentosController.php',
         'App\\Http\\Controllers\\ProyectosEstudiantesController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProyectosEstudiantesController.php',
         'App\\Http\\Controllers\\SeccionController' => __DIR__ . '/../..' . '/app/Http/Controllers/SeccionController.php',
         'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',
+        'App\\Http\\Middleware\\AuditLogMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/AuditLogMiddleware.php',
         'App\\Http\\Middleware\\EstudianteMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/EstudianteMiddleware.php',
         'App\\Models\\Asignacion' => __DIR__ . '/../..' . '/app/Models/Asignacion.php',
         'App\\Models\\Chat_Documento' => __DIR__ . '/../..' . '/app/Models/Chat_Documento.php',
@@ -755,6 +758,7 @@ class ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39
         'Database\\Factories\\EstudianteFactory' => __DIR__ . '/../..' . '/database/factories/EstudianteFactory.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\ProyectosDocumentosSeeder' => __DIR__ . '/../..' . '/database/seeders/ProyectosDocumentosSeeder.php',
         'Database\\Seeders\\RoleSeeder' => __DIR__ . '/../..' . '/database/seeders/RoleSeeder.php',
         'Database\\Seeders\\UsersSeeder' => __DIR__ . '/../..' . '/database/seeders/UsersSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
@@ -7771,10 +7775,10 @@ class ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit3284c38b25b1f9b1be05593f5fc0ba39::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit76f39ceb361f53d48a0fe5ec264ab81f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit76f39ceb361f53d48a0fe5ec264ab81f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit76f39ceb361f53d48a0fe5ec264ab81f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit76f39ceb361f53d48a0fe5ec264ab81f::$classMap;
 
         }, null, ClassLoader::class);
     }
