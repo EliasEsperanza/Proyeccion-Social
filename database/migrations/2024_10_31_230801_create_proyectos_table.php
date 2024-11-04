@@ -21,8 +21,8 @@ return new class extends Migration {
 
             // Se añade la clave foránea solo si la tabla 'usuarios' existe
 
-            if (Schema::hasTable('usuarios')) {
-                $table->foreign('coordinador')->references('id_usuario')->on('usuarios');
+            if (Schema::hasTable('users')) {
+                $table->foreign('coordinador')->references('id_usuario')->on('users');
             }
 
             $table->timestamps();

@@ -10,18 +10,24 @@ class EstadoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $ListEstados = Estado::all();
-        return view("estado.index", compact("ListEstados")); 
+        #Filtro por nombre de estado
+        $query = Estado::query();
+        if ($request->filled('nombre')) {
+            $query->where('nombre_estado', 'like', '%' . $request->nombre . '%');
+        }
+        $ListEstados = $query->get();
+        return view("estado.index", compact("ListEstados"));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view("estado.create"); 
+        return view("estado.create");
     }
 
     /**
@@ -33,8 +39,11 @@ class EstadoController extends Controller
             'nombre_estado' => 'required|string|max:50',
         ]);
 
-        $proyecto = Estado::crearProyecto($data);
-        return response()->json($proyecto, 201);    
+        // Estandarización del nombre
+        $data['nombre_estado'] = ucfirst(strtolower($data['nombre_estado'])); #usamos ucfirst y strtolower para convertir la primera letra a mayúscula y las demás a minúsculas, estandarizando el formato.
+
+        Estado::crearEstado($data);
+        return redirect()->route('estado.index')->with('success', 'Estado creado con éxito');
     }
 
     /**
@@ -43,7 +52,7 @@ class EstadoController extends Controller
     public function show(string $id)
     {
         $estado = Estado::find($id);
-        return view("estado.show", compact('estado')); 
+        return view("estado.show", compact('estado'));
     }
 
     /**
@@ -51,12 +60,12 @@ class EstadoController extends Controller
      */
     public function edit(string $id)
     {
-        $estado = Estado::find($id); 
+        $estado = Estado::find($id);
 
         if (!$estado) {
-            return response()->json(['message' => 'Estado no encontrado'], 404);
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
         }
-        return view("", compact('estado')); 
+        return view("estado.edit", compact('estado'));
     }
 
     /**
@@ -67,15 +76,17 @@ class EstadoController extends Controller
         $data = $request->validate([
             'nombre_estado' => 'required|string|max:50',
         ]);
-    
+
         $estado = Estado::find($id);
-    
         if (!$estado) {
-            return response()->json(['message' => 'Estado no encontrado'], 404);
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
         }
-    
+
+        // Estandarización del nombre
+        $data['nombre_estado'] = ucfirst(strtolower($data['nombre_estado'])); #usamos ucfirst y strtolower para convertir la primera letra a mayúscula y las demás a minúsculas, estandarizando el formato.
+
         $estado->update($data);
-        return response()->json($estado, 200);
+        return redirect()->route('estado.index')->with('success', 'Estado actualizado con éxito');
     }
 
     /**
@@ -85,10 +96,10 @@ class EstadoController extends Controller
     {
         $estado = Estado::find($id);
         if (!$estado) {
-            return response()->json(['message' => 'Estado no encontrado'], 404);
+            return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
         }
-        
-        $estado->delete(); 
-        return response()->json(['message' => 'Estado eliminado con éxito'], 200);
+
+        $estado->delete();
+        return redirect()->route('estado.index')->with('success', 'Estado eliminado con éxito');
     }
 }

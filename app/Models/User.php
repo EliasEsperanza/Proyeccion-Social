@@ -9,6 +9,8 @@ class User extends Authenticatable
 {
     use HasRoles;
 
+    protected $primaryKey = 'id_usuario';
+
     protected $fillable = [
         'name',
         'email',
