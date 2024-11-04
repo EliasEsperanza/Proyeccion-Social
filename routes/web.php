@@ -1,10 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChatDocumentoController;
+use App\Http\Controllers\DepartamentoController;
 
 Route::get('/', function () {
     return view('login.login');
 });
+
+Route::get('/permisos', function () {
+    return view('permisos.gestionpermiso');
+})
+->name('permisos');
 
 Route::get('/registro', function () {
     return view('registro.registro');
@@ -16,7 +23,7 @@ Route::get('/proyecto', function () {
 
 Route::get('/gestion-proyecto', function () {
     return view('gestionProyectos.gestionProyectos');
-});
+})->name('gestion-proyecto');
 
 Route::get('/recuperarcontraseña', function () {
     return view('auth.recupassword');
@@ -37,3 +44,12 @@ Route::get('/crear', function () {
 Route::get('/usuarios', function () {
     return view('usuarios.listaUsuario');
 })->name('usuarios');
+
+Route::get('/layouts', function () {
+    return view('layouts.gestion-de-roles');
+})->name('roles');
+
+Route::get('/perfil', function () {
+    return view('perfil.perfilUsuario');
+})
+->name('perfil');

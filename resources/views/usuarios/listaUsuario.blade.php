@@ -44,6 +44,8 @@
                         <td>
                             <a href="#" class="text-warning me-3"><i class="bi bi-pencil"></i> Editar</a>
                             <a href="#" class="text-danger"><i class="bi bi-trash"></i> Eliminar</a>
+                            <a href="{{ route(name:'perfil')}}" class="text-danger"><i class="bi bi-eye"></i> Mostrar</a>
+                            
                         </td>
                     </tr>
                     <tr>
@@ -55,6 +57,7 @@
                         <td>
                             <a href="#" class="text-warning me-3"><i class="bi bi-pencil"></i> Editar</a>
                             <a href="#" class="text-danger"><i class="bi bi-trash"></i> Eliminar</a>
+                            <a href="{{ route(name:'perfil')}}" class="text-danger"><i class="bi bi-eye"></i> Mostrar</a>
                         </td>
                     </tr>
                 </tbody>

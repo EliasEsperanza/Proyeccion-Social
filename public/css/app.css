@@ -1,3 +1,7 @@
+body{
+    background-color: #f5f5f5;
+}
+
 .navbar {
     position: fixed;
     top: 0;
@@ -15,7 +19,7 @@
 
 #contenedor-principal {
     display: flex;
-    margin-top: 70px;
+    margin-top: 55px;
 }
 
 #barra-lateral {
@@ -127,6 +131,27 @@
         width: 100%;
         margin-top: 60px;
     }
+}
+
+
+.btn-yei{
+    margin-left: 80%;
+    background-color:#800000;
+    color: #ffffff;
+}
+
+.btn-yei:hover{
+    color: #ffffff;
+    background-color:#660000;
+}
+
+.bi-pencil{
+    padding: 10px;
+}
+
+.bi-trash-fill{
+    padding: 10px;
+
 }
 
 #barra-lateral.visible {
@@ -378,5 +403,37 @@ input[type="checkbox"].form-check-input:checked::before {
 
 .btn-publicar:hover {
     background-color: #660000;
+
 }
 
+.profile-card {
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.profile-circle {
+    background-color: #6c0000;
+    color: white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 15px;
+}
+.btn-message {
+    background-color: #6c0000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+.btn-message:hover{
+    background-color: #800000;
+    color: white    ;
+}

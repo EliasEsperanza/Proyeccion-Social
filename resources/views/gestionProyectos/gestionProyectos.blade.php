@@ -10,9 +10,9 @@
 
 @section('content')
 
-<div class="container my-5">
+<div class="container ">
     
-    <div class="container my-5">
+    <div class="container">
         <h1 class="mb-4">Gestión de Proyectos</h1>
     
         <div class="card w-100">
