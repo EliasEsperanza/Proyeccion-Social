@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Departamento; 
+use Illuminate\Database\Eloquent\Model;
+
 
 class Seccion extends Model 
 {

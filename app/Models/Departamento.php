@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use \App\Models\Seccion;
+
 class Departamento extends Model
 {
     protected $perPage = 20;
