@@ -99,4 +99,44 @@ class ProyectoController extends Controller
         $proyecto->delete(); 
         return redirect()->route('proyecto.index')->with('success', 'Proyecto eliminado con éxito');
     }
+
+    public function filtrarProyectos(Request $request)
+    {   
+   
+        $estado = $request->input('estado');
+        $periodo = $request->input('periodo');
+        $query = Proyecto::with('estado', 'coordinador'); 
+    
+        if ($estado) {
+            $query->where('estado', $estado);
+        }
+
+        if ($periodo) {
+            $query->where('periodo', $periodo);
+        }
+
+        $ListProyecto = $query->get();
+
+
+        return view("Proyecto.indexProyecto", compact("ListProyecto"));
+}
+
+
+    public function asignarResponsable(Request $request, $id)
+    {
+        $id = (int) $id;
+
+        $data = $request->validate([
+            'coordinador' => 'required|integer|exists:usuarios,id',
+        ]);
+
+        $proyecto = Proyecto::find($id);
+            if (!$proyecto) {
+            return redirect()->route('proyecto.index')->with('error', 'Proyecto no encontrado');
+        }
+
+        $proyecto->update(['coordinador' => $data['coordinador']]);
+        return redirect()->route('proyecto.index')->with('success', 'Responsable asignado con exito');
+    }
+
 }

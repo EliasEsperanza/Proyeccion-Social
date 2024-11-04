@@ -6,17 +6,45 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
-class DepartamentoController extends Controller
+class DepartamentoController extends Controller // Cambiamos el nombre de la clase a DepartamentoController
 {
     /**
      * Muestra una lista de los departamentos.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View // Cambiamos el tipo de retorno a View
     {
-        $departamentos = Departamento::paginate(20);
+        // Obtener los parámetros de búsqueda y ordenación desde la solicitud
+        $search = $request->input('search');
+        $sortOrder = $request->input('sort', 'asc'); // Orden ascendente por defecto
 
-        return view('departamentos.index', compact('departamentos'));
+        // Filtrar y ordenar los departamentos
+        $departamentos = Departamento::query() 
+            ->when($search, function ($query) use ($search) { // Filtrar por nombre si se especifica la búsqueda
+                $query->where('nombre_departamento', 'like', '%' . $search . '%');  // Filtrar por nombre
+            })
+            ->orderBy('nombre_departamento', $sortOrder) // Ordenar por nombre
+            ->paginate(20);
+
+        // Pasar los datos a la vista
+        return view('departamentos.index', compact('departamentos', 'search', 'sortOrder'));
     }
+
+    /**
+     * Función para buscar departamentos por nombre.
+     */
+    public function searchByName(Request $request): View // Cambiamos el tipo de retorno a View
+    {
+        // Obtener el parámetro de búsqueda desde la solicitud
+        $search = $request->input('search');
+
+        // Filtrar los departamentos cuyo nombre coincida con la búsqueda
+        $departamentos = Departamento::where('nombre_departamento', 'like', '%' . $search . '%')
+            ->paginate(20);
+
+        // Retornar la vista con los resultados de búsqueda
+        return view('departamentos.index', compact('departamentos', 'search'));
+    }
+
 
     /**
      * Muestra el formulario para crear un nuevo departamento.
