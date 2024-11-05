@@ -180,6 +180,7 @@ return array(
     'Database\\Seeders\\EstudianteSeeder' => $baseDir . '/database/seeders/EstudianteSeeder.php',
     'Database\\Seeders\\NotificacionesSeeder' => $baseDir . '/database/seeders/NotificacionesSeeder.php',
     'Database\\Seeders\\ProyectosDocumentosSeeder' => $baseDir . '/database/seeders/ProyectosDocumentosSeeder.php',
+    'Database\\Seeders\\ProyectosTableSeeder' => $baseDir . '/database/seeders/ProyectosTableSeeder.php',
     'Database\\Seeders\\RoleSeeder' => $baseDir . '/database/seeders/RoleSeeder.php',
     'Database\\Seeders\\SeccionSeeder' => $baseDir . '/database/seeders/SeccionSeeder.php',
     'Database\\Seeders\\UsersSeeder' => $baseDir . '/database/seeders/UsersSeeder.php',

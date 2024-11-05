@@ -368,8 +368,8 @@ class ComposerStaticInit68e3994b202aba93185fa42b80d61dcb
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -763,6 +763,7 @@ class ComposerStaticInit68e3994b202aba93185fa42b80d61dcb
         'Database\\Seeders\\EstudianteSeeder' => __DIR__ . '/../..' . '/database/seeders/EstudianteSeeder.php',
         'Database\\Seeders\\NotificacionesSeeder' => __DIR__ . '/../..' . '/database/seeders/NotificacionesSeeder.php',
         'Database\\Seeders\\ProyectosDocumentosSeeder' => __DIR__ . '/../..' . '/database/seeders/ProyectosDocumentosSeeder.php',
+        'Database\\Seeders\\ProyectosTableSeeder' => __DIR__ . '/../..' . '/database/seeders/ProyectosTableSeeder.php',
         'Database\\Seeders\\RoleSeeder' => __DIR__ . '/../..' . '/database/seeders/RoleSeeder.php',
         'Database\\Seeders\\SeccionSeeder' => __DIR__ . '/../..' . '/database/seeders/SeccionSeeder.php',
         'Database\\Seeders\\UsersSeeder' => __DIR__ . '/../..' . '/database/seeders/UsersSeeder.php',
