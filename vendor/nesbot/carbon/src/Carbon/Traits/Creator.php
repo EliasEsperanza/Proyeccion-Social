@@ -146,8 +146,7 @@ trait Creator
             return clone $date;
         }
 
-        $instance = parent::createFromFormat('U.u', $date->format('U.u'))
-            ->setTimezone($date->getTimezone());
+        $instance = new static($date->format('Y-m-d H:i:s.u'), $date->getTimezone());
 
         if ($date instanceof CarbonInterface) {
             $settings = $date->getSettings();
@@ -651,7 +650,7 @@ trait Creator
 
         if (!\is_string($time)) {
             @trigger_error(
-                'createFromFormat() $time parameter will only accept string or integer for 1-letter format representing a numeric unit in the next version',
+                'createFromFormat() will only accept string or integer for 1-letter format representing a numeric unit int next version',
                 \E_USER_DEPRECATED,
             );
             $time = (string) $time;

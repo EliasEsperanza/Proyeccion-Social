@@ -36,8 +36,7 @@ trait Cast
     {
         if (!method_exists($className, 'instance')) {
             if (is_a($className, DateTimeInterface::class, true)) {
-                return $className::createFromFormat('U.u', $this->rawFormat('U.u'))
-                    ->setTimezone($this->getTimezone());
+                return new $className($this->rawFormat('Y-m-d H:i:s.u'), $this->getTimezone());
             }
 
             throw new InvalidCastException("$className has not the instance() method needed to cast the date.");

@@ -70,7 +70,7 @@ trait IntervalStep
         if ($this->step) {
             $carbonDate = Callback::parameter($this->step, $carbonDate->avoidMutation());
 
-            return $carbonDate->modify(($this->step)($carbonDate, $negated)->format('Y-m-d H:i:s.u e O'));
+            return $carbonDate->setDateTimeFrom(($this->step)($carbonDate, $negated));
         }
 
         if ($negated) {

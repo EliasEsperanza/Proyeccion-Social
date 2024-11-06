@@ -475,8 +475,7 @@ trait Converter
      */
     public function toDateTime(): DateTime
     {
-        return DateTime::createFromFormat('U.u', $this->rawFormat('U.u'))
-            ->setTimezone($this->getTimezone());
+        return new DateTime($this->rawFormat('Y-m-d H:i:s.u'), $this->getTimezone());
     }
 
     /**
@@ -489,8 +488,7 @@ trait Converter
      */
     public function toDateTimeImmutable(): DateTimeImmutable
     {
-        return DateTimeImmutable::createFromFormat('U.u', $this->rawFormat('U.u'))
-            ->setTimezone($this->getTimezone());
+        return new DateTimeImmutable($this->rawFormat('Y-m-d H:i:s.u'), $this->getTimezone());
     }
 
     /**

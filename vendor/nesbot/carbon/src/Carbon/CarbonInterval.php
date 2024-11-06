@@ -294,11 +294,6 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
      */
     protected ?DateInterval $rawInterval = null;
 
-    /**
-     * Flag if the interval was made from a diff with absolute flag on.
-     */
-    protected bool $absolute = false;
-
     protected ?array $initialValues = null;
 
     /**
@@ -497,11 +492,6 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
                     $this->assertSafeForInteger('minute', $minutes);
                     $seconds = (float) ($match['second'] ?? 0);
                     $this->assertSafeForInteger('second', $seconds);
-                    $microseconds = (int) str_pad(
-                        substr(explode('.', $match['second'] ?? '0.0')[1] ?? '0', 0, 6),
-                        6,
-                        '0',
-                    );
                 }
 
                 $totalDays = (($weeks * static::getDaysPerWeek()) + $days);
@@ -513,10 +503,6 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
                 $this->h = (int) $hours;
                 $this->i = (int) $minutes;
                 $this->s = (int) $seconds;
-                $secondFloatPart = (float) ($microseconds / CarbonInterface::MICROSECONDS_PER_SECOND);
-                $this->f = $secondFloatPart;
-                $intervalMicroseconds = (int) ($this->f * CarbonInterface::MICROSECONDS_PER_SECOND);
-                $intervalSeconds = $seconds - $secondFloatPart;
 
                 if (
                     ((float) $this->y) !== $years ||
@@ -524,8 +510,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
                     ((float) $this->d) !== $totalDays ||
                     ((float) $this->h) !== $hours ||
                     ((float) $this->i) !== $minutes ||
-                    ((float) $this->s) !== $intervalSeconds ||
-                    $intervalMicroseconds !== ((int) $microseconds)
+                    ((float) $this->s) !== $seconds
                 ) {
                     $this->add(static::fromString(
                         ($years - $this->y).' years '.
@@ -533,8 +518,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
                         ($totalDays - $this->d).' days '.
                         ($hours - $this->h).' hours '.
                         ($minutes - $this->i).' minutes '.
-                        ($intervalSeconds - $this->s).' seconds '.
-                        ($microseconds - $intervalMicroseconds).' microseconds ',
+                        ($seconds - $this->s).' seconds '
                     ));
                 }
             } catch (Throwable $secondException) {
@@ -543,7 +527,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         }
 
         if ($microseconds !== null) {
-            $this->f = $microseconds / CarbonInterface::MICROSECONDS_PER_SECOND;
+            $this->f = $microseconds / Carbon::MICROSECONDS_PER_SECOND;
         }
 
         foreach (['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'] as $unit) {
@@ -807,7 +791,6 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $this->startDate = null;
         $this->endDate = null;
         $this->rawInterval = null;
-        $this->absolute = false;
 
         return $this;
     }
@@ -1121,7 +1104,6 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $rawInterval = $start->diffAsDateInterval($end, $absolute);
         $interval = static::instance($rawInterval, $skip);
 
-        $interval->absolute = $absolute;
         $interval->rawInterval = $rawInterval;
         $interval->startDate = $start;
         $interval->endDate = $end;
@@ -2609,9 +2591,7 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
         $this->checkStartAndEnd();
 
         if ($this->startDate && $this->endDate) {
-            $diff = $this->startDate->diffInUnit($unit, $this->endDate);
-
-            return $this->absolute ? abs($diff) : $diff;
+            return $this->startDate->diffInUnit($unit, $this->endDate);
         }
 
         $result = 0;
@@ -3357,7 +3337,6 @@ class CarbonInterval extends DateInterval implements CarbonConverterInterface
             && ($this->startDate !== null || $this->endDate !== null)
             && $this->initialValues !== $this->getInnerValues()
         ) {
-            $this->absolute = false;
             $this->startDate = null;
             $this->endDate = null;
             $this->rawInterval = null;
