@@ -89,13 +89,13 @@ class UsersSeeder extends Seeder
 
         }
 
-        //Datos de los tutores
-        $tutores = [
+        //Datos de los coordinador
+        $coordinadores = [
             ['name' => 'Lucy Irina Serrano de Alfaro', 'email' => 'lucy.Serrano@example.com'],
             ['name' => 'Nora Isabel Claros Campos', 'email' => 'nora.Claros@example.com'],
             ['name' => 'Rene Eduardo Arias Cisneros', 'email' => 'rene.Arias@example.com'],
             ['name' => 'José Luis Castro Cordero', 'email' => 'jose.Castro@example.com'],
-            ['name' => 'Josselin Vanessa Márquez Argueta', 'email' => 'josselin.Márquez@example.com'],
+            ['name' => 'Josselin Vanessa Márquez Argueta', 'email' => 'josselin.Marquez@example.com'],
             ['name' => 'Jesús Antonio Orellana Rodríguez', 'email' => 'jesus.Orellana@example.com'],
             ['name' => 'Henry Jeovanni Mata Lazo', 'email' => 'henry.Mata@example.com'],
             ['name' => 'Aurora Guadalupe Gutierrez de Márquez', 'email' => 'aurora.Gutierrez@example.com'],
@@ -114,16 +114,17 @@ class UsersSeeder extends Seeder
             ['name' => 'Vilma Evelyn Gomez Zetino', 'email' => 'vilma.Gomez@example.com'],
             ['name' => 'Eladio Fabian Melgar Benítez', 'email' => 'eladio.Melgar@example.com'],
         ];
-         // Crear tutores
-         foreach ($tutores as $tutor) {
+         // Crear coordinador
+         foreach ($coordinadores as $coordinador) {
             $user = User::create([
-                'name' => $tutor['name'],
-                'email' => $tutor['email'],
+                'name' => $coordinador['name'],
+                'email' => $coordinador['email'],
                 'password' => Hash::make('12345678'),
                 'email_verified_at' => now(),
             ]);
-            $user->assignRole('Tutor'); 
+            $user->assignRole('Coordinador'); 
 
-        }  
+        }
+          
     }      
 }

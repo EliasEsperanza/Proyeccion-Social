@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
-
+    // El disco por defecto sera 'public'
+    'default' => env('FILESYSTEM_DISK', 'public'),// Se cambió a 'public' para usar el disco local por defecto, permitiendo que los archivos subidos se almacenen en la carpeta 'storage/app/public'. 
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -32,16 +32,17 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
+            'root' => storage_path('app/public'),// Directorio para almacenamiento local
             'serve' => true,
             'throw' => false,
         ],
 
+      // Configuración del disco 'public', que guarda archivos de forma local en la carpeta 'public'.
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
+            'root' => storage_path('app/public'),// Directorio para archivos público
+            'url' => env('APP_URL').'/storage',// URL para acceder a los archivos
+            'visibility' => 'public', // Asegura que los archivos sean accesibles públicamente.
             'throw' => false,
         ],
 
@@ -71,7 +72,7 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        public_path('storage') => storage_path('app/public'),// Crear enlace simbolico
     ],
 
 ];

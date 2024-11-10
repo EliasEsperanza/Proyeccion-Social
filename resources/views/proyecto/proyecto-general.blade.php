@@ -8,96 +8,64 @@
 @endsection
 
 @section('content')
-
-<div class="container-fluid mt-1">
-    <h2 class="text-start mb-4">Proyectos</h2>
-    <div class="card shadow-sm p-4" style="border-radius: 12px; overflow: hidden;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="input-group ms-auto w-25">
-                <span class="input-group-text bg-light border-0">
-                    <i class="bi bi-search text-secondary"></i>
-                </span>
-                <input type="text" class="form-control border-0" placeholder="Buscar">
-                <span class="input-group-text bg-light border-0">
-                    <i class="fas fa-filter custom-filter-icon"></i>
-                </span>
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead class="table-light">
+<h1>Proyectos</h1>
+<div class="tabla-contenedor shadow-sm rounded bg-white">
+    <div class="table-responsive ">
+        
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <th><input type="checkbox" id="selectAll"></th>
                     <th>Título del proyecto</th>
                     <th>Estudiantes</th>
                     <th>Tutor</th>
                     <th>Fecha de inicio</th>
                     <th>Fecha de finalización</th>
                     <th>Ubicación</th>
+                    <th>Progreso</th>
+                    <th>Horas completadas</th>
                     <th>Estado</th>
                     <th>Sección/Departamento</th>
-                    <th>Acciones</th>
                 </tr>
-                </thead>
-                <tbody>
+            </thead>
 
-                    <tr class="py-3">
-                    <td><input type="checkbox" class="selectProject"></td>
-                    <td>Gestor de TI</td>
-                    <td>Kevin Nata</td>
-                    <td>Josselin</td>
-                    <td>10-10-24</td>
-                    <td>10-07-25</td>
-                    <td>UES-FMO</td>
-                    <td>Anteproyecto</td>
-                    <td>Sistemas Informaticos</td>
-                    <td>
-                            <a href="#" class="text-warning me-3"> <i class="bi bi-pencil"></i></a>
-                            <a href="#" class="text-danger"> <i class="bi bi-trash"></i></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <tbody>
+                
+            </tbody>
 
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <p class="mb-0">Mostrando 1 a 10 de 50 resultados</p>
-            
-            <div class="d-flex align-items-center">
-                <select class="form-select form-select-sm w-auto">
+        </table>
+
+        <div class="p-3 d-flex flex-column flex-md-row justify-content-between align-items-center bg-light border-top">
+            <span class="text-muted mb-2 mb-md-0">Mostrando 1 a 10 de 50 resultados</span>
+            <div class="d-flex align-items-center gap-2 mb-2 mb-md-0">
+                <select class="form-select form-select-sm" style="width: auto;">
                     <option>10</option>
                     <option>20</option>
                     <option>50</option>
                 </select>
-                <span class="ms-2">por página</span>
+                <span>por página</span>
             </div>
-            <div class="rounded-pagination-wrapper" id="paginationWrapper">
-    <div class="pagination-container">
-        <nav aria-label="Navegación de página">
-            <ul class="pagination pagination-sm mb-0">
-                <li class="page-item" data-page="1">
-                    <a class="page-link" href="#">1</a>
+            <ul class="paginacion d-flex gap-2 mb-0">
+                <li class="pagina-item activo">
+                    <a class="pagina-enlace" href="#">1</a>
                 </li>
-                <li class="page-item" data-page="2"><a class="page-link" href="#">2</a></li>
-                <li class="page-item" data-page="3"><a class="page-link" href="#">3</a></li>
-                <li class="page-item" data-page="4"><a class="page-link" href="#">4</a></li>
-                <li class="page-item" data-page="5"><a class="page-link" href="#">5</a></li>
-                <li class="page-item" data-page="next">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&rsaquo;</span>
-                    </a>
-                    </li>
-                </ul>
-            </nav>
+                <li class="pagina-item"><a class="pagina-enlace" href="#">2</a></li>
+                <li class="pagina-item"><a class="pagina-enlace" href="#">3</a></li>
+                <li class="pagina-item"><a class="pagina-enlace" href="#">4</a></li>
+                <li class="pagina-item"><a class="pagina-enlace" href="#">5</a></li>
+                <li class="pagina-item"><a class="pagina-enlace" href="#"><i class="bi bi-chevron-right"></i></a></li>
+            </ul>
         </div>
-    </div>
-</div>
+    
+
+
+        <div class="d-flex justify-content-end">
+            
+            <div class="button-group mt-3 px-4 mb-4">
+                <a href="#" class="btn btn-success me-2">Generar PDF</a>
+                <a href="#" class="btn btn-primary">Generar Excel</a>
+            </div>
         </div>
-        <div class="button-group mt-3 px-4 mb-4">
-            <button class="btn btn-success me-2">Generar PDF</button>
-            <button class="btn btn-primary">Generar Excel</button>
-        </div>
+
     </div>
 </div>
 

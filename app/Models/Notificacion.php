@@ -9,7 +9,7 @@ use App\Models\User;
 class Notificacion extends Model
 {
     use HasFactory;
-    protected $table = 'Notificaciones';
+    protected $table = 'notificaciones';
     protected $primaryKey = 'id_notificacion';
 
     

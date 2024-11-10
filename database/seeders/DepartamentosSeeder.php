@@ -15,5 +15,4 @@ class DepartamentosSeeder extends Seeder
     {
         Departamento::factory()->count(10)->create();
     }
-    
 }

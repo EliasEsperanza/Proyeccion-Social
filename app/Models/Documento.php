@@ -7,7 +7,7 @@ use App\Models\Proyecto;
 
 class Documento extends Model
 {
-    protected $table = 'Documentos';
+    protected $table = 'documentos';
     protected $fillable = ['id', 'id_proyecto','tipo_documento','ruta_archivo','fecha_subida'];
 
     public function proyecto()

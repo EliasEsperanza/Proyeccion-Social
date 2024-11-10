@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Departamento;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Factories\DepartamentosFactory;
 
 class DepartamentoSeeder extends Seeder
 {
@@ -13,37 +14,37 @@ class DepartamentoSeeder extends Seeder
      */
     public function run(): void
     {
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Ciencias Agronómicas', 
         ]);
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Ciencias Económicas', 
         ]);
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Ciencias y Humanidades',
         ]);
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Ingeniería y Arquitectura',
         ]);
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Jurisprudencia y Ciencias Sociales',
         ]);        
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Medicina',
         ]);
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Ciencias Naturales y Matemática',
         ]);
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Química y Farmacia',
         ]);
-        Departamento::factory()->create([ 
+        Departamento::create([ 
             'nombre_departamento' => 'Escuela de Carreras Técnicas. Sede Morazán',
         ]);
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Escuela de Postgrado',
         ]);
-        Departamento::factory()->create([
+        Departamento::create([
             'nombre_departamento' => 'Extensión La Unión',
         ]);
     }

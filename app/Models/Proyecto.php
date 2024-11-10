@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Estado;
-use App\Models\Usuario;
+use App\Models\User;
 
 
 
 class Proyecto extends Model
 {
     use HasFactory;
-    protected $table = 'Proyectos';
+    protected $table = 'proyectos';
     protected $primaryKey= 'id_proyecto';
 
 
@@ -55,7 +55,7 @@ class Proyecto extends Model
     public function coordinador()
     {
 
-        return $this->belongsTo(Usuario::class);
+        return $this->belongsTo(user::class);
     }
 
     //gets

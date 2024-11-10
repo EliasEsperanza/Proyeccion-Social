@@ -9,10 +9,10 @@ class Seccion extends Model
 {
     protected $perPage = 20;
 
-    protected $table = 'Secciones';
+    protected $table = 'secciones';
+    protected $primaryKey = 'id_seccion';
 
-    //columnas
-    protected $fillable = ['id_seccion', 'nombre_seccion', 'id_departamento'];
+    protected $fillable = ['nombre_seccion', 'id_departamento', 'id_coordinador'];
 
     /**
      * Define una relación que pertenece al modelo Departamento.

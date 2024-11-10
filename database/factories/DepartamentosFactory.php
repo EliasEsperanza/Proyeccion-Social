@@ -11,7 +11,7 @@ class DepartamentosFactory extends Factory
     public function definition()
     {
         return [
-            'nombre_departamento' =>'dapartamento. ', $this->faker->unique()->word(), 
+            'nombre_departamento' => $this->faker->unique()->word(),
         ];
     }
 }

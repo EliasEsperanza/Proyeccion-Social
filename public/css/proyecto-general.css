@@ -74,6 +74,6 @@
     margin: 0 5px;
   }
   
-  .page-numbers li.active a {
+.page-numbers li.active a {
     font-weight: bold;
   }

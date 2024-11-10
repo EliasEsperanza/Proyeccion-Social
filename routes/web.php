@@ -24,6 +24,10 @@ Route::get('/registro', function () {
     return view('registro.registro');
 });
 
+Route::get('/proyecto-g', function () {
+    return view('proyecto.proyecto-general');
+})->name('proyecto-g');
+
 Route::get('/proyecto', function () {
     return view('proyecto.publicar-proyecto');
 })->name('proyecto');
