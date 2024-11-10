@@ -13,10 +13,11 @@ class EstadosSeeder extends Seeder
     public function run(): void
     {
         DB::table('estados')->insert([
-            ['nombre_estado' => 'En revision'],
-            ['nombre_estado' => 'Aprobados'],
-            ['nombre_estado' => 'Activo'],
-            ['nombre_estado' => 'Finalizado'],
+            ['nombre_estado' => 'INSCRIPCION'],
+            ['nombre_estado' => 'EJECUCION'],
+            ['nombre_estado' => 'INFORME'],
+            ['nombre_estado' => 'FINALIZACION (MEMORIA)'],
+            ['nombre_estado' => 'CERTIFICACION'],
         ]);
     }
 }
