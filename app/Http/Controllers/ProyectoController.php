@@ -415,5 +415,21 @@ class ProyectoController extends Controller
         return view('proyecto.proyecto-disponible-list');
     }
 
+    public function proyectosDisponibles()
+    {
+        $proyectos = Proyecto::where('estado', 1) 
+            ->with(['tutorr', 'estadoo']) 
+            ->get(['id_proyecto', 'nombre_proyecto', 'tutor', 'lugar', 'fecha_inicio', 'fecha_fin', 'estado']);
+
+        return response()->json($proyectos);
+    }
+
+    public function obtenerTutores()
+    {
+        $tutores = User::role('tutor')->get();
+
+        return response()->json($tutores);
+    }
+
 }
 

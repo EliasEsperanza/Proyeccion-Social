@@ -31,6 +31,12 @@ Route::get('/hrs', function () {
 
 Route::post('/', [UserController::class, 'login'])->name('login.process');
 
+Route::get('/secciones-disponibles', [EstudianteController::class, 'seccionesDisponibles'])->name('secciones.disponibles');
+Route::get('/estudiantes-por-seccion/{idSeccion}', [EstudianteController::class, 'estudiantesPorSeccion'])->name('estudiantes.porSeccion');
+Route::get('/proyectos-disponibles', [ProyectoController::class, 'proyectosDisponibles'])->name('proyectos.disponibles');
+Route::get('/proyectos-tutores', [ProyectoController::class, 'obtenerTutores'])->name('proyectos.tutores');
+
+
 Route::get('/dashboard/datos-grafico', [ProyectoController::class, 'obtenerDatosGrafico'])->name('dashboard.datosGrafico');
 Route::get('/dashboard/estudiantes-proyectos-por-fecha', [ProyectoController::class, 'obtenerEstudiantesYProyectosPorFecha'])->name('dashboard.estudiantesProyectosPorFecha');
 

@@ -7,6 +7,7 @@ use App\Models\Estudiante;
 use App\Models\Seccion;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
 
@@ -168,5 +169,24 @@ class EstudianteController extends Controller
     public function totalEstudiantes()
     {
         return Estudiante::count();
+    }
+
+    public function seccionesDisponibles()
+    {
+        $secciones = DB::table('secciones')
+            ->join('departamentos', 'secciones.id_departamento', '=', 'departamentos.id_departamento')
+            ->select('secciones.id_seccion', 'secciones.nombre_seccion', 'departamentos.nombre_departamento')
+            ->get();
+
+        return response()->json($secciones);
+    }
+
+    public function estudiantesPorSeccion($idSeccion)
+    {
+        $estudiantes = Estudiante::with('usuario')
+            ->where('id_seccion', $idSeccion)
+            ->get();
+
+        return response()->json($estudiantes);
     }
 }
