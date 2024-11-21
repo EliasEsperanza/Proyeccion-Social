@@ -113,9 +113,15 @@ document.addEventListener('DOMContentLoaded', function () {
 document.getElementById('seccion').addEventListener('change', function () {
     const idSeccion = this.value;
     const selectEstudiantes = document.getElementById('nombreEstudiante');
+    const selectTutores = document.getElementById('tutor');
 
+    // Limpiar estudiantes
     selectEstudiantes.innerHTML = '<option selected disabled>Seleccione un estudiante</option>';
+    
+    // Limpiar tutores
+    selectTutores.innerHTML = '<option selected disabled>Seleccione un tutor</option>';
 
+    // Fetch estudiantes por sección (código existente)
     fetch(`/estudiantes-por-seccion/${idSeccion}`)
         .then(response => response.json())
         .then(estudiantes => {
@@ -129,6 +135,21 @@ document.getElementById('seccion').addEventListener('change', function () {
             sortSelectOptions(selectEstudiantes);
         })
         .catch(error => console.error('Error al cargar estudiantes:', error));
+
+    // Nuevo fetch para cargar tutores por sección
+    fetch(`/obtener-tutores-por-seccion/${idSeccion}`)
+        .then(response => response.json())
+        .then(tutores => {
+            tutores.forEach(tutor => {
+                console.log(tutor);
+                const option = document.createElement('option');
+                option.value = tutor.id_tutor;                
+                option.textContent = tutor.name || `Tutor ${tutor.id_usuario}`;
+                selectTutores.appendChild(option);
+            });
+            sortSelectOptions(selectTutores);
+        })
+        .catch(error => console.error('Error al cargar tutores:', error));
 });
 
 function agregarEstudiante() {
@@ -179,7 +200,8 @@ function sortSelectOptions(select) {
     const options = Array.from(select.options).slice(1);
     options.sort((a, b) => a.text.toLowerCase().localeCompare(b.text.toLowerCase()));
 
-    select.innerHTML = '<option selected disabled>Seleccione un estudiante</option>';
+    selectEstudiantes.innerHTML = '<option selected disabled>Seleccione un estudiante</option>';
+    selectTutores.innerHTML = '<option selected disabled>Seleccione un tutor</option>';
 
     options.forEach(option => select.appendChild(option));
 }

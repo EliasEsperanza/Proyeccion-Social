@@ -13,15 +13,15 @@ return new class extends Migration {
         Schema::create('solicitudes', function (Blueprint $table) {
             $table->id('solicitud_id');
             $table->foreignId('id_estudiante')
-                ->constrained('estudiantes')
+                ->constrained('estudiantes', 'id_estudiante') 
                 ->onDelete('cascade');
             $table->foreignId('id_proyecto')
-                ->constrained('proyectos')
+                ->constrained('proyectos', 'id_proyecto') 
                 ->onDelete('cascade');
             $table->double('valor');
             $table->string('documento');
             $table->foreignId('estado')
-                ->constrained('estados')
+                ->constrained('estados', 'id_estado')
                 ->onDelete('cascade');
             $table->timestamps();
         });

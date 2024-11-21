@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Departamento;
 use App\Exports\ProyectosExport;
+use Illuminate\Container\Attributes\DB as AttributesDB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProyectoController extends Controller
@@ -22,23 +23,23 @@ class ProyectoController extends Controller
     public function index()
     {
         $ListProyecto = Proyecto::with([
-                'seccion.departamento',
-                'estudiantes',
-                'coordinadorr',
-                'tutorr.seccionesTutoreadas',
-                'estadoo'
-            ])
+            'seccion.departamento',
+            'estudiantes',
+            'coordinadorr',
+            'tutorr.seccionesTutoreadas',
+            'estadoo'
+        ])
             ->whereHas('estadoo', function ($query) {
                 $query->where('nombre_estado', '!=', 'Disponible');
             })
             ->get();
-    
+
         return view("proyecto.proyecto-general", compact("ListProyecto"));
     }
 
     public function retornar_proyectos()
     {
-        $proyectos = Proyecto::with('seccion.departamento','estudiantes','coordinadorr','tutorr.seccionesTutoreadas','estadoo')->get();
+        $proyectos = Proyecto::with('seccion.departamento', 'estudiantes', 'coordinadorr', 'tutorr.seccionesTutoreadas', 'estadoo')->get();
         //dd($ListProyecto);
         return view("proyecto.proyecto-disponible", compact("proyectos"));
         /*
@@ -61,7 +62,7 @@ class ProyectoController extends Controller
             'ubicacion' => 'required|string|max:255',
             'id_seccion' => 'required|exists:secciones,id_seccion',
         ]);
-    
+
         try {
             $proyecto = new Proyecto();
             $proyecto->nombre_proyecto = $validatedData['titulo'];
@@ -74,13 +75,13 @@ class ProyectoController extends Controller
             $proyecto->seccion_id = $validatedData['id_seccion']; // Asegúrate de que este campo se guarde
             $proyecto->fecha_inicio = now();
             $proyecto->fecha_fin = now()->addMonths(3);
-            
+
             $proyecto->save();
-    
+
             return redirect()
                 ->back()
                 ->with('success', 'Proyecto creado exitosamente');
-    
+
         } catch (\Exception $e) {
             \Log::error('Error al crear proyecto: ' . $e->getMessage());
             return redirect()
@@ -99,15 +100,15 @@ class ProyectoController extends Controller
     public function edit(string $id)
     {
         $proyecto = Proyecto::find($id);
-        $estados= Estado::all();
-        $estudiantes= Estudiante::all(); 
-        $secciones=Seccion::all();
+        $estados = Estado::all();
+        $estudiantes = Estudiante::all();
+        $secciones = Seccion::all();
         $tutores = User::role('tutor')->get();
         if (!$proyecto) {
             return redirect()->route('proyectos.index')->with('error', 'Proyecto no encontrado');
         }
         // dd($proyecto);
-        return view("proyecto.proyecto-editar", compact('proyecto', 'estados', 'estudiantes','tutores','secciones'));
+        return view("proyecto.proyecto-editar", compact('proyecto', 'estados', 'estudiantes', 'tutores', 'secciones'));
     }
 
     public function update(Request $request, $id)
@@ -122,7 +123,7 @@ class ProyectoController extends Controller
         ]);
 
         $proyecto = Proyecto::find($id);
-        
+
         if (!$proyecto) {
             return redirect()->route('proyectos.index')->with('error', 'Proyecto no encontrado');
         }
@@ -130,7 +131,7 @@ class ProyectoController extends Controller
         $proyecto->update($data);
         return redirect()->route('proyectos.index')->with('success', 'Proyecto actualizado con éxito');
     }
-    
+
     public function asignarEstudiante(Request $request, $idProyecto)
     {
         $request->validate([
@@ -139,24 +140,24 @@ class ProyectoController extends Controller
             'idEstudiante.exists' => 'El estudiante seleccionado no existe en la base de datos.',
             'idEstudiante.required' => 'El estudiante no esta registrado.',
         ]);
-    
+
         // Buscar al estudiante por id
         $estudiante = Estudiante::find($request->idEstudiante);
-    
+
         if (!$estudiante) {
             return back()->withErrors(['El estudiante no existe.']);
         }
-    
+
         // Buscar el proyecto y asociar al estudiante
         $proyecto = Proyecto::findOrFail($idProyecto);
-    
+
         // // Verificar si el estudiante ya está asignado
-         if (!$proyecto->estudiantes->contains($estudiante->id_estudiante)) {
-             $proyecto->estudiantes()->attach($estudiante->id_estudiante);
-         } else {
-             return back()->withErrors(['El estudiante ya está asignado a este proyecto.']);
-         }
-    
+        if (!$proyecto->estudiantes->contains($estudiante->id_estudiante)) {
+            $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+        } else {
+            return back()->withErrors(['El estudiante ya está asignado a este proyecto.']);
+        }
+
         return back()->with('success', 'Estudiante asignado correctamente.');
     }
     public function eliminarEstudiante($proyectoId, $estudianteId)
@@ -180,13 +181,13 @@ class ProyectoController extends Controller
             'estado' => 'required|integer|exists:estados,id_estado',
             'seccion_id' => 'required|string|exists:secciones,id_seccion',
         ]);
-    
+
         $tutor = User::find($request->idTutor);
-    
+
         if ($validatedData['idTutor'] && !$tutor) {
             return redirect()->back()->withErrors(['tutor' => 'El tutor ingresado no existe.']);
         }
-    
+
         $proyecto = Proyecto::findOrFail($id);
         $proyecto->update([
             'nombre_proyecto' => $validatedData['nombre_proyecto'],
@@ -197,7 +198,7 @@ class ProyectoController extends Controller
             'estado' => $validatedData['estado'],
             'seccion_id' => $validatedData['seccion_id'],
         ]);
-    
+
         return redirect()->route('proyecto-g')->with('success', 'Proyecto actualizado correctamente.');
     }
 
@@ -205,7 +206,7 @@ class ProyectoController extends Controller
     {
         $action = $request->input('action');
         $proyectos = $request->input('proyectos', []);
-    
+
         switch ($action) {
             case 'pdf':
                 return $this->generarPDF($proyectos);
@@ -372,7 +373,7 @@ class ProyectoController extends Controller
             'labels' => ['En Progreso', 'Completados', 'En Revisión'],
             'data' => [$datos->en_progreso, $datos->completados, $datos->en_revision],
         ]);
-    } 
+    }
 
     public function obtenerEstudiantesYProyectosPorFecha()
     {
@@ -403,7 +404,7 @@ class ProyectoController extends Controller
 
         return response()->json($data);
 
-        
+
     }
 
     //retorna vista gertor de TI
@@ -417,14 +418,15 @@ class ProyectoController extends Controller
         return view('proyecto.solicitud-proyecto');
     }
 
-    public function proyecto__disponible_list(){
+    public function proyecto__disponible_list()
+    {
         return view('proyecto.proyecto-disponible-list');
     }
 
     public function proyectosDisponibles()
     {
-        $proyectos = Proyecto::where('estado', 1) 
-            ->with(['tutorr', 'estadoo']) 
+        $proyectos = Proyecto::where('estado', 1)
+            ->with(['tutorr', 'estadoo'])
             ->get(['id_proyecto', 'nombre_proyecto', 'tutor', 'lugar', 'fecha_inicio', 'fecha_fin', 'estado']);
 
         return response()->json($proyectos);
@@ -432,7 +434,7 @@ class ProyectoController extends Controller
 
     public function obtenerProyectosDashboard()
     {
-        $proyectos = Proyecto::where('estado', 1) 
+        $proyectos = Proyecto::where('estado', 1)
             ->get(['id_proyecto', 'nombre_proyecto', 'descripcion_proyecto', 'horas_requeridas', 'estado']);
 
         return view('estudiantes.dashboard', compact('proyectos'));
@@ -450,18 +452,18 @@ class ProyectoController extends Controller
         try {
             // Primero debug del ID recibido
             \Log::info('ID recibido: ' . $id);
-    
+
             // Buscar el proyecto
             $proyecto = Proyecto::with(['seccion.departamento'])->findOrFail($id);
-            
+
             // Debug del proyecto encontrado
             \Log::info('Proyecto encontrado:', $proyecto->toArray());
-    
+
             // Intentar ambas formas de pasar la variable
             return view('proyecto.detalle-proyecto')
                 ->with('proyecto', $proyecto)
                 ->with('debug', true);
-                
+
         } catch (\Exception $e) {
             \Log::error('Error en mostrarDetalle: ' . $e->getMessage());
             return back()->with('error', 'Proyecto no encontrado');
@@ -470,36 +472,71 @@ class ProyectoController extends Controller
 
     //editar
     public function edit_proyecto($id)
-{
-    $proyecto = Proyecto::findOrFail($id);
-    $departamentos = Departamento::all();
-    $secciones = Seccion::all();
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        $departamentos = Departamento::all();
+        $secciones = Seccion::all();
 
-    return view('proyecto.editar-proyecto', compact('proyecto', 'departamentos', 'secciones'));
+        return view('proyecto.editar-proyecto', compact('proyecto', 'departamentos', 'secciones'));
+    }
+
+    public function update_proyecto(Request $request, $id)
+    {
+        $data = $request->validate([
+            'titulo' => 'required|string|max:255',
+            'descripcion' => 'required|string|max:1000',
+            'ubicacion' => 'required|string|max:255',
+            'horas' => 'required|integer|min:1',
+            'id_seccion' => 'required|exists:secciones,id_seccion',
+        ]);
+
+        $proyecto = Proyecto::findOrFail($id);
+
+
+        $proyecto->update([
+            'nombre_proyecto' => $data['titulo'],
+            'descripcion_proyecto' => $data['descripcion'],
+            'lugar' => $data['ubicacion'],
+            'horas_requeridas' => $data['horas'],
+            'id_seccion' => $data['id_seccion'],
+        ]);
+
+        return redirect()->route('proyecto-disponible')->with('success', 'Proyecto actualizado con éxito');
+
+    }
+
+
+    public function obtenerDetalleProyecto($id)
+    {
+        try {
+            $proyecto = Proyecto::with(['seccion.departamento'])->findOrFail($id);
+            return view('proyecto.detalle-proyecto', compact('proyecto'));
+        } catch (\Exception $e) {
+            \Log::error('Error en obtenerDetalleProyecto: ' . $e->getMessage());
+            return back()->with('error', 'Proyecto no encontrado');
+        }
+    }
+
+    public function descargarPDF($id)
+    {
+        $proyecto = Proyecto::with('seccion')->findOrFail($id);
+
+        $nombreArchivo = str_replace(' ', '_', $proyecto->nombre_proyecto) . '.pdf';
+
+        $pdf = Pdf::loadView('proyecto.pdf_proyecto', compact('proyecto'));
+        return $pdf->download($nombreArchivo);
+    }
+    public function GetTutoresPorSeccion($id)
+    {
+        $tutoresSeccion = DB::table('seccion_tutor')
+            ->join('users', 'seccion_tutor.id_tutor', '=', 'users.id_usuario')
+            ->select('users.id_usuario', 'users.name')
+            ->where('seccion_tutor.id_seccion', $id)
+            ->get();
+        return response()->json($tutoresSeccion);
+    }
 }
 
-public function update_proyecto(Request $request, $id)
-{
-    $data = $request->validate([
-        'titulo' => 'required|string|max:255',
-        'descripcion' => 'required|string|max:1000', // Ajusta el máximo si necesitas más texto
-        'ubicacion' => 'required|string|max:255',
-        'horas' => 'required|integer|min:1',
-        'id_seccion' => 'required|exists:secciones,id_seccion',
-    ]);
 
-    $proyecto = Proyecto::findOrFail($id); // Esto lanza un error 404 si no encuentra el proyecto
 
-    // Actualizar el proyecto con los datos validados
-    $proyecto->update([
-        'nombre_proyecto' => $data['titulo'],
-        'descripcion_proyecto' => $data['descripcion'],
-        'lugar' => $data['ubicacion'],
-        'horas_requeridas' => $data['horas'],
-        'id_seccion' => $data['id_seccion'],
-    ]);
-
-    return redirect()->route('proyecto-disponible')->with('success', 'Proyecto actualizado con éxito');
-}
-}
 

@@ -34,7 +34,7 @@ class DocumentosSeeder extends Seeder
             'Formulario Nº 8 Formulario 3-5 Para El MINED.docx',
             'Informe del 50% del Servicio Social.docx',
             'Informe del 100% del Servicio Social.docx',
-            'MANUALDEPROYECCIONSOCIAL.doc',
+            'Manual de proyeccion social.doc',
             'MODELO DE CARTA A LA INSTITUCION QUE SOLICITA ESTUDIANTES EN SERVICIO SOCIAL.docx',
             'Modelo de Certificación.docx',
         ];

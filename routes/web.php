@@ -29,7 +29,7 @@ Route::get('/', function () {
 
 Route::get('/prys', function () {
     return view('estudiantes.documentos-sociales');
-});
+})->name('documentos');
 
 Route::get('/hrs', function () {
     return view('estudiantes.actualizar-horas');
@@ -90,6 +90,12 @@ Route::get('/proyecto/{id}/editar_proyecto',[ProyectoController::class, 'edit_pr
 //Update proyecto 
 Route::put('/proyectos/{id}/update_proyecto', [ProyectoController::class, 'update_proyecto'])->name('proyectos.proyectos_update');
 
+//Mostrar los detalle de los proyectos 
+// En routes/web.php
+Route::get('/proyecto/{id}/detalle', [ProyectoController::class, 'obtenerDetalleProyecto'])->name('obtener-detalle');
+
+// En routes/web.php
+Route::get('/proyecto/{id}/descargar-pdf', [ProyectoController::class, 'descargarPDF'])->name('proyecto.descargar-pdf');
 
 //Mostrar los departamentos en publicar proyectos
 Route::get('/proyecto', [ProyectoController::class, 'retornar_departamentos'])->name('proyecto');
@@ -357,5 +363,7 @@ Route::get('/descargar/{filename}', function ($filename) {
         abort(404, 'Archivo no encontrado.');
     }
 })->name('descargar');
+
+Route::get('/obtener-tutores-por-seccion/{id}', [ProyectoController::class, 'GetTutoresPorSeccion']);
 ?>
 
