@@ -60,6 +60,10 @@ public function departamento()
         return $this->belongsTo(Estado::class,'estado','id_estado', 'estado', 'id_estado');
     }
 
+    public function estadoos()
+{
+    return $this->belongsTo(Estado::class, 'estado', 'id_estado');
+}
     public function coordinadorr()
     {
         return $this->belongsTo(User::class, 'coordinador', 'id_usuario');
