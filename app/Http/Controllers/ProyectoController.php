@@ -40,8 +40,8 @@ class ProyectoController extends Controller
     }*/
     public function index()
     {
-        //$proyectos = Proyecto::where('estado', 'En Revisión')->get();
-        $proyectos = Proyecto::All();
+        $proyectos = Proyecto::where('estado', 'Solicitud')->get();
+        //$proyectos = Proyecto::All();
 
         // Retorna la vista con los proyectos
         return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
@@ -100,6 +100,7 @@ class ProyectoController extends Controller
                 ->with('error', 'Error al crear el proyecto. Por favor intente nuevamente.');
         }
     }
+
 
     public function show(string $id)
     {

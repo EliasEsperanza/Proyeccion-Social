@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     emailInput.addEventListener('input', function() {
         const valor = this.value.trim();
         //const esCorreoUES = /^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/.test(valor);
-        const esCorreoUES = /^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/.test(valor);
+        const esCorreoUES = /^[a-zA-Z0-9._%+-]+@example.com$/.test(valor);
         if (!valor) {
             showFeedback(this, false, 'El correo es obligatorio');
         } else if (!esCorreoUES) {

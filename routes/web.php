@@ -228,10 +228,9 @@ Route::controller(EstudianteController::class)
 //         Route::delete('/{id}', 'destroy')->name('destroy'); 
 //     });
 
-    Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
 
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'create'])->name('solicitud_proyecto.create');
-Route::post('/solicitud-proyecto', [ProyectoController::class, 'store'])->name('solicitud_proyecto.store');
+Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
 
 // Rutas de recuperación y reseteo de contraseña
 Route::get('/recuperarpassword', function () {
