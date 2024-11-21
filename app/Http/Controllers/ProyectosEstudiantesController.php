@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Estudiante;
 use App\Models\ProyectosEstudiantes;
 use Illuminate\Http\Request;
-use App\Models\Estudiante;
+
 use App\Models\Proyecto;
 
 class ProyectosEstudiantesController extends Controller
@@ -136,16 +136,21 @@ class ProyectosEstudiantesController extends Controller
     }
 
     public function Solicitud_Proyecto_Student()
-    {
-        $estudianteId = auth()->user()->id_estudiante;
+{
+    // Obtener el ID del usuario autenticado
+    $estudianteId = auth()->user()->id_usuario;
 
-        // prueba CON ID 2
-        $proyectoEstudiante = Estudiante::where('id_seccion','estudianteId')
-            ->with('proyecto')
-            ->get()->first();
-
-        return view('estudiantes.solicitud-proyecto',compact('proyectoEstudiante'));
+    // Obtener el ID de la sección del estudiante autenticado
+    $estudiante = Estudiante::where('id_usuario', $estudianteId)->first();
+    
+    if ($estudiante) {
+        $seccion_id = $estudiante->id_seccion;
+        $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
+        return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
     }
+    return redirect()->route('home')->with('error', 'Estudiante no encontrado');
+}
+
 
     public function Procesos()
     {

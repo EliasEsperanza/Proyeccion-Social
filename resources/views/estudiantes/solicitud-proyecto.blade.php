@@ -25,11 +25,12 @@
                         <select class="form-control" id="nombreEstudiante">
                             <option selected disabled>Seleccione un estudiante</option>
                         </select>
-                        <ul class="mt-3" id="estudiantesList">
-                            <!-- Aquí se añadirán los estudiantes -->
-                        </ul>
+
                         <button type="button" class="btn btn-primary btn-gestion fw-bold" onclick="agregarEstudiante()">Agregar estudiante</button>
                     </div>
+                    <ul class="mt-3" id="estudiantesList">
+                            <!-- Aquí se añadirán los estudiantes -->
+                        </ul>
                 </div>
 
                 <div class="mb-3">
