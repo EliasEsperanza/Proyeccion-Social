@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\ProyectosEstudiantes;
 use Illuminate\Http\Request;
+use App\Models\Estudiante;
+use App\Models\Proyecto;
 
 class ProyectosEstudiantesController extends Controller
 {
@@ -134,7 +136,19 @@ class ProyectosEstudiantesController extends Controller
 
     public function Solicitud_Proyecto_Student()
     {
-        return view('estudiantes.solicitud-proyecto');
+        $ListProyecto = Proyecto::with([
+            'seccion.departamento',
+            'estudiantes',
+            'coordinadorr',
+            'tutorr.seccionesTutoreadas',
+            'estadoo'
+        ])
+        ->whereHas('estadoo', function ($query) {
+            $query->where('nombre_estado', '=', 'Disponible');
+        })
+        ->get();
+        $estudiantes = Estudiante::all();
+        return view('estudiantes.solicitud-proyecto', compact('estudiantes','ListProyecto'));
     }
 
     public function Procesos()

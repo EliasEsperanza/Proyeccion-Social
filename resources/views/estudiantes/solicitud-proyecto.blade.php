@@ -18,23 +18,23 @@
                     <label for="nombreProyecto" class="form-label">Nombre del Proyecto</label>
                     <input type="text" class="form-control" id="nombreProyecto" placeholder="Nombre del Proyecto">
                 </div>
+                <select class="form-select" id="nombreEstudiante" name="idEstudiante">
+                    @foreach ($estudiantes as $estudiante)
+                        <option value="{{ $estudiante->id_estudiante }}">
+                            {{ $estudiante->usuario->name }}
+                        </option>
+                    @endforeach
+                </select>                
+                <button type="button" class="btn btn-light btn-sm p-2 px-3" onclick="agregarEstudiante()">
+                    <i class="bi bi-plus"></i>
+                </button>
+                <ul id="listaEstudiantes" class="list-unstyled"></ul>
 
-                <div class="mb-4">
-                    <label for="nombreEstudiante" class="form-label">Estudiantes</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="nombreEstudiante" placeholder="Nombre del estudiante">
-                        <button type="button" class="btn btn-danger">Agregar estudiante</button>
-                    </div>
-                    <ul class="mt-3">
-                        <li>Kevin Nathanael Granados Perez</li>
-                        <li>Carlos Orlando Del Cid</li>
-                        <li>Edars Ariel Viera Lazo</li>
-                    </ul>
-                </div>
 
                 <div class="mb-5">
                     <label for="descripcion" class="form-label">Descripción del proyecto</label>
-                    <textarea class="form-control" id="descripcion" rows="4" placeholder="Descripción del proyecto"></textarea>
+                    <textarea class="form-control" id="descripcion" rows="4"
+                        placeholder="Descripción del proyecto"></textarea>
                 </div>
 
                 <div class="row mb-5">
@@ -69,5 +69,48 @@
         .catch(error => {
             console.error(error);
         });
+
+    function agregarEstudiante() {
+    const selectEstudiantes = document.getElementById('nombreEstudiante');
+    const listaEstudiantes = document.getElementById('listaEstudiantes');
+    const estudianteId = selectEstudiantes.value;
+    const estudianteNombre = selectEstudiantes.options[selectEstudiantes.selectedIndex]?.text;
+
+    if (!estudianteId) {
+        alert('Seleccione un estudiante antes de agregar.');
+        return;
+    }
+
+    const estudianteYaAgregado = Array.from(listaEstudiantes.children).some(li => li.dataset.id === estudianteId);
+    if (estudianteYaAgregado) {
+        alert('Este estudiante ya ha sido agregado.');
+        return;
+    }
+
+    const li = document.createElement('li');
+    li.textContent = estudianteNombre;
+    li.dataset.id = estudianteId;
+
+    const btnEliminar = document.createElement('button');
+    btnEliminar.className = 'btn btn-danger btn-sm ms-2 bi bi-trash';
+    btnEliminar.onclick = () => {
+        li.remove();
+
+        const optionYaExiste = Array.from(selectEstudiantes.options).some(option => option.value === estudianteId);
+        if (!optionYaExiste) {
+            const option = document.createElement('option');
+            option.value = estudianteId;
+            option.textContent = estudianteNombre;
+            selectEstudiantes.appendChild(option);
+
+            sortSelectOptions(selectEstudiantes);
+        }
+    };
+
+    li.appendChild(btnEliminar);
+    listaEstudiantes.appendChild(li);
+
+    selectEstudiantes.value = '';
+}
 </script>
 @endsection
