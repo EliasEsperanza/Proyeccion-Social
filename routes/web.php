@@ -27,6 +27,8 @@ Route::get('/', function () {
     return view('login.login');
 })->name('login');
 
+Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
+
 Route::get('/prys', function () {
     return view('estudiantes.documentos-sociales');
 })->name('documentos');
@@ -227,6 +229,9 @@ Route::controller(EstudianteController::class)
 //     });
 
     Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
+
+Route::get('/solicitud-proyecto', [ProyectoController::class, 'create'])->name('solicitud_proyecto.create');
+Route::post('/solicitud-proyecto', [ProyectoController::class, 'store'])->name('solicitud_proyecto.store');
 
 // Rutas de recuperación y reseteo de contraseña
 Route::get('/recuperarpassword', function () {
