@@ -96,7 +96,9 @@ class ProyectosEstudiantesController extends Controller
     {
         $estudianteId = auth()->user()->id_estudiante; // Asegúrate de que el usuario autenticado tiene este atributo.
 
-        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', 3)
+        //$proyectoEstudiante = ProyectosEstudiantes::where(column: 'id_estudiante', estudianteId)
+        // prueba
+        $proyectoEstudiante = ProyectosEstudiantes::where(column: 'id_estudiante', 3)
             ->with('proyecto')
             ->get()->first();
 
@@ -114,9 +116,9 @@ class ProyectosEstudiantesController extends Controller
     //retorna vista solicitud de proyecto
     public function Mi_proyecto()
     {
-        $estudianteId = auth()->user()->id_estudiante; // Asegúrate de que el usuario autenticado tiene este atributo.
-
-        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', 3)
+        //$proyectoEstudiante = ProyectosEstudiantes::where(column: 'id_estudiante', estudianteId)
+        // prueba
+        $proyectoEstudiante = ProyectosEstudiantes::where(column: 'id_estudiante', 3)
             ->with('proyecto')
             ->get()->first();
 
