@@ -10,6 +10,22 @@
 
 @section('content')
 
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="container ">
     
     <div class="container">
@@ -17,15 +33,8 @@
     
         <div class="card w-100">
             <div class="card-body">
-            <form action="" method="POST">
+            <form action="{{ route('proyectos.asignar') }}" method="POST">
                     @csrf
-            <div class="mb-3">
-                <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
-                <select class="form-select" id="proyectosDisponibles" name="proyecto_id">
-                    <option selected disabled>Seleccione un proyecto</option>
-                </select>
-            </div>
-            
             <div class="mb-3">
                 <label class="form-label">Sección o Departamento</label>
                 <div class="input-group mb-3">
@@ -34,6 +43,15 @@
                     </select>
                 </div>
             </div>
+
+            <div class="mb-3">
+                <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
+                <select class="form-select" id="proyectosDisponibles" name="proyecto_id">
+                    <option selected disabled>Seleccione un proyecto</option>
+                </select>
+            </div>
+            
+            
 
             <div class="mb-3">
                 <label class="form-label">Estudiantes</label>
@@ -84,7 +102,7 @@
                     </select>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Crear Proyecto</button>
+            <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Asignar Proyecto</button>
         </form> 
 
             </div>
@@ -95,6 +113,8 @@
 <script src="{{ asset('js/gestionProyecto.js') }}"></script>
 
 <script>
+
+    
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/secciones-disponibles')
         .then(response => response.json())
@@ -114,14 +134,12 @@ document.getElementById('seccion').addEventListener('change', function () {
     const idSeccion = this.value;
     const selectEstudiantes = document.getElementById('nombreEstudiante');
     const selectTutores = document.getElementById('tutor');
-
-    // Limpiar estudiantes
-    selectEstudiantes.innerHTML = '<option selected disabled>Seleccione un estudiante</option>';
+    const selectProyectos = document.getElementById('proyectosDisponibles');
     
-    // Limpiar tutores
+    selectEstudiantes.innerHTML = '<option selected disabled>Seleccione un estudiante</option>';
     selectTutores.innerHTML = '<option selected disabled>Seleccione un tutor</option>';
+    selectProyectos.innerHTML = '<option selected disabled>Seleccione un proyecto</option>';
 
-    // Fetch estudiantes por sección (código existente)
     fetch(`/estudiantes-por-seccion/${idSeccion}`)
         .then(response => response.json())
         .then(estudiantes => {
@@ -131,17 +149,14 @@ document.getElementById('seccion').addEventListener('change', function () {
                 option.textContent = estudiante.usuario.name;
                 selectEstudiantes.appendChild(option);
             });
-
             sortSelectOptions(selectEstudiantes);
         })
         .catch(error => console.error('Error al cargar estudiantes:', error));
 
-    // Nuevo fetch para cargar tutores por sección
     fetch(`/obtener-tutores-por-seccion/${idSeccion}`)
         .then(response => response.json())
         .then(tutores => {
             tutores.forEach(tutor => {
-                console.log(tutor);
                 const option = document.createElement('option');
                 option.value = tutor.id_tutor;                
                 option.textContent = tutor.name || `Tutor ${tutor.id_usuario}`;
@@ -150,8 +165,33 @@ document.getElementById('seccion').addEventListener('change', function () {
             sortSelectOptions(selectTutores);
         })
         .catch(error => console.error('Error al cargar tutores:', error));
-});
 
+    fetch(`/proyectos-por-seccion/${idSeccion}`)
+        .then(response => response.json())
+        .then(proyectos => {
+            proyectos.forEach(proyecto => {
+                const option = document.createElement('option');
+                option.value = proyecto.id_proyecto;
+                option.textContent = proyecto.nombre_proyecto;
+
+                option.dataset.tutor = proyecto.tutorr?.name || 'No asignado';
+                option.dataset.ubicacion = proyecto.lugar;
+                option.dataset.fechaInicio = proyecto.fecha_inicio;
+                option.dataset.fechaFin = proyecto.fecha_fin;
+                option.dataset.estado = proyecto.estadoo?.nombre_estado || 'No definido';
+
+                selectProyectos.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error al cargar proyectos:', error));
+});
+document.querySelector('form').addEventListener('submit', function(e) {
+    const selectedStudentIds = Array.from(document.querySelectorAll('#listaEstudiantes li'))
+        .map(li => li.dataset.id);
+    
+    console.log('Selected Student IDs:', selectedStudentIds);
+    document.getElementById('estudiantesSeleccionados').value = JSON.stringify(selectedStudentIds);
+});
 function agregarEstudiante() {
     const selectEstudiantes = document.getElementById('nombreEstudiante');
     const listaEstudiantes = document.getElementById('listaEstudiantes');
