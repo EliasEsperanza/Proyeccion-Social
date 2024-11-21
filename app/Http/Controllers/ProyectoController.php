@@ -371,13 +371,28 @@ class ProyectoController extends Controller
 
     public function obtenerDatosGrafico()
     {
-        $datos = DB::table('proyectos')
-            ->selectRaw("
-                COUNT(CASE WHEN estado IN (2, 3, 4) THEN 1 END) as en_progreso,
-                COUNT(CASE WHEN estado IN (5, 7) THEN 1 END) as completados,
-                COUNT(CASE WHEN estado IN (1, 8, 9) THEN 1 END) as en_revision
-            ")
-            ->first();
+        $user = Auth::user(); 
+
+        if ($user->hasRole('Tutor')) {
+            $datos = DB::table('asignaciones')
+                ->join('proyectos', 'asignaciones.id_proyecto', '=', 'proyectos.id_proyecto')
+                ->selectRaw("
+                    COUNT(CASE WHEN proyectos.estado IN (2, 3, 4) THEN 1 END) as en_progreso,
+                    COUNT(CASE WHEN proyectos.estado IN (5, 7) THEN 1 END) as completados,
+                    COUNT(CASE WHEN proyectos.estado IN (1, 8, 9) THEN 1 END) as en_revision
+                ")
+                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->first();
+        } else {
+           
+            $datos = DB::table('proyectos')
+                ->selectRaw("
+                    COUNT(CASE WHEN estado IN (2, 3, 4) THEN 1 END) as en_progreso,
+                    COUNT(CASE WHEN estado IN (5, 7) THEN 1 END) as completados,
+                    COUNT(CASE WHEN estado IN (1, 8, 9) THEN 1 END) as en_revision
+                ")
+                ->first();
+        }
 
         return response()->json([
             'labels' => ['En Progreso', 'Completados', 'En Revisión'],
@@ -387,17 +402,37 @@ class ProyectoController extends Controller
 
     public function obtenerEstudiantesYProyectosPorFecha()
     {
-        $estudiantesPorFecha = DB::table('estudiantes')
-            ->selectRaw('DATE(created_at) as fecha, COUNT(*) as total_estudiantes')
-            ->groupBy('fecha')
-            ->orderBy('fecha', 'asc')
-            ->get();
+        $user = Auth::user(); 
 
-        $proyectosPorFecha = DB::table('proyectos')
-            ->selectRaw('DATE(created_at) as fecha, COUNT(*) as total_proyectos')
-            ->groupBy('fecha')
-            ->orderBy('fecha', 'asc')
-            ->get();
+        if ($user->hasRole('Tutor')) {
+            $estudiantesPorFecha = DB::table('asignaciones')
+                ->join('estudiantes', 'asignaciones.id_estudiante', '=', 'estudiantes.id_estudiante')
+                ->selectRaw('DATE(asignaciones.fecha_asignacion) as fecha, COUNT(*) as total_estudiantes')
+                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->groupBy('fecha')
+                ->orderBy('fecha', 'asc')
+                ->get();
+
+            $proyectosPorFecha = DB::table('asignaciones')
+                ->join('proyectos', 'asignaciones.id_proyecto', '=', 'proyectos.id_proyecto')
+                ->selectRaw('DATE(asignaciones.fecha_asignacion) as fecha, COUNT(*) as total_proyectos')
+                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->groupBy('fecha')
+                ->orderBy('fecha', 'asc')
+                ->get();
+        } else {
+            $estudiantesPorFecha = DB::table('estudiantes')
+                ->selectRaw('DATE(created_at) as fecha, COUNT(*) as total_estudiantes')
+                ->groupBy('fecha')
+                ->orderBy('fecha', 'asc')
+                ->get();
+
+            $proyectosPorFecha = DB::table('proyectos')
+                ->selectRaw('DATE(created_at) as fecha, COUNT(*) as total_proyectos')
+                ->groupBy('fecha')
+                ->orderBy('fecha', 'asc')
+                ->get();
+        }
 
         $fechas = $estudiantesPorFecha->pluck('fecha')->merge($proyectosPorFecha->pluck('fecha'))->unique()->sort();
 
@@ -413,9 +448,10 @@ class ProyectoController extends Controller
         });
 
         return response()->json($data);
-
-
     }
+
+
+
 
     //retorna vista gertor de TI
     public function gestor_de_TI()
@@ -722,6 +758,21 @@ class ProyectoController extends Controller
         return redirect()->back()->withErrors(['error' => 'Ocurrió un error al asignar el proyecto.']);
     }
 }
+
+    public function totalProyectosAsignados()
+    {
+        $user = Auth::user(); 
+
+        if ($user->hasRole('Tutor')) {
+            $totalProyectosAsignados = Asignacion::where('id_tutor', $user->id_usuario)
+                ->distinct('id_proyecto') 
+                ->count('id_proyecto'); 
+        } else {
+            $totalProyectosAsignados = \App\Models\Proyecto::count();
+        }
+
+        return $totalProyectosAsignados;
+    }
 }
 
 
