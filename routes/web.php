@@ -21,6 +21,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Estado;
+use App\Models\Proyecto;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
@@ -130,9 +131,23 @@ Route::get('/proyecto/{id}/editar',[ProyectoController::class, 'edit'], function
 })->middleware('auth')->name('proyecto.proyecto-editar');
 
 Route::post('/proyectos/{proyecto}/asignar-estudiantes', [ProyectoController::class, 'asignarEstudiante'])->name('proyectos.asignarEstudiante');
+Route::post('/proyectos/{proyecto}/asignar-estudiantes-gestion', [ProyectoController::class, 'asignarEstudianteGestion'])->name('proyectos.asignarEstudianteGestion');
 Route::delete('/proyectos/{proyecto}/eliminar-estudiante/{estudiante}', [ProyectoController::class, 'eliminarEstudiante'])->name('proyectos.eliminarEstudiante');
 Route::put('/proyectos/{proyecto}/actualizar', [ProyectoController::class, 'actualizar'])->name('proyectos.actualizar');
-Route::post('/proyectos/asignar', [ProyectoController::class, 'asignarProyecto'])->name('proyectos.asignar');
+Route::post('/proyectos/asignar', [ProyectoController::class, 'asignarProyecto'])->name('proyectos.asignar');Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
+
+Route::get('/proyectos/{proyecto}/estudiantes', function ($proyectoId) {
+    $proyecto = Proyecto::with('estudiantes.usuario')->findOrFail($proyectoId);
+    return response()->json([
+        'estudiantes' => $proyecto->estudiantes->map(function ($estudiante) {
+            return [
+                'id_estudiante' => $estudiante->id_estudiante,
+                'usuario' => ['name' => $estudiante->usuario->name],
+            ];
+        }),
+        'csrfToken' => csrf_token(),
+    ]);
+});
 
 Route::get('/mensajeria', [UserController::class, 'show'])
     ->middleware('auth')
@@ -141,7 +156,7 @@ Route::get('/mensajeria', [UserController::class, 'show'])
 Route::get('/api/users', [UserController::class, 'getUsers']);
 
 
-Route::get('/gestion-proyecto', function () {
+Route::get('/gestion-proyecto',[ProyectoController::class, 'edit_gestion_proyecto'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Coordinador', 'Administrador'])) {
         $estados = Estado::orderBy('nombre_estado', 'asc')->get();
 
@@ -375,4 +390,3 @@ Route::get('/descargar/{filename}', function ($filename) {
 
 Route::get('/obtener-tutores-por-seccion/{id}', [ProyectoController::class, 'GetTutoresPorSeccion']);
 ?>
-

@@ -114,12 +114,39 @@ class ProyectoController extends Controller
         $estados = Estado::all();
         $estudiantes = Estudiante::all();
         $secciones = Seccion::all();
-        $tutores = User::role('tutor')->get();
+        $tutores = User::role('tutor') 
+        ->whereHas('seccionesTutoreadas')
+        ->with('seccionesTutoreadas')
+        ->get();
         if (!$proyecto) {
             return redirect()->route('proyectos.index')->with('error', 'Proyecto no encontrado');
         }
-        // dd($proyecto);
         return view("proyecto.proyecto-editar", compact('proyecto', 'estados', 'estudiantes', 'tutores', 'secciones'));
+    }
+    public function edit_gestion_proyecto()
+    {
+        $proyectos = Proyecto::with([
+            'seccion.departamento',
+            'estudiantes',
+            'coordinadorr',
+            'tutorr.seccionesTutoreadas',
+            'estadoo'
+        ])
+            ->whereHas('estadoo', function ($query) {
+                $query->where('nombre_estado', '=', 'Disponible');
+            })
+            ->get();
+        $estados = Estado::all();
+        $estudiantes = Estudiante::all();
+        $secciones = Seccion::all();
+        $tutores = User::role('tutor') 
+        ->whereHas('seccionesTutoreadas')
+        ->with('seccionesTutoreadas')
+        ->get();
+        if (!$proyectos) {
+            return redirect()->route('gestionProyectos.gestionProyectos')->with('error', 'Proyecto no encontrado');
+        }
+        return view("gestionProyectos.gestionProyectos", compact('proyectos', 'estados', 'estudiantes', 'tutores', 'secciones'));
     }
 
     public function update(Request $request, $id)
@@ -170,6 +197,35 @@ class ProyectoController extends Controller
         }
 
         return back()->with('success', 'Estudiante asignado correctamente.');
+    }
+    public function gestionActualizar(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'idTutor' => 'required|string|exists:users,id_usuario',
+            'lugar' => 'nullable|string|max:255',
+            'fecha_inicio' => 'nullable|date',
+            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+            'estado' => 'required|integer|exists:estados,id_estado',
+            'seccion_id' => 'required|string|exists:secciones,id_seccion',
+        ]);
+
+        $tutor = User::find($request->idTutor);
+
+        if ($validatedData['idTutor'] && !$tutor) {
+            return redirect()->back()->withErrors(['tutor' => 'El tutor ingresado no existe.']);
+        }
+
+        $proyecto = Proyecto::findOrFail($id);
+        $proyecto->update([
+            'tutor' => $tutor->id_usuario ?? null,
+            'lugar' => $validatedData['lugar'],
+            'fecha_inicio' => $validatedData['fecha_inicio'],
+            'fecha_fin' => $validatedData['fecha_fin'],
+            'estado' => $validatedData['estado'],
+            'seccion_id' => $validatedData['seccion_id'],
+        ]);
+
+        return redirect()->route('gestion-proyecto')->with('success', 'Proyecto actualizado correctamente.');
     }
     public function eliminarEstudiante($proyectoId, $estudianteId)
     {
@@ -693,89 +749,4 @@ class ProyectoController extends Controller
             ->get();
         return response()->json($tutoresSeccion);
     }
-    public function asignarProyecto(Request $request)
-{
-    \Log::info('Request Data:', $request->all());
-
-    // Manually decode estudiantes if it's a JSON string
-    $estudiantes = is_string($request->input('estudiantes')) 
-        ? json_decode($request->input('estudiantes'), true) 
-        : $request->input('estudiantes');
-
-    // Merge the decoded estudiantes back into the request
-    $request->merge(['estudiantes' => $estudiantes]);
-
-    // Validate with more explicit error messages
-    $validatedData = $request->validate([
-        'seccion_id' => 'required|exists:secciones,id_seccion',
-        'proyecto_id' => 'required|exists:proyectos,id_proyecto',
-        'estudiantes' => 'required|array|min:1',
-        'tutor_id' => [
-            'required', 
-            'exists:users,id_usuario'
-        ],
-        'estado_id' => 'required|exists:estados,id',
-    ], [
-        'estudiantes.required' => 'Debe seleccionar al menos un estudiante.',
-        'tutor_id.required' => 'Debe seleccionar un tutor.',
-        'tutor_id.exists' => 'El tutor seleccionado no es válido.',
-        'estado_id.required' => 'Debe seleccionar un estado para el proyecto.',
-    ]);
-
-    // Add additional debugging
-    \Log::info('Validated Data:', $validatedData);
-
-    DB::beginTransaction();
-    dd($validatedData );
-
-    try {
-        // Actualizar información del proyecto
-        $proyecto = Proyecto::findOrFail($validatedData['proyecto_id']);
-        $proyecto->tutor_id = $validatedData['tutor_id'];
-        $proyecto->estado_id = $validatedData['estado_id'];
-        $proyecto->ubicacion = $request->ubicacion ?? $proyecto->ubicacion;
-        $proyecto->fecha_inicio = $request->fecha_inicio ?? $proyecto->fecha_inicio;
-        $proyecto->fecha_fin = $request->fecha_fin ?? $proyecto->fecha_fin;
-        $proyecto->save();
-
-        
-
-
-        foreach ($validatedData['estudiantes'] as $estudianteId) {
-            Asignacion::create([
-                'proyecto_id' => $proyecto->id,
-                'estudiante_id' => $estudianteId,
-            ]);
-        }
-
-        DB::commit();
-
-    
-
-        return redirect()->route('gestion-proyecto')->with('success', 'Proyecto asignado exitosamente.');
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->withErrors(['error' => 'Ocurrió un error al asignar el proyecto.']);
-    }
 }
-
-    public function totalProyectosAsignados()
-    {
-        $user = Auth::user(); 
-
-        if ($user->hasRole('Tutor')) {
-            $totalProyectosAsignados = Asignacion::where('id_tutor', $user->id_usuario)
-                ->distinct('id_proyecto') 
-                ->count('id_proyecto'); 
-        } else {
-            $totalProyectosAsignados = \App\Models\Proyecto::count();
-        }
-
-        return $totalProyectosAsignados;
-    }
-}
-
-
-
-
