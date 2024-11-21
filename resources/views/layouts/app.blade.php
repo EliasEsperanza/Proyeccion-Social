@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboardStyle.css') }}">
     <link rel="stylesheet" href="{{ asset(path: 'css/mensaje.css')}}">
+    <link rel="stylesheet" href="{{ asset(path: 'css/soliproyecto.css')}}">
     @yield('styles')
     
 </head>
