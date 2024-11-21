@@ -136,19 +136,26 @@ class ProyectosEstudiantesController extends Controller
     }
 
     public function Solicitud_Proyecto_Student()
-{
-    // Obtener el ID del usuario autenticado
-    $estudianteId = auth()->user()->id_usuario;
+    {
+        // Obtener el ID del usuario autenticado
+        $estudianteId = auth()->user()->id_usuario;
 
-    // Obtener el ID de la sección del estudiante autenticado
-    $estudiante = Estudiante::where('id_usuario', $estudianteId)->first();
-    
-    if ($estudiante) {
-        $seccion_id = $estudiante->id_seccion;
-        $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
-        return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
-    }
-    return redirect()->route('home')->with('error', 'Estudiante no encontrado');
+        // Obtener el ID de la sección del estudiante autenticado
+        $estudiante = Estudiante::where('id_usuario', $estudianteId)->first();
+        
+        if ($estudiante) {
+            $tieneProyecto = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
+                ->exists();
+
+            if ($tieneProyecto) {
+                return "tiene proyecto";
+            }
+
+            $seccion_id = $estudiante->id_seccion;
+            $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
+            
+            return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
+        }
 }
 
 
