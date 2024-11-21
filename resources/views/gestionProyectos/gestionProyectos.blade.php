@@ -183,7 +183,13 @@ document.getElementById('seccion').addEventListener('change', function () {
         })
         .catch(error => console.error('Error al cargar proyectos:', error));
 });
-
+document.querySelector('form').addEventListener('submit', function(e) {
+    const selectedStudentIds = Array.from(document.querySelectorAll('#listaEstudiantes li'))
+        .map(li => li.dataset.id);
+    
+    console.log('Selected Student IDs:', selectedStudentIds);
+    document.getElementById('estudiantesSeleccionados').value = JSON.stringify(selectedStudentIds);
+});
 function agregarEstudiante() {
     const selectEstudiantes = document.getElementById('nombreEstudiante');
     const listaEstudiantes = document.getElementById('listaEstudiantes');
