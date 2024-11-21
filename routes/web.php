@@ -28,6 +28,8 @@ Route::get('/', function () {
 })->name('login');
 
 Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
+Route::get('/proyectos-solicitudes', [ProyectoController::class, 'solicitudes_coordinador'])->name('solicitudes_coordinador');
+
 
 Route::get('/prys', function () {
     return view('estudiantes.documentos-sociales');
