@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Estudiante;
 use App\Models\ProyectosEstudiantes;
 use Illuminate\Http\Request;
+use App\Models\Estudiante;
+use App\Models\Proyecto;
 
 class ProyectosEstudiantesController extends Controller
 {
@@ -148,5 +150,10 @@ class ProyectosEstudiantesController extends Controller
     public function Procesos()
     {
         return view('estudiantes.vista_procesos_horas');
+    }
+
+    public function docs()
+    {
+        return view('estudiantes.docs_tramites');
     }
 }
