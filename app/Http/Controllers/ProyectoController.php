@@ -420,32 +420,136 @@ class ProyectoController extends Controller
 
     public function proyecto__disponible_list()
     {
-        return view('proyecto.proyecto-disponible-list');
+        // Obtener el usuario autenticado
+    $user = auth()->user();
+
+    // Verificar si el usuario tiene el rol de 'Estudiante'
+    if ($user->hasRole('Estudiante')) {
+        // Obtener la sección del estudiante
+        $userSeccion = DB::table('estudiantes')
+            ->where('id_usuario', $user->id_usuario)
+            ->pluck('id_seccion') // Obtener el ID de la sección asignada
+            ->first();
+
+        // Verificar que se encontró la sección
+        if ($userSeccion) {
+            // Filtrar proyectos por la sección y estado
+            $proyectos = Proyecto::where('seccion_id', $userSeccion)
+                ->where('estado', 1) // Solo proyectos disponibles
+                ->get();
+
+            // Retornar la vista con los proyectos filtrados
+            return view('proyecto.proyecto-disponible-list', compact('proyectos'));
+        } else {
+            // Si no hay sección asignada, redirigir con error
+            return redirect()->route('proyectos.disponibles')->with('error', 'No tienes una sección asignada.');
+        }
+    }
+
+    // Si el usuario no tiene el rol 'Estudiante', redirigir con error
+    return redirect()->route('login')->with('error', 'Acceso denegado.');
     }
 
     public function proyectosDisponibles()
     {
-        $proyectos = Proyecto::where('estado', 1)
-            ->with(['tutorr', 'estadoo'])
-            ->get(['id_proyecto', 'nombre_proyecto', 'tutor', 'lugar', 'fecha_inicio', 'fecha_fin', 'estado']);
+        // Obtener el usuario autenticado
+    $user = auth()->user();
 
-        return response()->json($proyectos);
+    // Verificar si el usuario tiene el rol de 'Estudiante'
+    if ($user->hasRole('Estudiante')) {
+        // Obtener la sección asignada al estudiante
+        $userSeccion = DB::table('estudiantes')
+            ->where('id_usuario', $user->id_usuario)
+            ->pluck('id_seccion') // Obtener solo el ID de la sección
+            ->first();
+
+        // Validar que el estudiante tenga una sección asignada
+        if ($userSeccion) {
+            // Filtrar los proyectos por sección
+            $proyectos = Proyecto::where('seccion_id', $userSeccion)
+                ->where('estado', 1) // Solo proyectos disponibles
+                ->with(['tutorr', 'estadoo'])
+                ->get(['id_proyecto', 'nombre_proyecto', 'tutor', 'lugar', 'fecha_inicio', 'fecha_fin', 'estado']);
+
+            return response()->json($proyectos);
+        }
+
+        // Si no tiene sección, devolver una colección vacía como respuesta
+        return response()->json([]);
+    }
+
+    // Si el usuario no tiene el rol 'Estudiante', devolver error de acceso denegado
+    return response()->json(['error' => 'Acceso denegado'], 403);
     }
 
     public function obtenerProyectosDashboard()
     {
-        $proyectos = Proyecto::where('estado', 1)
-            ->get(['id_proyecto', 'nombre_proyecto', 'descripcion_proyecto', 'horas_requeridas', 'estado']);
+        // Obtener el usuario autenticado
+    $user = auth()->user();
 
-        return view('estudiantes.dashboard', compact('proyectos'));
+    // Verificar si el usuario tiene el rol de 'Estudiante'
+    if ($user->hasRole('Estudiante')) {
+        // Obtener la sección asignada al estudiante
+        $userSeccion = DB::table('estudiantes')
+            ->where('id_usuario', $user->id_usuario)
+            ->pluck('id_seccion') // Obtener solo el ID de la sección
+            ->first();
+
+        // Verificar que se encontró la sección
+        if ($userSeccion) {
+            // Filtrar los proyectos por la sección y estado
+            $proyectos = Proyecto::where('seccion_id', $userSeccion)
+                ->where('estado', 1) // Solo proyectos disponibles
+                ->get(['id_proyecto', 'nombre_proyecto', 'descripcion_proyecto', 'horas_requeridas', 'estado']);
+
+            // Retornar la vista con los proyectos filtrados
+            return view('estudiantes.dashboard', compact('proyectos'));
+        }
+
+        // Si no hay sección asignada, redirigir con error
+        return redirect()->route('login')->with('error', 'No tienes una sección asignada.');
+    }
+
+    // Si el usuario no tiene el rol 'Estudiante', redirigir con error
+    return redirect()->route('login')->with('error', 'Acceso denegado.');
     }
 
     public function mostrarProyecto($id)
     {
-        $proyecto = Proyecto::with(['seccion', 'estadoo'])
-            ->findOrFail($id);
+        // Obtener el usuario autenticado
+    $user = auth()->user();
 
-        return view('estudiantes.proyecto-disponibles', compact('proyecto'));
+    // Verificar si el usuario tiene el rol de 'Estudiante'
+    if ($user->hasRole('Estudiante')) {
+        // Obtener la sección asignada al estudiante
+        $userSeccion = DB::table('estudiantes')
+            ->where('id_usuario', $user->id_usuario)
+            ->pluck('id_seccion') // Obtener solo el ID de la sección
+            ->first();
+
+        // Validar que el estudiante tenga una sección asignada
+        if ($userSeccion) {
+            // Filtrar el proyecto por sección
+            $proyecto = Proyecto::with(['seccion', 'estadoo'])
+                ->where('id_proyecto', $id)
+                ->where('seccion_id', $userSeccion)
+                ->first();
+
+            if ($proyecto) {
+                // Si el proyecto pertenece a la sección, mostrarlo
+                return view('estudiantes.proyecto-disponibles', compact('proyecto'));
+            }
+
+            // Si el proyecto no pertenece a la sección, redirigir con error
+            return redirect()->route('proyectos.disponibles')->with('error', 'No tienes permiso para ver este proyecto.');
+        }
+
+        // Si el estudiante no tiene sección, redirigir con error
+        return redirect()->route('proyectos.disponibles')->with('error', 'No tienes una sección asignada.');
+    }
+
+    // Si el usuario no tiene el rol 'Estudiante', redirigir con error
+    return redirect()->route('login')->with('error', 'Acceso denegado.');
     }
     public function mostrarDetalle($id)
     {
