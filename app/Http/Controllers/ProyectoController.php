@@ -22,7 +22,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProyectoController extends Controller
 {
-    public function index()
+    /*public function index()
     {
         $ListProyecto = Proyecto::with([
             'seccion.departamento',
@@ -37,6 +37,14 @@ class ProyectoController extends Controller
             ->get();
 
         return view("proyecto.proyecto-general", compact("ListProyecto"));
+    }*/
+    public function index()
+    {
+        //$proyectos = Proyecto::where('estado', 'En Revisión')->get();
+        $proyectos = Proyecto::All();
+
+        // Retorna la vista con los proyectos
+        return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
     }
 
     public function retornar_proyectos()
