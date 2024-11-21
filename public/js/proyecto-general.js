@@ -1,19 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Evento para el botón de Generar PDF
-    const btnPDF = document.querySelector('.btn-success');
-    if (btnPDF) {
-        btnPDF.addEventListener('click', function() {
-            alert('Generando PDF...');
-        });
-    }
-
-    // Evento para el botón de Generar Excel    
-    const btnExcel = document.querySelector('.btn-primary');
-    if (btnExcel) {
-        btnExcel.addEventListener('click', function() {
-            alert('Generando Excel...');
-        });
-    }
+    
 
     // Checkbox de "Seleccionar Todos"
     const selectAllCheckbox = document.getElementById('selectAll');

@@ -38,6 +38,14 @@ class User extends Authenticatable implements JWTSubject
         );
     }
 
+    public function getTutoresConSecciones()
+    {
+        $tutores = User::whereHas('seccionesTutoreadas')
+            ->with('seccionesTutoreadas') 
+            ->get();
+
+        return response()->json($tutores);
+    }
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

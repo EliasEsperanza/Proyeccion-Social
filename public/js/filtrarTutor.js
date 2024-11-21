@@ -1,39 +1,31 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const seccionSelect = document.getElementById('seccion_id');
-    const tutorSelect = document.getElementById('tutor');
-    const tutoresDiv = document.getElementById('tutores-data');
+const tutoresDiv = document.getElementById('tutores-data'); // Div con datos de tutores
+const tutores = JSON.parse(tutoresDiv.dataset.tutores); // Parsear los tutores desde el dataset
+console.log(tutores)
+document.getElementById('seccion_id').addEventListener('change', function () {
+    const idSeccion = this.value; // Obtener el ID de la sección seleccionada
+    const tutorSelect = document.getElementById('idTutor'); // Select donde se mostrarán los tutores
 
-    try {
-        const tutores = JSON.parse(tutoresDiv.dataset.tutores);
-        console.log('Tutores cargados:', tutores);
+    // Limpiar las opciones del select
+    tutorSelect.innerHTML = '<option selected disabled>Seleccionar tutor</option>';
 
-        seccionSelect.addEventListener('change', function () {
-            const idSeccion = this.value;
-            console.log('Sección seleccionada para tutores:', idSeccion);
+    // Filtrar tutores que estén asignados a la sección seleccionada
+    const tutoresFiltrados = tutores.filter(tutor =>
+        tutor.secciones_tutoreadas.some(seccion => seccion.id_seccion == idSeccion) // Verificar si alguna sección coincide
+    );
 
-            // Limpiar el select de tutores
-            tutorSelect.innerHTML = '<option selected disabled>Seleccione un tutor</option>';
+    // Agregar las opciones de tutores al select
+    tutoresFiltrados.forEach(tutor => {
+        const option = document.createElement('option');
+        option.value = tutor.id_usuario; // ID del tutor
+        option.textContent = tutor.name; // Nombre del tutor
+        tutorSelect.appendChild(option);
+    });
 
-            // Filtrar tutores por sección
-            const tutoresFiltrados = tutores.filter(tutor => tutor.id_seccion == idSeccion);
-            console.log('Tutores filtrados:', tutoresFiltrados);
-
-            // Agregar opciones al select de tutores
-            if (tutoresFiltrados.length > 0) {
-                tutoresFiltrados.forEach(tutor => {
-                    const option = document.createElement('option');
-                    option.value = tutor.id_tutor;
-                    option.textContent = tutor.name;
-                    tutorSelect.appendChild(option);
-                });
-            } else {
-                const noOption = document.createElement('option');
-                noOption.disabled = true;
-                noOption.textContent = 'No hay tutores disponibles';
-                tutorSelect.appendChild(noOption);
-            }
-        });
-    } catch (error) {
-        console.error('Error procesando los tutores:', error);
+    // Mostrar un mensaje si no hay tutores disponibles
+    if (tutoresFiltrados.length === 0) {
+        const noOption = document.createElement('option');
+        noOption.disabled = true;
+        noOption.textContent = 'No hay tutores disponibles';
+        tutorSelect.appendChild(noOption);
     }
 });

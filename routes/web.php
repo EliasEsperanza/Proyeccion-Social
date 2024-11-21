@@ -20,12 +20,17 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Estado;
+use App\Models\Proyecto;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
     return view('login.login');
 })->name('login');
 
-
+Route::get('/prys', function () {
+    return view('estudiantes.documentos-sociales');
+})->name('documentos');
 
 Route::get('/hrs', function () {
     return view('estudiantes.actualizar-horas');
@@ -38,8 +43,6 @@ Route::get('/estudiantes-por-seccion/{idSeccion}', [EstudianteController::class,
 Route::get('/proyectos-disponibles', [ProyectoController::class, 'proyectosDisponibles'])->name('proyectos.disponibles');
 Route::get('/dashboard/estudiantes', [ProyectoController::class, 'obtenerProyectosDashboard'])->name('estudiantes.dashboard');
 Route::get('/proyectos/{id}/ver', [ProyectoController::class, 'mostrarProyecto'])->name('proyecto.ver');
-Route::get('/tutores-por-seccion/{idSeccion}', [ProyectoController::class, 'obtenerTutores']);
-
 
 
 Route::get('/dashboard/datos-grafico', [ProyectoController::class, 'obtenerDatosGrafico'])->name('dashboard.datosGrafico');
@@ -65,6 +68,7 @@ Route::get('/proyecto-g',[ProyectoController::class, 'index'], function () {
     }
     return view('dashboard.dashboard');
 })->middleware('auth')->name('proyecto-g');
+
 Route::get('/proyecto', function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
         return view('proyecto.publicar-proyecto');
@@ -74,6 +78,25 @@ Route::get('/proyecto', function () {
 
 Route::delete('/proyecto/{id}', [ProyectoController::class, 'destroy'])->name('proyecto.eliminarProyecto');
 Route::post('/proyectos/generar', [ProyectoController::class, 'generar'])->name('proyectos.generar');
+
+
+//editar
+Route::get('/proyecto/{id}/editar_proyecto',[ProyectoController::class, 'edit_proyecto'], function () {
+    if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
+        return view('proyecto.editar-proyecto');
+    }
+    return view('dashboard.dashboard');
+})->middleware('auth')->name('proyecto.editar-proyecto');
+
+//Update proyecto 
+Route::put('/proyectos/{id}/update_proyecto', [ProyectoController::class, 'update_proyecto'])->name('proyectos.proyectos_update');
+
+//Mostrar los detalle de los proyectos 
+// En routes/web.php
+Route::get('/proyecto/{id}/detalle', [ProyectoController::class, 'obtenerDetalleProyecto'])->name('obtener-detalle');
+
+// En routes/web.php
+Route::get('/proyecto/{id}/descargar-pdf', [ProyectoController::class, 'descargarPDF'])->name('proyecto.descargar-pdf');
 
 //Mostrar los departamentos en publicar proyectos
 Route::get('/proyecto', [ProyectoController::class, 'retornar_departamentos'])->name('proyecto');
@@ -102,9 +125,23 @@ Route::get('/proyecto/{id}/editar',[ProyectoController::class, 'edit'], function
 })->middleware('auth')->name('proyecto.proyecto-editar');
 
 Route::post('/proyectos/{proyecto}/asignar-estudiantes', [ProyectoController::class, 'asignarEstudiante'])->name('proyectos.asignarEstudiante');
+Route::post('/proyectos/{proyecto}/asignar-estudiantes-gestion', [ProyectoController::class, 'asignarEstudianteGestion'])->name('proyectos.asignarEstudianteGestion');
 Route::delete('/proyectos/{proyecto}/eliminar-estudiante/{estudiante}', [ProyectoController::class, 'eliminarEstudiante'])->name('proyectos.eliminarEstudiante');
 Route::put('/proyectos/{proyecto}/actualizar', [ProyectoController::class, 'actualizar'])->name('proyectos.actualizar');
+Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
 
+Route::get('/proyectos/{proyecto}/estudiantes', function ($proyectoId) {
+    $proyecto = Proyecto::with('estudiantes.usuario')->findOrFail($proyectoId);
+    return response()->json([
+        'estudiantes' => $proyecto->estudiantes->map(function ($estudiante) {
+            return [
+                'id_estudiante' => $estudiante->id_estudiante,
+                'usuario' => ['name' => $estudiante->usuario->name],
+            ];
+        }),
+        'csrfToken' => csrf_token(),
+    ]);
+});
 
 Route::get('/mensajeria', [UserController::class, 'show'])
     ->middleware('auth')
@@ -112,9 +149,8 @@ Route::get('/mensajeria', [UserController::class, 'show'])
 
 Route::get('/api/users', [UserController::class, 'getUsers']);
 
-use App\Models\Estado;
 
-Route::get('/gestion-proyecto',[ProyectoController::class, 'gestionProyecto'], function () {
+Route::get('/gestion-proyecto',[ProyectoController::class, 'edit_gestion_proyecto'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Coordinador', 'Administrador'])) {
         $estados = Estado::orderBy('nombre_estado', 'asc')->get();
 
@@ -122,9 +158,6 @@ Route::get('/gestion-proyecto',[ProyectoController::class, 'gestionProyecto'], f
     }
     return view('dashboard.dashboard');
 })->middleware('auth')->name('gestion-proyecto');
-
-Route::get('/proyectoGestion/{id}', [ProyectoController::class, 'obtenerProyectoPorId'])->name('proyecto.obtener');
-
 
 
 Route::get('/gestion-permiso', function () {
@@ -330,16 +363,12 @@ Route::controller(ProyectosDocumentosController::class)
     });
 
     Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
-    Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
+    //Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
 
     Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
     Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
     Route::get('/solicitud-proyecto', [ProyectosEstudiantesController::class, 'Solicitud_Proyecto_Student'])->name('solicitud-proyecto');
     Route::get('/procesos', [ProyectosEstudiantesController::class, 'Procesos'])->name('vista_procesos_horas');
-
-
-
-    use Illuminate\Support\Facades\Storage;
 
 Route::get('/descargar/{filename}', function ($filename) {
     $filePath = 'documentos/' . $filename;
@@ -349,5 +378,6 @@ Route::get('/descargar/{filename}', function ($filename) {
         abort(404, 'Archivo no encontrado.');
     }
 })->name('descargar');
-?>
 
+Route::get('/obtener-tutores-por-seccion/{id}', [ProyectoController::class, 'GetTutoresPorSeccion']);
+?>

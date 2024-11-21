@@ -2,13 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
+use App\Services\ChatService;
 use Illuminate\Http\Request;
 
 class ChatsController extends Controller
 {
+    protected $chatService;
+
+    public function __construct(ChatService $chatService)
+    {
+        $this->chatService = $chatService;
+    }
+
+    // Mostrar todos los mensajes
     public function index()
     {
-        return Chat::all();
+        // Usa el servicio para filtrar mensajes basados en el usuario autenticado
+        $mensajes = $this->chatService->filtrarMensajes(auth()->id());
+        return response()->json($mensajes);
     }
 
     // Crear un nuevo mensaje
@@ -20,7 +32,12 @@ class ChatsController extends Controller
             'mensaje' => 'required|string|max:255',
         ]);
 
-        $chat = Chat::create($validatedData);
+        // Usa el servicio para enviar y almacenar el mensaje
+        $chat = $this->chatService->enviarMensaje(
+            $validatedData['id_emisor'],
+            $validatedData['id_recibidor'],
+            $validatedData['mensaje']
+        );
 
         return response()->json($chat, 201);
     }
@@ -28,7 +45,8 @@ class ChatsController extends Controller
     // Mostrar mensajes de un usuario específico (por ejemplo, del recibidor)
     public function show($id)
     {
-        $chats = Chat::where('id_recibidor', $id)->get();
+        // Usa el servicio para filtrar mensajes para el recibidor específico
+        $chats = $this->chatService->filtrarMensajes($id);
         return response()->json($chats);
     }
 

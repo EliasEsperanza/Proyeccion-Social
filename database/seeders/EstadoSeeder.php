@@ -19,6 +19,7 @@ class EstadoSeeder extends Seeder
             ['nombre_estado' => 'Rechazado'],
             ['nombre_estado' => 'En Revisión'],
             ['nombre_estado' => 'Solicitud'],
+            ['nombre_estado' => 'Aprobado'],
         ]);
     }
 }

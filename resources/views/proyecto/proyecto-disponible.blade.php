@@ -27,33 +27,72 @@
                 </tr>
             </thead>
             <tbody>
-                @if(isset($proyectos) && $proyectos->isNotEmpty())
-                    @foreach ($proyectos as $proyecto)
+                @php
+                    // Obtener el usuario autenticado
+                    $user = auth()->user();
+                    $userSeccion = null;
+
+                    // Determinar la sección según el rol
+                    if ($user->hasRole('Estudiante')) {
+                        $userSeccion = DB::table('estudiantes')
+                            ->join('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
+                            ->where('estudiantes.id_usuario', $user->id_usuario)
+                            ->select('secciones.id_seccion', 'secciones.nombre_seccion')
+                            ->first();
+                    } elseif ($user->hasRole('Tutor')) {
+                        $userSeccion = DB::table('seccion_tutor')
+                            ->join('secciones', 'seccion_tutor.id_seccion', '=', 'secciones.id_seccion')
+                            ->where('seccion_tutor.id_tutor', $user->id_usuario)
+                            ->select('secciones.id_seccion', 'secciones.nombre_seccion')
+                            ->first();
+                    } elseif ($user->hasRole('Coordinador')) {
+                        $userSeccion = DB::table('secciones')
+                            ->where('id_coordinador', $user->id_usuario)
+                            ->select('id_seccion', 'nombre_seccion')
+                            ->first();
+                    }
+
+                    // Filtrar proyectos según la sección del usuario
+                    $filteredProjects = $proyectos->filter(function ($proyecto) use ($user, $userSeccion) {
+                        // Mostrar todos los proyectos si es administrador
+                        if ($user->hasRole('Administrador')) {
+                            return true;
+                        }
+
+                        // Validar que el proyecto pertenece a la misma sección que el usuario
+                        return $proyecto->seccion->id_seccion == ($userSeccion->id_seccion ?? null);
+                    });
+                @endphp
+
+                @if($filteredProjects->isNotEmpty())
+                    @foreach ($filteredProjects as $proyecto)
                         <tr>
-                            <td><input type="checkbox" class="form-check-input" value="{{ $proyecto->id }}"></td>
+                            <td><input type="checkbox" class="form-check-input" value="{{ $proyecto->id_proyecto }}"></td>
                             <td>{{ $proyecto->nombre_proyecto }}</td>
                             <td>{!! strip_tags($proyecto->descripcion_proyecto) !!}</td>
                             <td>{{ $proyecto->horas_requeridas }}</td>
                             <td>{{ $proyecto->lugar }}</td>
                             <td>
-                            @if ($proyecto->seccion)
-                            {{ $proyecto->seccion->nombre_seccion }}
-                            @if($proyecto->seccion->departamento)
-                            / {{ $proyecto->seccion->departamento->nombre_departamento }}
-                            @endif
-                            @else
-                            No asignada
-                            @endif
+                                @if ($proyecto->seccion)
+                                    {{ $proyecto->seccion->nombre_seccion }}
+                                    @if ($proyecto->seccion->departamento)
+                                        / {{ $proyecto->seccion->departamento->nombre_departamento }}
+                                    @endif
+                                @else
+                                    No asignada
+                                @endif
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="" class="btn btn-light btn-sm p-2 px-3">
-                                        <i class="bi bi-eye text-muted"></i>
-                                    </a>
-                                    <a href="" class="btn btn-light btn-sm p-2 px-3">
+                                
+                                <a href="{{ route('obtener-detalle', ['id' => $proyecto->id_proyecto]) }}" class="btn btn-light btn-sm p-2 px-3">
+                                    <i class="bi bi-eye text-muted"></i>
+                                </a>
+
+                                    <a href="{{ route('proyecto.editar-proyecto', ['id' => $proyecto->id_proyecto]) }}" class="btn btn-light btn-sm p-2 px-3">
                                         <i class="bi bi-pencil text-warning"></i>
                                     </a>
-                                    <form action="" method="POST" style="display:inline;">
+                                    <form action="{{ route('proyecto.eliminarProyecto', ['id' => $proyecto->id_proyecto]) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-light btn-sm p-2 px-3">

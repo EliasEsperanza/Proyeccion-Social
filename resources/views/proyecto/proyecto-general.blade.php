@@ -102,26 +102,47 @@
         </div>
         <div class="d-flex justify-content-end">
             <div class="button-group mt-3 px-4 mb-4">
-                <button type="button" onclick="submitForm('pdf')" class="btn btn-success me-2">Generar PDF</button>
-                <button type="button" onclick="submitForm('excel')" class="btn btn-primary">Generar Excel</button>
-                <button type="button" onclick="submitForm('delete')" class="btn btn-danger">Eliminar Seleccionados</button>
+                <button type="button" onclick="return submitForm('pdf')" class="btn btn-success me-2">Generar PDF</button>
+                <button type="button" onclick="return submitForm('excel')" class="btn btn-primary">Generar Excel</button>
+                <button type="button" onclick="return submitForm('delete')" class="btn btn-danger">Eliminar Seleccionados</button>
             </div>
         </div>
     </div>
 </form>
 <script>
-    function submitForm(action) {
-        const form = document.getElementById('proyectosForm');
-        const actionInput = document.getElementById('actionInput');
-        actionInput.value = action;
+  function submitForm(action) {
+    const form = document.getElementById('proyectosForm');
+    const actionInput = document.getElementById('actionInput');
+    const selectedItems = document.querySelectorAll('input[name="proyectos[]"]:checked');
 
-        if (action === 'delete') {
-            const confirmDelete = confirm('¿Estás seguro de que deseas eliminar los proyectos seleccionados?');
-            if (!confirmDelete) return; 
-        }
+    // Mapeo de acciones a mensajes personalizados
+    const actionMessages = {
+        'pdf': 'generar un PDF',
+        'excel': 'generar un Excel',
+        'delete': 'eliminar proyectos'
+    };
 
-        form.submit();
+    // Validación de selección
+    if (selectedItems.length === 0) {
+        alert(`Por favor, selecciona al menos un proyecto para ${actionMessages[action]}.`);
+        return false; // Detiene la propagación del evento y previene otras alertas
     }
+
+    // Confirmación para eliminación
+    if (action === 'delete') {
+        const confirmDelete = confirm(`¿Estás seguro de que deseas eliminar los ${selectedItems.length} proyectos seleccionados?`);
+        if (!confirmDelete) {
+            return false; // Detiene la ejecución si no se confirma
+        }
+    }
+
+    // Configurar acción
+    actionInput.value = action;
+
+    // Enviar formulario
+    form.submit();
+    return false; // Asegura que no se propague el evento
+}
 </script>
 
 <script src="{{ asset('js/proyecto-general.js') }}"></script>

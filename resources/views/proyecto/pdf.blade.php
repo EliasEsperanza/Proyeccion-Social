@@ -46,7 +46,7 @@
                             @endforeach
                         @else
                             No hay estudiantes asignados
-                        @endif
+                        @endif 
                     </td>
                     <td>{{ $proyecto->tutorr?->name ?? 'Sin tutor asignado' }}</td>
                     <td>{{ $proyecto->fecha_inicio }}</td>
