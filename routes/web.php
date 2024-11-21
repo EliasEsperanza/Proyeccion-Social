@@ -28,6 +28,10 @@ Route::get('/', function () {
     return view('login.login');
 })->name('login');
 
+Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
+Route::get('/proyectos-solicitudes', [ProyectoController::class, 'solicitudes_coordinador'])->name('solicitudes_coordinador');
+
+
 Route::get('/prys', function () {
     return view('estudiantes.documentos-sociales');
 })->name('documentos');
@@ -41,6 +45,8 @@ Route::post('/', [UserController::class, 'login'])->name('login.process');
 Route::get('/secciones-disponibles', [EstudianteController::class, 'seccionesDisponibles'])->name('secciones.disponibles');
 Route::get('/estudiantes-por-seccion/{idSeccion}', [EstudianteController::class, 'estudiantesPorSeccion'])->name('estudiantes.porSeccion');
 Route::get('/proyectos-disponibles', [ProyectoController::class, 'proyectosDisponibles'])->name('proyectos.disponibles');
+Route::get('/proyectos-por-seccion/{id}', [ProyectoController::class, 'proyectosDisponiblesPorSeccion'])->name('proyectos.porSeccion');
+
 Route::get('/dashboard/estudiantes', [ProyectoController::class, 'obtenerProyectosDashboard'])->name('estudiantes.dashboard');
 Route::get('/proyectos/{id}/ver', [ProyectoController::class, 'mostrarProyecto'])->name('proyecto.ver');
 
@@ -128,7 +134,7 @@ Route::post('/proyectos/{proyecto}/asignar-estudiantes', [ProyectoController::cl
 Route::post('/proyectos/{proyecto}/asignar-estudiantes-gestion', [ProyectoController::class, 'asignarEstudianteGestion'])->name('proyectos.asignarEstudianteGestion');
 Route::delete('/proyectos/{proyecto}/eliminar-estudiante/{estudiante}', [ProyectoController::class, 'eliminarEstudiante'])->name('proyectos.eliminarEstudiante');
 Route::put('/proyectos/{proyecto}/actualizar', [ProyectoController::class, 'actualizar'])->name('proyectos.actualizar');
-Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
+Route::post('/proyectos/asignar', [ProyectoController::class, 'asignarProyecto'])->name('proyectos.asignar');Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
 
 Route::get('/proyectos/{proyecto}/estudiantes', function ($proyectoId) {
     $proyecto = Proyecto::with('estudiantes.usuario')->findOrFail($proyectoId);
@@ -239,7 +245,9 @@ Route::controller(EstudianteController::class)
 //         Route::delete('/{id}', 'destroy')->name('destroy'); 
 //     });
 
-    Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
+
+Route::get('/solicitud-proyecto', [ProyectoController::class, 'create'])->name('solicitud_proyecto.create');
+Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
 
 // Rutas de recuperación y reseteo de contraseña
 Route::get('/recuperarpassword', function () {
@@ -369,6 +377,7 @@ Route::controller(ProyectosDocumentosController::class)
     Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
     Route::get('/solicitud-proyecto', [ProyectosEstudiantesController::class, 'Solicitud_Proyecto_Student'])->name('solicitud-proyecto');
     Route::get('/procesos', [ProyectosEstudiantesController::class, 'Procesos'])->name('vista_procesos_horas');
+    Route::get('/docs', [ProyectosEstudiantesController::class, 'docs'])->name('docs_tramites');
 
 Route::get('/descargar/{filename}', function ($filename) {
     $filePath = 'documentos/' . $filename;

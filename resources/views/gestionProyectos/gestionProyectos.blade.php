@@ -132,7 +132,7 @@
                     </select>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Crear Proyecto</button>
+            <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Asignar Proyecto</button>
         </form> 
 
             </div>

@@ -149,5 +149,10 @@ class User extends Authenticatable implements JWTSubject
             'administradores' => $administradores
         ];
     }
+
+        public function asignaciones()
+    {
+        return $this->hasMany(Asignacion::class, 'id_tutor', 'id_usuario');
+    }
 }
 

@@ -21,6 +21,13 @@ class DocumentosSeeder extends Seeder
         // nombre de los documentos
         $plantillaFiles = [
             'CARTA ASIGNACION DE TUTOR.docx',
+            //new documents
+            'Carta de ampliacion de tiempo.docx',
+            'Carta de Eliminacion de Estudiante del Proyecto (grupo).docx',
+            'Carta de eliminacion de proyecto.docx',
+            'Carta de Eliminacion de un estudiante (estudiante).docx',
+            'Carta de Prorroga a Jefe de Unidad.docx',
+            //
             'Constancia de aprobación del Plan de Trabajo del Servicio Social.docx',
             'Constancia de Finalización del Servicio Social.docx',
             'Constancia de la Institución.docx',
@@ -37,13 +44,6 @@ class DocumentosSeeder extends Seeder
             'Manual de proyeccion social.doc',
             'MODELO DE CARTA A LA INSTITUCION QUE SOLICITA ESTUDIANTES EN SERVICIO SOCIAL.docx',
             'Modelo de Certificación.docx',
-
-            //documentos nuevos
-            'Carta de ampliacion de tiempo.docx',
-            'Carta de Eliminacion de Estudiante del Proyecto (grupo).docx',
-            'Carta de eliminacion de proyecto.docx',
-            'Carta de Eliminacion de un estudiante (estudiante).docx',
-            'Carta de Prorroga a Jefe de Unidad.docx'
         ];
 
         

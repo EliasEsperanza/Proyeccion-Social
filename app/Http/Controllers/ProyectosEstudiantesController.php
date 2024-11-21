@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Estudiante;
 use App\Models\ProyectosEstudiantes;
 use Illuminate\Http\Request;
+
+use App\Models\Proyecto;
 
 class ProyectosEstudiantesController extends Controller
 {
@@ -134,11 +137,35 @@ class ProyectosEstudiantesController extends Controller
 
     public function Solicitud_Proyecto_Student()
     {
-        return view('estudiantes.solicitud-proyecto');
-    }
+        // Obtener el ID del usuario autenticado
+        $estudianteId = auth()->user()->id_usuario;
+
+        // Obtener el ID de la sección del estudiante autenticado
+        $estudiante = Estudiante::where('id_usuario', $estudianteId)->first();
+        
+        if ($estudiante) {
+            $tieneProyecto = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
+                ->exists();
+
+            if ($tieneProyecto) {
+                return "tiene proyecto";
+            }
+
+            $seccion_id = $estudiante->id_seccion;
+            $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
+            
+            return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
+        }
+}
+
 
     public function Procesos()
     {
         return view('estudiantes.vista_procesos_horas');
+    }
+
+    public function docs()
+    {
+        return view('estudiantes.docs_tramites');
     }
 }
