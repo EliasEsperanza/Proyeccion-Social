@@ -19,21 +19,26 @@
 
       <!-- Progress bar -->
       <div class="my-4">
-        <div class="d-flex justify-content-between ">
-          <p class="card-text">Progreso del Proyecto</p>
-          <p>Completadas {{ $proyectoEstudiante->horas_sociales_completadas }}  de {{ $proyectoEstudiante->proyecto->horas_requeridas }} horas</p>
-        </div>
-
+        @php
+            $porcentaje = optional($proyectoEstudiante)->porcentaje_completado ?? 0;
+        @endphp
+        <div class="d-flex justify-content-between">
+            <p class="card-text">Progreso del Proyecto</p>
+            <p>Completadas {{ $proyectoEstudiante->horas_sociales_completadas ?? 0 }} de {{ $proyectoEstudiante->proyecto->horas_requeridas }} horas</p>
+        </div>  
         <div class="progress" style="height: 20px;">
-          <div class="progress-bar" role="progressbar"
-            style="width: 30%;"
-            aria-valuenow="15"
-            aria-valuemin="0"
-            aria-valuemax="100">
-
-          </div>
+            <div 
+                class="progress-bar" 
+                role="progressbar"
+                style="width: {{ $porcentaje }}%;"
+                aria-valuenow="{{ $porcentaje }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+            >
+                {{ $porcentaje }}%
+            </div>
         </div>
-      </div>
+    </div>
 
       <div class="mr-4">
         <p class="card-text"><i class="bi bi-calendar"></i>Inicio: {{ $proyectoEstudiante->proyecto->fecha_inicio }}</p>
