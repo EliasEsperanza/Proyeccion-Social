@@ -3,7 +3,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SeccionTutor extends Model
+class seccion_tutor extends Model
 {
     protected $table = 'seccion_tutor';
 

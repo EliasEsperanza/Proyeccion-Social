@@ -3,63 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\seccion_tutor;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class seccion_tutorController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
-    }
+        // Validar los datos del Request
+        $validated = $request->validate([
+            'id_seccion' => 'required|exists:secciones,id_seccion',
+            'id_tutor' => 'required|exists:users,id_usuario',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(seccion_tutor $seccion_tutor)
-    {
-        //
-    }
+        // Verificar que el usuario sea un tutor
+        $tutor = User::find($validated['id_tutor']);
+        if (!$tutor || $tutor->role !== 'Tutor') {
+            return response()->json(['error' => 'El usuario especificado no es un tutor válido'], 422);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(seccion_tutor $seccion_tutor)
-    {
-        //
-    }
+        // Crear la relación entre el tutor y la sección
+        $seccionTutor = seccion_tutor::create([
+            'id_seccion' => $validated['id_seccion'],
+            'id_tutor' => $validated['id_tutor'],
+        ]);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, seccion_tutor $seccion_tutor)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(seccion_tutor $seccion_tutor)
-    {
-        //
+        return response()->json([
+            'message' => 'Tutor asignado correctamente a la sección',
+            'data' => $seccionTutor,
+        ], 201);
     }
 }
