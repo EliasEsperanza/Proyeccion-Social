@@ -2,11 +2,13 @@
 namespace App\Http\Controllers;
 
 use App\Exports\EstudianteExport;
+use App\Models\Asignacion;
 use App\Models\User;
 use App\Models\Estudiante;
 use App\Models\Seccion;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Hash;
@@ -168,7 +170,19 @@ class EstudianteController extends Controller
 
     public function totalEstudiantes()
     {
-        return Estudiante::count();
+        $user = Auth::user();
+
+        if ($user->hasRole('Tutor')) {
+            // Obtener estudiantes asignados al tutor
+            $totalEstudiantes = Asignacion::where('id_tutor', $user->id_usuario)
+                ->distinct('id_estudiante') // Asegúrate de no contar estudiantes duplicados
+                ->count('id_estudiante');
+        } else {
+            // Total general de estudiantes
+            $totalEstudiantes = Estudiante::count();
+        }
+
+        return $totalEstudiantes;
     }
 
     public function seccionesDisponibles()
