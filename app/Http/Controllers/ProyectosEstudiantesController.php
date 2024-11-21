@@ -141,4 +141,9 @@ class ProyectosEstudiantesController extends Controller
     {
         return view('estudiantes.vista_procesos_horas');
     }
+
+    public function docs()
+    {
+        return view('estudiantes.docs_tramites');
+    }
 }

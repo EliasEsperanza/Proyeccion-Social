@@ -68,7 +68,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('documentos') }}" onclick="establecerActivo(this)">
+                <a class="nav-link" href="{{ route('docs_tramites') }}" onclick="establecerActivo(this)">
                     <i class="bi bi-folder2-open me-2"></i> Documentos
                 </a>
             </li>

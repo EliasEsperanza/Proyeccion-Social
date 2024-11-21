@@ -354,6 +354,7 @@ Route::controller(ProyectosDocumentosController::class)
     Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
     Route::get('/solicitud-proyecto', [ProyectosEstudiantesController::class, 'Solicitud_Proyecto_Student'])->name('solicitud-proyecto');
     Route::get('/procesos', [ProyectosEstudiantesController::class, 'Procesos'])->name('vista_procesos_horas');
+    Route::get('/docs', [ProyectosEstudiantesController::class, 'docs'])->name('docs_tramites');
 
 Route::get('/descargar/{filename}', function ($filename) {
     $filePath = 'documentos/' . $filename;
