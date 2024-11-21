@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Models;
-use App\Models\Departamento; 
+use App\Models\Departamento;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Seccion extends Model 
+class Seccion extends Model
 {
     protected $perPage = 20;
 
@@ -17,11 +17,16 @@ class Seccion extends Model
     /**
      * Define una relación que pertenece al modelo Departamento.
      */
-    public function departamento() 
+    public function departamento()
     {
         return $this->belongsTo(Departamento::class, 'departamento_id', 'id_departamento');
 
     }
+    public function tutores()
+    {
+        return $this->belongsToMany(User::class, 'seccion_tutor', 'id_seccion', 'id_tutor');
+    }
+
     public function proyectos()
     {
         return $this->hasMany(Proyecto::class, 'seccion_id', 'id_seccion');

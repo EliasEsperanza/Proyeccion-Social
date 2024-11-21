@@ -25,6 +25,8 @@ Route::get('/', function () {
     return view('login.login');
 })->name('login');
 
+
+
 Route::get('/hrs', function () {
     return view('estudiantes.actualizar-horas');
 });
@@ -34,7 +36,10 @@ Route::post('/', [UserController::class, 'login'])->name('login.process');
 Route::get('/secciones-disponibles', [EstudianteController::class, 'seccionesDisponibles'])->name('secciones.disponibles');
 Route::get('/estudiantes-por-seccion/{idSeccion}', [EstudianteController::class, 'estudiantesPorSeccion'])->name('estudiantes.porSeccion');
 Route::get('/proyectos-disponibles', [ProyectoController::class, 'proyectosDisponibles'])->name('proyectos.disponibles');
-Route::get('/proyectos-tutores', [ProyectoController::class, 'obtenerTutores'])->name('proyectos.tutores');
+Route::get('/dashboard/estudiantes', [ProyectoController::class, 'obtenerProyectosDashboard'])->name('estudiantes.dashboard');
+Route::get('/proyectos/{id}/ver', [ProyectoController::class, 'mostrarProyecto'])->name('proyecto.ver');
+Route::get('/tutores-por-seccion/{idSeccion}', [ProyectoController::class, 'obtenerTutores']);
+
 
 
 Route::get('/dashboard/datos-grafico', [ProyectoController::class, 'obtenerDatosGrafico'])->name('dashboard.datosGrafico');
@@ -101,19 +106,26 @@ Route::delete('/proyectos/{proyecto}/eliminar-estudiante/{estudiante}', [Proyect
 Route::put('/proyectos/{proyecto}/actualizar', [ProyectoController::class, 'actualizar'])->name('proyectos.actualizar');
 
 
-Route::get('/mensajeria', function () {
-    if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
-        return view('mensaje.mensaje');
-    }
-    return view('dashboard.dashboard');
-})->middleware('auth')->name('mensajeria');
+Route::get('/mensajeria', [UserController::class, 'show'])
+    ->middleware('auth')
+    ->name('mensajeria');
 
-Route::get('/gestion-proyecto', function () {
+Route::get('/api/users', [UserController::class, 'getUsers']);
+
+use App\Models\Estado;
+
+Route::get('/gestion-proyecto',[ProyectoController::class, 'gestionProyecto'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Coordinador', 'Administrador'])) {
-        return view('gestionProyectos.gestionProyectos');
+        $estados = Estado::orderBy('nombre_estado', 'asc')->get();
+
+        return view('gestionProyectos.gestionProyectos', compact('estados'));
     }
     return view('dashboard.dashboard');
 })->middleware('auth')->name('gestion-proyecto');
+
+Route::get('/proyectoGestion/{id}', [ProyectoController::class, 'obtenerProyectoPorId'])->name('proyecto.obtener');
+
+
 
 Route::get('/gestion-permiso', function () {
     if (Auth::check() && auth()->user()->hasRole('Administrador')) {
@@ -317,18 +329,25 @@ Route::controller(ProyectosDocumentosController::class)
         return view('estudiantes.solicitud-proyecto');
     });
 
-    //ruta dashboard de estudiantes
-    Route::get('/pry', function () {
-        return view('estudiantes.dashboard');
-    });
-
     Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
     Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
 
-    Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'detallesmio'])->name('detallesmio');
-    Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'proyectomio'])->name('proyectomio');
+    Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
+    Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
+    Route::get('/solicitud-proyecto', [ProyectosEstudiantesController::class, 'Solicitud_Proyecto_Student'])->name('solicitud-proyecto');
+    Route::get('/procesos', [ProyectosEstudiantesController::class, 'Procesos'])->name('vista_procesos_horas');
 
-    
 
+
+    use Illuminate\Support\Facades\Storage;
+
+Route::get('/descargar/{filename}', function ($filename) {
+    $filePath = 'documentos/' . $filename;
+    if (Storage::disk('public')->exists($filePath)) {
+        return response()->download(storage_path('app/public/' . $filePath));
+    } else {
+        abort(404, 'Archivo no encontrado.');
+    }
+})->name('descargar');
 ?>
 

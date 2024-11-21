@@ -46,13 +46,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="" onclick="establecerActivo(this)">
+                <a class="nav-link" href="{{route(name:'solicitud-proyecto')}}" onclick="establecerActivo(this)">
                     <i class="bi bi-person me-2"></i> Solicitud de proyecto
                 </a>
             </li>
             <li class="nav-item text-muted mt-3">Guías</li>
             <li class="nav-item">
-                <a class="nav-link" href="" onclick="establecerActivo(this)">
+                <a class="nav-link" href="{{route(name:'vista_procesos_horas')}}" onclick="establecerActivo(this)">
                     <i class="bi bi-journal me-2"></i> Proceso de inscripción
                 </a>
             </li>

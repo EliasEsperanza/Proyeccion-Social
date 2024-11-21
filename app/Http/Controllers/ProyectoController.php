@@ -28,10 +28,8 @@ class ProyectoController extends Controller
                 'tutorr.seccionesTutoreadas',
                 'estadoo'
             ])
-            ->whereHas('estadoo', function ($query) {
-                $query->where('nombre_estado', '!=', 'Disponible');
-            })
             ->get();
+
     
         return view("proyecto.proyecto-general", compact("ListProyecto"));
     }
@@ -424,12 +422,53 @@ class ProyectoController extends Controller
         return response()->json($proyectos);
     }
 
-    public function obtenerTutores()
+    public function obtenerProyectosDashboard()
     {
-        $tutores = User::role('tutor')->get();
+        $proyectos = Proyecto::where('estado', 1) 
+            ->get(['id_proyecto', 'nombre_proyecto', 'descripcion_proyecto', 'horas_requeridas', 'estado']);
 
-        return response()->json($tutores);
+        return view('estudiantes.dashboard', compact('proyectos'));
     }
+
+    public function mostrarProyecto($id)
+    {
+        $proyecto = Proyecto::with(['seccion', 'estadoo'])
+            ->findOrFail($id);
+
+        return view('estudiantes.proyecto-disponibles', compact('proyecto'));
+    }
+
+
+    public function gestionProyecto()
+    {   
+        $ListProyecto = Proyecto::with([
+            'seccion.departamento',
+            'estudiantes',
+            'coordinadorr',
+            'tutorr.seccionesTutoreadas',
+            'estadoo'
+        ])
+        ->whereHas('estadoo', function ($query) {
+            $query->where('nombre_estado', '=', 'Disponible');
+        })
+        ->get();
+        $estados= Estado::all();
+        $tutores = User::role('tutor')->get();
+        $estudiantes= Estudiante::all(); 
+        $secciones= Seccion::all(); 
+        
+      
+        return view("gestionProyectos.gestionProyectos", compact("ListProyecto","estados","tutores","estudiantes","secciones"));
+    }
+
+    public function obtenerProyectoPorId($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        $estudiantes = $proyecto->estudiantes;
+        return response()->json(['estudiantes' => $estudiantes]);
+    }
+
+
 
 }
 

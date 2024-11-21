@@ -41,68 +41,36 @@
 </div>
 
 <div class="contenedor-carrusel ">
-<h2 class="titulo-proyectos mb-4">Proyectos disponibles <a class="ver-mas" href="{{ route('proyecto__disponible_list') }}" onclick="establecerActivo(this)">Ver más</a></h2>
+    <h2 class="titulo-proyectos mb-4">Proyectos disponibles 
+        <a class="ver-mas" href="{{ route('proyecto__disponible_list') }}" onclick="establecerActivo(this)">Ver más</a>
+    </h2>
     <div class="d-flex align-items-center justify-content-center ">
         <button class="btn boton-carrusel" id="btnIzquierda">
             <span class="flecha-carrusel"><i class="bi bi-arrow-left"></i></span>
         </button>
         <div class="carrusel carru" id="contenedorCarrusel">
-            <div class="tarjeta-proyecto carru">
-                <h3 class="card-title">Gestor de TI</h3>
-                <br>
-                <p class="card-text">
-                    Descripción:
-                </p>
-                <p class="card-text">
-                Este proyecto busca desarrollar las competencias tecnológicas y de gestión de TI.
-                </p>
-                <p class="card-text">
-                <strong>Horas requeridas:</strong> 500
-                </p>
-                <div class="estado-boton">
-                    <span class="badge estado-disponible">Disponible</span>
-                    <a href="#" class="ver-mas">VER MÁS</a>
+            @foreach ($proyectos as $proyecto)
+                <div class="tarjeta-proyecto carru">
+                    <h3 class="card-title">{{ $proyecto->nombre_proyecto }}</h3>
+                    <br>
+                    <p class="card-text">Descripción:</p>
+                    <p class="card-text">{{ $proyecto->descripcion_proyecto }}</p>
+                    <p class="card-text"><strong>Horas requeridas:</strong> {{ $proyecto->horas_requeridas }}</p>
+                    <div class="estado-boton">
+                        <span class="badge {{ $proyecto->estado == 1 ? 'estado-disponible' : 'estado-no-disponible' }}">
+                            {{ $proyecto->estado == 1 ? 'Disponible' : 'No Disponible' }}
+                        </span>
+                        <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
+                    </div>
                 </div>
-            </div>
-            <div class="tarjeta-proyecto">
-                <h3 class="card-title">Gestor de TI</h3>
-                <br>
-                <p class="card-text">Descripción:</p>
-                <p class="card-text">Este proyecto busca desarrollar las competencias tecnológicas y de gestión de TI.</p>
-                <p class="card-text"><strong>Horas requeridas:</strong> 500</p>
-                <div class="estado-boton">
-                    <span class="badge estado-no-disponible">No disponible</span>
-                    <a href="#" class="ver-mas">VER MÁS</a>
-                </div>
-            </div>
-            <div class="tarjeta-proyecto">
-                <h3 class="card-title">Gestor de Infraestructura</h3>
-                <br>
-                <p class="card-text">Descripción:</p>
-                <p class="card-text">Propuesta para mejorar la infraestructura tecnológica.</p>
-                <p class="card-text"><strong>Horas requeridas:</strong> 400</p>
-                <div class="estado-boton">
-                    <span class="badge estado-disponible">Disponible</span>
-                    <a href="#" class="ver-mas">VER MÁS</a>
-                </div>
-            </div>
-            <div class="tarjeta-proyecto">
-                <h3 class="card-title">Desarrollador Web</h3>
-                <br>
-                <p class="card-text">Descripción:</p>
-                <p class="card-text">Crear páginas web dinámicas con tecnologías modernas.</p>
-                <p class="card-text"><strong>Horas requeridas:</strong> 350</p>
-                <div class="estado-boton">
-                    <span class="badge estado-no-disponible">No disponible</span>
-                    <a href="#" class="ver-mas">VER MÁS</a>
-                </div>
-            </div>
+            @endforeach
         </div>
         <button class="btn boton-carrusel" id="btnDerecha">
             <span class="flecha-carrusel"><i class="bi bi-arrow-right"></i></span>
         </button>
     </div>
 </div>
+
 
 <div class="card mt-5 mx-auto card-med mb-4">
     <div class="card-body">

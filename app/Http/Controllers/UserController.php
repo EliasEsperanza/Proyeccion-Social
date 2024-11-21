@@ -452,4 +452,20 @@ class UserController extends Controller
         })->count();
     }
 
+    public function getUsers()
+    {
+        // Obtener todos los usuarios de la base de datos
+        $users = User::all();
+
+        // Retornar los usuarios en formato JSON
+        return response()->json($users);
+    }
+
+    public function show()
+    {
+        if (auth()->check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
+            return view('mensaje.mensaje');
+        }
+        return view('dashboard.dashboard');
+    }
 }

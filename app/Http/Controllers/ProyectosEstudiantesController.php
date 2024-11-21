@@ -91,13 +91,25 @@ class ProyectosEstudiantesController extends Controller
 
     }
 
-    public function detallesmio()
+    public function Detalles_proyecto()
     {
         return view('estudiantes.detallesmio');
     }
+
     //retorna vista solicitud de proyecto
-    public function proyectomio()
+    public function Mi_proyecto()
     {
         return view('estudiantes.proyectomio');
     }
+
+    public function Solicitud_Proyecto_Student()
+    {
+        return view('estudiantes.solicitud-proyecto');
+    }
+
+    public function Procesos()
+    {
+        return view('estudiantes.vista_procesos_horas');
+    }
 }
+
