@@ -95,6 +95,8 @@
 <script src="{{ asset('js/gestionProyecto.js') }}"></script>
 
 <script>
+
+    
 document.addEventListener('DOMContentLoaded', function () {
     fetch('/secciones-disponibles')
         .then(response => response.json())
