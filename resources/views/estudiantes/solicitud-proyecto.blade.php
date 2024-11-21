@@ -22,6 +22,7 @@
                 <div class="mb-4">
                     <label class="form-label">Estudiantes</label>
                     <div class="input-group mb-3">
+                        <input type="hidden" id="estudiantesIds" name="estudiantes" value="">
                         <select class="form-control" id="nombreEstudiante">
                             <option selected disabled>Seleccione un estudiante</option>
                         </select>
@@ -101,12 +102,21 @@
         const selectedEstudiante = selectEstudiantes.value;
         if (selectedEstudiante) {
             const estudianteText = selectEstudiantes.options[selectEstudiantes.selectedIndex].textContent;
+
+            // Añadir el estudiante a la lista visual
             const li = document.createElement('li');
             li.textContent = estudianteText;
+            li.dataset.id = selectedEstudiante; // Asociar el ID del estudiante
             document.querySelector('#estudiantesList').appendChild(li);
-            selectEstudiantes.value = '';  // Limpiar el select
+
+            // Añadir el ID del estudiante al input oculto
+            const estudiantesInput = document.querySelector('#estudiantesIds');
+            estudiantesInput.value += selectedEstudiante + ',';
+
+            selectEstudiantes.value = ''; // Limpiar el select
         }
     }
+
 
     // Manejar el evento de submit del formulario
     document.querySelector('#formProyecto').addEventListener('submit', function(event) {
