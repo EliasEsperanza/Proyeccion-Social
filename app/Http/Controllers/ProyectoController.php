@@ -17,6 +17,7 @@ use App\Models\Departamento;
 use App\Models\Asignacion;
 use App\Exports\ProyectosExport;
 use Illuminate\Container\Attributes\DB as AttributesDB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProyectoController extends Controller
@@ -649,13 +650,35 @@ class ProyectoController extends Controller
     }
     public function asignarProyecto(Request $request)
 {
+    \Log::info('Request Data:', $request->all());
+
+    // Manually decode estudiantes if it's a JSON string
+    $estudiantes = is_string($request->input('estudiantes')) 
+        ? json_decode($request->input('estudiantes'), true) 
+        : $request->input('estudiantes');
+
+    // Merge the decoded estudiantes back into the request
+    $request->merge(['estudiantes' => $estudiantes]);
+
+    // Validate with more explicit error messages
     $validatedData = $request->validate([
-        'seccion_id' => 'required|exists:secciones,id',
-        'proyecto_id' => 'required|exists:proyectos,id',
-        'estudiantes' => 'required|array',
-        'tutor_id' => 'required|exists:tutores,id',
+        'seccion_id' => 'required|exists:secciones,id_seccion',
+        'proyecto_id' => 'required|exists:proyectos,id_proyecto',
+        'estudiantes' => 'required|array|min:1',
+        'tutor_id' => [
+            'required', 
+            'exists:users,id_usuario'
+        ],
         'estado_id' => 'required|exists:estados,id',
+    ], [
+        'estudiantes.required' => 'Debe seleccionar al menos un estudiante.',
+        'tutor_id.required' => 'Debe seleccionar un tutor.',
+        'tutor_id.exists' => 'El tutor seleccionado no es válido.',
+        'estado_id.required' => 'Debe seleccionar un estado para el proyecto.',
     ]);
+
+    // Add additional debugging
+    \Log::info('Validated Data:', $validatedData);
 
     DB::beginTransaction();
     dd($validatedData );
