@@ -58,9 +58,14 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function scopeAllTutores($query)
+    {
+        return $query->role('Tutor');
+    }
+
     public function scopeEstudiantesPorSeccion(Builder $query)
     {
-        return $query->role('estudiante')
+        return $query->role('Estudiante')
             ->leftJoin('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
             ->leftJoin('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
             ->orderBy('secciones.id_seccion')
@@ -69,7 +74,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeTutoresPorSeccion(Builder $query)
     {
-        return $query->role('tutor')
+        return $query->role('Tutor')
             ->leftJoin('seccion_tutor', 'users.id_usuario', '=', 'seccion_tutor.id_tutor')
             ->leftJoin('secciones', 'seccion_tutor.id_seccion', '=', 'secciones.id_seccion')
             ->orderBy('secciones.id_seccion')
@@ -79,7 +84,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeCoordinadoresPorSeccion(Builder $query)
     {
-        return $query->role('coordinador')
+        return $query->role('Coordinador')
             ->leftJoin('secciones', 'users.id_usuario', '=', 'secciones.id_coordinador')
             ->orderBy('secciones.id_seccion')
             ->select('users.*', 'secciones.nombre_seccion');
@@ -87,7 +92,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeAdministradoresPorSeccion(Builder $query)
     {
-        return $query->role('administrador')
+        return $query->role('Administrador')
             ->select('users.*')
             ->orderBy('users.name');
     }

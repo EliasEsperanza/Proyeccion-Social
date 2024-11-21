@@ -1,0 +1,59 @@
+.titulo-documentos {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.descripcion-documentos {
+    font-size: 1rem;
+    color: #666;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+    max-width: 100%; 
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.titulo-documento {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.descripcion-corta {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.btn-descargar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background-color: transparent;
+    color: #800000;
+    border: 2px solid #800000;
+    font-size: 0.9rem;
+    padding: 10px 0;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+
+.btn-descargar:hover {
+    background-color: #800000;
+    color: #fff;
+    border-color: #800000;
+}

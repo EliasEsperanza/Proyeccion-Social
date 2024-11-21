@@ -20,20 +20,23 @@ class DocumentosSeeder extends Seeder
 
         // nombre de los documentos
         $plantillaFiles = [
-            'Carta_de_Ampliacion_de_Tiempo-2024.docx',
-            'Carta_de_Eliminacion_de_Estudiante_del_Proyecto_(grupo)-2024.docx',
-            'Carta_de_Eliminacion_de_un_estudiante_(estudiante)-2024.docx',
-            'Carta_de_Eliminacion-2024.docx',
-            'Carta_de_Prorroga_a_Jefe_de_Unidad-2024.docx',
-            'Carta_de_solicitud.docx',
-            'Cartas_para_Inscripcion.docx',
-            'Formato_de_Inscripcion.docx',
-            'Formato_de_Memoria.docx',
-            'Formato_de_Proyecto.docx',
-            'HOJA_DE_VIDA_bolsa_de_trabajo_UES.docx',
-            'MANUALDEPROYECCIONSOCIAL_LINIAMIENTOS.docx',
-            'MANUALDEPROYECCIONSOCIAL.doc',
-            //'MANUALDEPROYECCIONSOCIAL.doc',
+            'CARTA ASIGNACION DE TUTOR.docx',
+            'Constancia de aprobación del Plan de Trabajo del Servicio Social.docx',
+            'Constancia de Finalización del Servicio Social.docx',
+            'Constancia de la Institución.docx',
+            'Constancia del Docente Tutor de Servicio Social.docx',
+            'Control de Asesorías a estudiantes en Servicio Social.docx',
+            'Control de Asistencia.docx',
+            'EJEMPLO DE DOCUMENTACION PARA EL PROYECTO DE SERVICIO SOCIAL.docx',
+            'Ficha de desempeño del estudiante en Servicio Social.docx',
+            'Ficha de supervisión y evaluación del Servicio Social.docx',
+            'FORMULARIO N1 HOJA DE INSCRIPCION PARA SERVICIO SOCIAL.docx',
+            'Formulario Nº 8 Formulario 3-5 Para El MINED.docx',
+            'Informe del 50% del Servicio Social.docx',
+            'Informe del 100% del Servicio Social.docx',
+            'Manual de proyeccion social.doc',
+            'MODELO DE CARTA A LA INSTITUCION QUE SOLICITA ESTUDIANTES EN SERVICIO SOCIAL.docx',
+            'Modelo de Certificación.docx',
         ];
 
         

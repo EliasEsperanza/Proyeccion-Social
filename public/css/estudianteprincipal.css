@@ -304,6 +304,18 @@
     text-decoration: underline;
 }
 
+.titulo-proyectos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 60px;
+    margin-left: 60px;
+    }
+    .ver-mas {
+    color: #333;
+    font-size: 0.875rem;
+    font-weight: 500;
+    }    
 @media (max-width: 576px) {
     body {
         font-size: 0.85rem;

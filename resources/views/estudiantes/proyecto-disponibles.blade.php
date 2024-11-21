@@ -1,6 +1,6 @@
 @extends('layouts.appE')
 
-@section('title', 'Dashboard - Horas Sociales')
+@section('title', 'Detalles del Proyecto')
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/proyecto-disponibleE.css') }}">
@@ -8,27 +8,22 @@
 
 @section('content')
 
-<div class="container-fluid py-3 encabezado">
-    <div class="container">
-        <h2 class="titulo-encabezado">Proyectos disponibles</h2>
-    </div>
-</div>
-
-<div class="container py-1 contenedor-card">
-    <div class="bg-white shadow tarjeta-contenido">
-        <div class="card-body">
-            <h3 class="titulo-proyecto">Gestor de TI</h3>
-            <p class="descripcion">
-                <strong>Descripción:</strong> Este proyecto busca desarrollar las competencias tecnológicas y de gestión de TI en comunidades e instituciones educativas con acceso limitado a recursos tecnológicos. A través de la colaboración de estudiantes de tecnología, se pretende optimizar y digitalizar procesos de gestión, además de brindar soporte en infraestructura de TI y en el uso de herramientas informáticas. El proyecto será una oportunidad de aprendizaje y aplicación de conocimientos prácticos para los estudiantes, a la vez que brinda un servicio valioso a la comunidad.
+<div class="container py-5">
+    <div class="card shadow tarjeta-detalle mx-auto" style="max-width: 800px;">
+        <div class="card-body p-4">
+            <h2 class="titulo-proyecto mb-4 text-center">{{ $proyecto->nombre_proyecto }}</h2>
+            <p class="descripcion mb-3">
+                <strong>Descripción:</strong> {{ $proyecto->descripcion_proyecto }}
             </p>
             <div class="detalles-proyecto">
-                <p><strong>Horas requeridas:</strong> 500 horas</p>
-                <p><strong>Ubicación:</strong> UES-FMO</p>
-                <p><strong>Sección Departamento:</strong> Sistemas Informáticos</p>
+                <p><strong>Horas requeridas:</strong> {{ $proyecto->horas_requeridas }}</p>
+                <p><strong>Ubicación:</strong> {{ $proyecto->lugar }}</p>
+                <p><strong>Sección:</strong> {{ $proyecto->seccion->nombre ?? 'Sin sección asignada' }}</p>
+                <p><strong>Estado:</strong> {{ $proyecto->estadoo->nombre_estado ?? 'Sin estado definido' }}</p>
             </div>
-            <div class="d-flex justify-content-end mt-4">
+            <div class="d-flex justify-content-between mt-4">
                 <button class="btn btn-enviar me-2">Enviar solicitud</button>
-                <button class="btn btn-pdf">Generar PDF</button>
+                <a href="{{ route('estudiantes.dashboard') }}" class="btn btn-regresar">Regresar</a>
             </div>
         </div>
     </div>

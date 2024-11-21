@@ -21,15 +21,8 @@
         <button class="btn btn-outline-dark me-2" id="boton-toggle-superior">
             <i class="bi bi-list"></i>
         </button>
-
-        <!-- Campo de Búsqueda -->
-        <form class="d-flex ms-auto position-relative me-3">
-            <input class="form-control rounded-pill ps-5" type="search" placeholder="Buscar" aria-label="Buscar">
-            <i class="bi bi-search position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
-        </form>
-
         
-        <div class="position-relative me-3 topbar-notification">
+        <div class="d-flex ms-auto position-relative me-3 topbar-notification">
             <i class="bi bi-bell" style="font-size: 1.5rem; color: #800000;"></i>
             <span class="badge">4</span>
         </div>      
@@ -62,17 +55,8 @@
                             <i class="bi bi-people me-2"></i> Gestión de Usuarios
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('permissions.index') }}" onclick="establecerActivo(this)">
-                            <i class="bi bi-person-gear me-2"></i> Gestión de Permisos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="{{ route('gestion-roles') }}" onclick="establecerActivo(this)">
-                            <i class="bi bi-journal me-2"></i> Gestión de Roles
-                        </a>
-                    </li>
+                    
+                   
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('usuarios') }}" onclick="establecerActivo(this)">
                             <i class="bi bi-person me-2"></i> Usuarios
@@ -87,12 +71,7 @@
                             <i class="bi bi-people me-2"></i> Gestión de Usuarios
                         </a>
                     </li>
-                    <li class="nav-item">
-
-                        <a class="nav-link" href="{{ route('gestion-roles') }}" onclick="establecerActivo(this)">
-                            <i class="bi bi-journal me-2"></i> Gestión de Roles
-                        </a>
-                    </li>
+                   
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('usuarios') }}" onclick="establecerActivo(this)">
                             <i class="bi bi-person me-2"></i> Usuarios
@@ -138,7 +117,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('solicitud_proyecto') }}" onclick="establecerActivo(this)">
+                        <a class="nav-link" href="" onclick="establecerActivo(this)">
                             <i class="fas fa-file-alt me-2"></i>Solicitud de Proyectos
                         </a>
                     </li>

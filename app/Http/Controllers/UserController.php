@@ -434,12 +434,22 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('correo', 'contrasena');
-
+    
         if (Auth::attempt(['email' => $credentials['correo'], 'password' => $credentials['contrasena']])) {
             $request->session()->regenerate();
+            
+            // Obtener el usuario autenticado
+            $user = Auth::user();
+            
+            // Verificar si el usuario tiene el rol de Estudiante
+            if ($user->hasRole('Estudiante')) {
+                return redirect()->route('estudiantes.dashboard');
+            }
+            
+            // Redireccionamiento por defecto para otros roles
             return redirect()->intended('/dashboard');
         }
-
+    
         return redirect()->route('login')->withErrors([
             'error' => 'Usuario o contraseña inválidos.',
         ]);
@@ -452,4 +462,20 @@ class UserController extends Controller
         })->count();
     }
 
+    public function getUsers()
+    {
+        // Obtener todos los usuarios de la base de datos
+        $users = User::all();
+
+        // Retornar los usuarios en formato JSON
+        return response()->json($users);
+    }
+
+    public function show()
+    {
+        if (auth()->check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
+            return view('mensaje.mensaje');
+        }
+        return view('dashboard.dashboard');
+    }
 }
