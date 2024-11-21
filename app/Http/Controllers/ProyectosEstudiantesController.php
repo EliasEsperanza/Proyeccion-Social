@@ -90,4 +90,14 @@ class ProyectosEstudiantesController extends Controller
         return redirect()->route('proyectos_estudiantes.index')->with('success','Elminacion de asignacion de estudiante a proyecto exitosa');;
 
     }
+
+    public function detallesmio()
+    {
+        return view('estudiantes.detallesmio');
+    }
+    //retorna vista solicitud de proyecto
+    public function proyectomio()
+    {
+        return view('estudiantes.proyectomio');
+    }
 }

@@ -22,14 +22,47 @@
                     <th>Fecha de finalización</th>
                     <th>Ubicación</th>
                     <th>Progreso</th>
-                    <th>Horas completadas</th>
                     <th>Estado</th>
                     <th>Sección/Departamento</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
 
             <tbody>
-                
+            @foreach($ListProyecto as $proyecto)
+                <tr>
+                    <td>{{$proyecto->nombre_proyecto}}</td>
+                    <td>
+                        @if($proyecto->estudiantes->isNotEmpty())
+                            @foreach($proyecto->estudiantes as $estudiante)
+                                <li>{{$estudiante->usuario->name}}</li>
+                            @endforeach
+                        @else
+                            <p>no hay estudiantes asignados</p> 
+                        @endif
+                    </td>
+                    <td>{{ $proyecto->tutorr?->name ?? 'Sin tutor asignado' }}</td>
+                    <td>{{$proyecto->fecha_inicio}}</td>
+                    <td>{{$proyecto->fecha_fin}}</td>
+                    <td>{{$proyecto->lugar}}</td>
+                    <td>-</td>
+                    <td>{{$proyecto->estadoo->nombre_estado}}</td>
+                    <td>
+                    @if($proyecto->tutorr?->seccionesTutoreadas)
+                        @foreach ($proyecto->tutorr->seccionesTutoreadas as $seccion)
+                            <li>{{ $seccion->nombre_seccion ?? 'Sin seccion asignada' }}</li>
+                        @endforeach
+                    @else
+                        <li>No hay secciones tutoreadas</li>
+                    @endif
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{{ route('proyecto.proyecto-editar', ['id' => $proyecto->id_proyecto]) }}" class="btn btn-light btn-sm p-2 px-3"><i class="bi bi-pencil text-warning"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
             </tbody>
 
         </table>

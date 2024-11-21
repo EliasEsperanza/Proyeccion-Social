@@ -59,12 +59,6 @@
     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="seccion" class="form-label">Sección/Departamento</label>
-                            <select class="form-select" id="seccion">
-                                <option selected>Seleccionar departamento</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
                             <label for="estado" class="form-label">Estado</label>
                             <select class="form-select" id="estado">
                                 <option selected>En progreso</option>

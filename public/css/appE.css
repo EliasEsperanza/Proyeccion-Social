@@ -1,0 +1,475 @@
+body{
+    background-color: #f5f5f5;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 1rem;
+    background-color: #ffffff;
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem #800000;
+    border-color: #800000;
+}
+
+#contenedor-principal {
+    display: flex;
+    margin-top: 55px;
+}
+
+#barra-lateral {
+    width: 250px;
+    min-height: calc(100vh - 70px);
+    border-right: 1px solid #ddd;
+    background-color: #fff;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 70px;
+}
+
+#barra-lateral.oculto {
+    display: none;
+}
+
+#barra-lateral .nav-link {
+    color: #413c3c;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 4px;
+    outline: none;
+}
+
+#barra-lateral .nav-link:hover,
+#barra-lateral .nav-link:focus {
+    background-color: #660000;
+    color: #fff;
+}
+
+.nav-link.activo {
+    background-color: #800000;
+    color: #ffffff;
+}
+
+#barra-lateral .nav-item.text-muted {
+    padding: 10px 15px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #f5f5f5;
+}
+
+#contenido-principal {
+    flex-grow: 1;
+    transition: all 0.3s ease;
+}
+
+.navbar .form-control {
+    max-width: 350px;
+    background-color: #f8f9fa;
+    border: none;
+    border: 2px solid #800000;
+}
+
+.navbar .btn-outline-dark {
+    color: #800000;
+    border-color: #800000;
+}
+
+.navbar .btn-outline-dark:hover {
+    background-color: #660000;
+    color: #fff;
+    border-color: #660000;
+}
+
+.badge {
+    font-size: 1rem;
+    background-color: #6b0303;
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+    margin-left: 1rem;
+    border-radius: 50%;
+}
+
+@media (max-width: 767px) {
+    #barra-lateral {
+        width: 200px;
+    }
+
+    #boton-toggle-superior {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+    }
+
+    #barra-lateral {
+        display: none;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 250px;
+        height: calc(100vh - 60px);
+        z-index: 10;
+        background-color: #fff;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    #barra-lateral.visible {
+        display: block;
+        transform: translateX(0);
+    }
+
+    #contenido-principal {
+        width: 100%;
+        margin-top: 60px;
+    }
+}
+
+
+.btn-yei{
+    margin-left: 80%;
+    background-color:#800000;
+    color: #ffffff;
+}
+
+.btn-yei:hover{
+    color: #ffffff;
+    background-color:#660000;
+}
+
+.bi-pencil{
+    padding: 10px;
+}
+
+.bi-trash-fill{
+    padding: 10px;
+
+}
+
+#barra-lateral.visible {
+    display: block;
+    transform: translateX(0);
+}
+
+#boton-toggle-superior {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+}
+
+#contenido-principal {
+    width: 100%;
+    margin-top: 60px;
+}
+
+.nav-link.activo {
+    background-color: #800000 !important;
+    color: #ffffff !important;
+}
+
+.detail-card {
+    max-width: 1300px;
+    width: 100%;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-return {
+    max-width: 400px;
+    width: 100%;
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-return:hover {
+    background-color: #5a6268;
+    color: white;
+}
+
+.btn-pdf {
+    max-width: 400px;
+    width: 100%;
+    background-color: #800000;
+    color: white;
+}
+
+.btn-pdf:hover {
+    background-color: #660000;
+    color: white;
+}
+
+
+/*proyecto disponible*/
+.tabla-contenedor {
+    background-color: #f7f8fa;
+    border-radius: 12px;
+    padding: 1rem;
+}
+
+.grupo-entrada {
+    max-width: 500px;
+    margin: auto;
+}
+
+.grupo-entrada .form-control {
+    background-color: transparent;
+    font-size: 0.9rem;
+}
+
+.grupo-entrada .btn {
+    background-color: transparent;
+    color: #6c757d;
+}
+
+.table {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.tabla-clara {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.tabla-hover tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.btn-light {
+    padding: 0.4rem 0.6rem;
+    width: auto;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.btn-light:hover {
+    background-color: #800000 !important;
+    color: #ffffff !important;
+}
+
+.btn-light:hover i {
+    color: #ffffff !important;
+}
+
+.btn-accion {
+    padding: 0.4rem 0.6rem;
+    width: auto;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background-color: #f1f3f5;
+    color: #6c757d;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-accion:hover {
+    background-color: #800000 !important;
+    color: #ffffff !important;
+}
+
+.paginacion {
+    padding: 0;
+    margin: 0;
+}
+
+.paginacion .pagina-item {
+    display: inline-block;
+}
+
+.paginacion .pagina-item .pagina-enlace {
+    background-color: #f1f3f5;
+    color: #000000;
+    padding: 0.4rem 0.8rem;
+    border-radius: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.paginacion .pagina-item.activo .pagina-enlace {
+    background-color: #800000;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 0.4rem 0.8rem;
+}
+
+.paginacion .pagina-enlace:hover {
+    background-color: #800000;
+    color: #ffffff;
+    border-radius: 10px;
+}
+
+.paginacion .pagina-enlace:hover i {
+    color: #ffffff !important;
+}
+
+.text-muted {
+    color: #000000 !important;
+}
+
+.text-warning {
+    color: #000000 !important;
+}
+
+.text-danger {
+    color: #000000 !important;
+}
+
+.buscar {
+    border: none;
+    border: 2px solid #800000;
+}
+
+.buscar:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem #800000;
+    border-color: #800000;
+}
+
+input[type="checkbox"].form-check-input {
+    position: relative;
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #800000;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+}
+
+input[type="checkbox"].form-check-input:checked {
+    background-color: #800000;
+    border-color: #800000;
+}
+
+input[type="checkbox"].form-check-input:checked::before {
+    content: '✓';
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.form-select.form-select-sm {
+    border: 2px solid #800000;
+    background-color: #f8f9fa;
+    color: #000000;
+    transition: border-color 0.3s ease;
+}
+
+.form-select.form-select-sm:focus {
+    border-color: #800000;
+    box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.25);
+    outline: none;
+}
+
+.form-select:focus {
+    border-color: #800000;
+    box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.25);
+    outline: none;
+}
+
+.btn-publicar {
+    background-color: #800000;
+    color: #ffffff;
+    border: none;
+}
+
+.btn-publicar:hover {
+    background-color: #660000;
+
+}
+
+.profile-card {
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+}
+.profile-circle {
+    background-color: #6c0000;
+    color: white;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 15px;
+}
+.btn-message {
+    background-color: #6c0000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+.btn-message:hover{
+    background-color: #800000;
+    color: white    ;
+}
+
+/* Estilos base para la campana */
+.topbar-notification {
+    font-size: 1.5rem;
+    color: #800000;
+    cursor: pointer;
+    position: relative;
+}
+
+.topbar-notification .badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    font-size: 0.65rem;
+    background-color: rgba(128, 0, 0, 0.15);
+    color: #800000;
+    border-radius: 50%;
+    padding: 0.1em 0.25em;
+    min-width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    line-height: 1;
+}
+
+@media (max-width: 767px) {
+    .navbar .form-control {
+        max-width: 150px;
+        height: 30px;
+        font-size: 0.875rem;
+        padding-left: 2.5rem;
+    }
+}
+

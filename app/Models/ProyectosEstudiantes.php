@@ -11,17 +11,17 @@ class ProyectosEstudiantes extends Model
 {
     use HasFactory;
     protected $table = 'proyectos_estudiantes';
-    protected $primaryKey= 'id';
+    protected $primaryKey= 'id_proyectos_estudiante';
     protected $fillable = [
-        'id_proyectos',
-        'id_estudiantes',
+        'id_proyecto',
+        'id_estudiante',
     ];
 
     public function proyecto(){
-        return $this->belongsTo(Proyecto::class,'id_proyectos');
+        return $this->belongsTo(Proyecto::class,'id_proyecto');
     }
 
     public function estudiantes(){
-        return $this->belongsToMany(Estudiante::class,'id_estudiantes');
+        return $this->belongsToMany(Estudiante::class,'id_estudiante');
     }
 }

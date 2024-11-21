@@ -10,10 +10,13 @@ class RoleController extends Controller
 {
     public function index()
     {
-        // Obtener todos los roles con sus permisos
+        if (!auth()->user()->hasAnyRole(['Administrador', 'Coordinador'])) {
+            return redirect()->route('dashboard'); 
+        }
+    
         $roles = Role::with('permissions')->get();
-        $permissions = Permission::all(); // Obtener todos los permisos para asignar al crear/editar un rol
-
+        $permissions = Permission::all();
+    
         return view('layouts.gestion-de-roles', compact('roles', 'permissions'));
     }
 

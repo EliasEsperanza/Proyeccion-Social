@@ -19,25 +19,23 @@ class AsignacionesSeeder extends Seeder
      */
     public function run(): void
     {
-         // Obtener todos los estudiantes, proyectos y tutores
-         $estudiantes = Estudiante::all();
-         $proyectos = Proyecto::all();
-         $tutores = User::role('Tutor')->get(); // Obtener solo los usuarios con el rol de 'Tutor'
-         
-         // Verificar si hay datos en las tablas necesarias
-         if ($estudiantes->isEmpty() || $proyectos->isEmpty() || $tutores->isEmpty()) {
-             throw new \Exception('Probablemenete no hay datos de Estudiantes, datos de Proyectos o datos de Tutor');
-         }
-         // Iterar sobre los estudiantes y asignarles un proyecto y tutor aleatorio
-         foreach ($estudiantes as $estudiante) {
-             Asignacion::create([
-                 'id_proyecto' => $proyectos->random()->id, // Selecciona un proyecto aleatorio
-                 'id_estudiante' => $estudiante->id, // ID del estudiante actual
-                 'id_tutor' => $tutores->random()->id, // Selecciona un tutor aleatorio
-                 'fecha_asignacion' => Carbon::now()->subDays(rand(0, 365))->format('d/m/Y'), // Fecha aleatoria en el ultimo año con formato dia/mes/año
-             ]);
-         }
-          
-     }
-    
+        $estudiantes = Estudiante::all();
+        $proyectos = Proyecto::all();
+        $tutores = User::role('Tutor')->get();
+        foreach ($estudiantes as $estudiante) {
+            try {
+                $proyecto = $proyectos->random();
+                $tutor = $tutores->random();
+
+                Asignacion::create([
+                    'id_proyecto' => $proyecto->id_proyecto,
+                    'id_estudiante' => $estudiante->id_estudiante,
+                    'id_tutor' => $tutor->id_usuario,
+                    'fecha_asignacion' => Carbon::now()->subDays(rand(0, 365))->format('Y-m-d'),
+                ]);
+            } catch (\Exception $e) {
+                $this->command->error("Error al crear asignación para estudiante {$estudiante->id_estudiante}: " . $e->getMessage());
+            }
+        }
+    }
 }

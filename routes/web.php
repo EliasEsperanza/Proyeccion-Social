@@ -1,74 +1,141 @@
 <?php
 
 use App\Http\Controllers\DepartamentoController;
-use App\Http\Controllers\HistorialDepartamentoController;
 use App\Http\Controllers\TestsKevControllerController;
 use App\Http\Controllers\AsignacionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatDocumentoController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\HistorialController;
 use App\Http\Controllers\HorasSocialesController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\ProyectosDocumentosController;
+use App\Http\Controllers\ProyectosEstudiantesController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('login.login');
+})->name('login');
+
+Route::get('/hrs', function () {
+    return view('estudiantes.actualizar-horas');
 });
 
-Route::get('/registro', function () {
-    return view('registro.registro');
-});
+Route::post('/', [UserController::class, 'login'])->name('login.process');
 
-Route::get('/proyecto-g', function () {
-    return view('proyecto.proyecto-general');
-})->name('proyecto-g');
+Route::get('/dashboard/datos-grafico', [ProyectoController::class, 'obtenerDatosGrafico'])->name('dashboard.datosGrafico');
+Route::get('/dashboard/estudiantes-proyectos-por-fecha', [ProyectoController::class, 'obtenerEstudiantesYProyectosPorFecha'])->name('dashboard.estudiantesProyectosPorFecha');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware('auth') 
+    ->name('dashboard');
+
+Route::post('/logout', function () {
+    auth()->logout();
+    return redirect('/'); 
+})->middleware('auth')->name('logout');
+
+Route::get('/registro', [UserController::class, 'allSeccionRegistro'])->name('registro');
+Route::post('/registro', [UserController::class, 'registro'])->name('usuarios.registro');
+
+
+// -----------------rutas de proyectos---------
+Route::get('/proyecto-g',[ProyectoController::class, 'index'], function () {
+    if (Auth::check() && auth()->user()->hasAnyRole(['Administrador', 'Coordinador', 'Tutor'])) {
+        return view('proyecto.proyecto-general');
+    }
+    return view('dashboard.dashboard');
+})->middleware('auth')->name('proyecto-g');
 Route::get('/proyecto', function () {
-    return view('proyecto.publicar-proyecto');
-})->name('proyecto');
+    if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
+        return view('proyecto.publicar-proyecto');
+    }
+    return view('dashboard.dashboard');
+})->middleware('auth')->name('proyecto');
+
+
+//Mostrar los departamentos en publicar proyectos
+Route::get('/proyecto', [ProyectoController::class, 'retornar_departamentos'])->name('proyecto');
+
+Route::get('/proyecto-disponible',[ProyectoController::class, 'retornar_proyectos'], function () {
+    if (Auth::check() && auth()->user()->hasAnyRole(['Administrador', 'Coordinador', 'Tutor'])) {
+        return view('proyecto.proyect-disponible');
+    }
+    return view('dashboard.dashboard');
+})->middleware('auth')->name('proyecto-disponible');
+
+
+// Ruta para la página del gestor de TI
+Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])
+    ->name('gestor_de_TI');
+// Ruta para la solicitud de proyecto
+Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])
+    ->name('solicitud_proyecto');
+
+Route::get('/proyecto/{id}/editar',[ProyectoController::class, 'edit'], function () {
+    if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
+        return view('proyecto.proyecto-editar');
+    }
+    return view('dashboard.dashboard');
+})->middleware('auth')->name('proyecto.proyecto-editar');
+
+Route::post('/proyectos/{proyecto}/asignar-estudiantes', [ProyectoController::class, 'asignarEstudiante'])->name('proyectos.asignarEstudiante');
+Route::delete('/proyectos/{proyecto}/eliminar-estudiante/{estudiante}', [ProyectoController::class, 'eliminarEstudiante'])->name('proyectos.eliminarEstudiante');
+Route::put('/proyectos/{proyecto}/actualizar', [ProyectoController::class, 'actualizar'])->name('proyectos.actualizar');
+
 
 Route::get('/mensajeria', function () {
-    return view('mensaje.mensaje');
-})->name('mensajeria');
+    if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
+        return view('mensaje.mensaje');
+    }
+    return view('dashboard.dashboard');
+})->middleware('auth')->name('mensajeria');
 
 Route::get('/gestion-proyecto', function () {
-    return view('gestionProyectos.gestionProyectos');
-})->name('gestion-proyecto');
+    if (Auth::check() && auth()->user()->hasAnyRole(['Coordinador', 'Administrador'])) {
+        return view('gestionProyectos.gestionProyectos');
+    }
+    return view('dashboard.dashboard');
+})->middleware('auth')->name('gestion-proyecto');
 
 Route::get('/gestion-permiso', function () {
-    return view('permisos.gestionpermiso');
-})->name('gestion-permiso');
+    if (Auth::check() && auth()->user()->hasRole('Administrador')) {
+        return view('permisos.gestionpermiso');
+    }
+    return view('dashboard.dashboard');
+})->middleware('auth')->name('gestion-permiso');
 
-Route::get('/gestion-roles', function () {
-    return view('layouts.gestion-de-roles');
-})->name('gestion-roles');
+Route::get('/gestion-roles', [RoleController::class, 'index'])->middleware('auth')->name('gestion-roles');
 
-Route::get('/proyecto-disponible', function () {
-    return view('proyecto.proyecto-disponible');
-})->name('proyecto-disponible');
 
 Route::get('/detalle', function () {
-    return view('proyecto.detalle-proyecto');
-})->name('detalle');
-
-Route::get('/dashboard', function () {
+    if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
+        return view('proyecto.detalle-proyecto');
+    }
     return view('dashboard.dashboard');
-})->name('dashboard');
+})->middleware('auth')->name('detalle');
 
-Route::get('/crear', function () {
-    return view('usuarios.crearUsuario');
-})->name('crear');
 
-Route::get('/usuarios', function () {
-    return view('usuarios.listaUsuario');
-})->name('usuarios');
+Route::get('/crear', [UserController::class, 'allSeccion'])->name('crear');
+Route::get('/usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuarios.editarUsuario');
+Route::put('/usuarios/{id}/actualizar', [UserController::class, 'update'])->name('usuarios.actualizar');
+Route::get('/usuarios', [UserController::class, 'list'])->name('usuarios');
+Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
+Route::delete('/usuarios/eliminar', [UserController::class, 'deleteSelected'])->name('usuarios.eliminar');
+Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.eliminarUsuario');
+Route::get('/usuarios/buscar', [UserController::class, 'buscar'])->name('usuarios.buscar');
+
+Route::get('/est', function () {
+    return view('estudiantes.dashboard');
+});
 
 Route::resource('permissions', PermissionController::class)->except(['show']);
 
@@ -90,9 +157,7 @@ Route::get('/layouts', function () {
     return view('layouts.gestion-de-roles');
 })->name('roles');
 
-Route::get('/perfil', function () {
-    return view('perfil.perfilUsuario');
-})->name('perfil');
+Route::get('perfil/{id}', [UserController::class, 'showPerfil'])->name('perfil');
 
 // Rutas del controlador Estudiante
 Route::controller(EstudianteController::class)
@@ -100,32 +165,38 @@ Route::controller(EstudianteController::class)
     ->name('estudiantes.')
     ->group(function () {
         Route::get('/', 'index')->name('index');          
-        Route::post('/', 'store')->name('store');         
+        Route::get('/create', 'create')->name('create');          
+        Route::post('/', 'store')->name('store'); 
+
         Route::get('/{id}', 'show')->name('show');        
         Route::put('/{id}', 'update')->name('update');    
         Route::delete('/{id}', 'destroy')->name('destroy'); 
     });
 
 // Rutas del controlador Proyecto
-Route::controller(ProyectoController::class)
-    ->prefix('proyectos')
-    ->name('proyectos.')
-    ->group(function () {
-        Route::get('/', 'index')->name('index');          
-        Route::post('/', 'store')->name('store');         
-        Route::get('/{id}', 'show')->name('show');        
-        Route::put('/{id}', 'update')->name('update');    
-        Route::delete('/{id}', 'destroy')->name('destroy'); 
-    });
+// Route::controller(ProyectoController::class)
+//     ->prefix('proyectos')
+//     ->name('proyectos.')
+//     ->group(function () {
+//         Route::get('/', 'index')->name('index');          
+//         Route::post('/', 'store')->name('store');         
+//         Route::get('/{id}', 'show')->name('show');        
+//         Route::put('/{id}', 'update')->name('update');    
+//         Route::delete('/{id}', 'destroy')->name('destroy'); 
+//     });
+
+    Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
 
 // Rutas de recuperación y reseteo de contraseña
-Route::get('/recuperarcontraseña', function () {
+Route::get('/recuperarpassword', function () {
     return view('auth.recupassword');
-});
+})->name('recuperarpassword');
 
-Route::get('/resetearcontraseña', function () {
-    return view('auth.resetpassword');
-});
+Route::get('/resetearpassword/{idUser}',[UserController::class,'resetearpassword'] );
+
+Route::post('/enviocorreocode', [UserController::class, 'enviocorreocode'])->name('enviocorreocode');
+
+Route::post('/updatepassword/{idUser}', [UserController::class, 'updatepassword'])->name('updatepassword');
 
 // Rutas del controlador Estado
 Route::controller(EstadoController::class)->group(function () {
@@ -191,7 +262,7 @@ Route::controller(HorasSocialesController::class)
     });
 
 // Rutas del controlador Notification
-Route::controller(NotificationController::class)
+Route::controller(NotificacionController::class)
     ->prefix('notificaciones')
     ->name('notificaciones.')
     ->group(function () {
@@ -223,4 +294,32 @@ Route::controller(ProyectosDocumentosController::class)
     Route::delete('/layouts/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
     Route::put('/layouts/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
 
+    Route::get('/perfil_usuario', [UserController::class, 'mostrarPerfil'], function () {
+        return view('usuarios.perfilUsuario');
+    })->name('perfil_usuario');
+
+    Route::put('/perfil_usuario/{id}', [UserController::class, 'updateusuario'])->name('update_usuario');
+
+    Route::put('/perfil_usuario', [UserController::class, 'updatepassperfil'])->name('update_password');
+
+
+    //ruta solicitud proyectos de estudiantes
+    Route::get('/solicitudproyecto', function () {
+        return view('estudiantes.solicitud-proyecto');
+    });
+
+    //ruta dashboard de estudiantes
+    Route::get('/pry', function () {
+        return view('estudiantes.dashboard');
+    });
+
+    Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
+    Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
+
+    Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'detallesmio'])->name('detallesmio');
+    Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'proyectomio'])->name('proyectomio');
+
+    
+
 ?>
+

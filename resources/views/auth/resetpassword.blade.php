@@ -13,7 +13,7 @@
     <div class="card p-4 shadow login-card">
         <h3 class="text-center mb-4 fw-bold">Cambiar Contraseña</h3>
         
-        <form action="" method="POST">
+        <form action="{{route('updatepassword',['idUser'=>$idUser])}}" method="POST">
             @csrf
             <div class="mb-3">
   <label for="codigo_verificacion" class="form-label">Código de verificación</label>
@@ -21,6 +21,11 @@
     <span style="  transform: scaleX(1.2);
     font-size: 1.1rem; "  class="input-group-text float-start"><i class="bi bi-envelope"></i></span>
     <input type="text" class="form-control" id="codigo_verificacion" name="codigo_verificacion" required>
+    @if (session()->has('error'))
+    <div class="invalid-feedback d-block">
+        {{ session('error') }}
+    </div>
+    @endif
   </div>
 </div>
 

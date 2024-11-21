@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Seccion;
+use App\Models\Proyecto;
+use App\Models\ProyectosEstudiantes;
 
 
 class Estudiante extends Model
@@ -13,6 +15,7 @@ class Estudiante extends Model
     use HasFactory;
     
     protected $table = 'estudiantes';
+    protected $primaryKey = 'id_estudiante';
     protected $fillable = [
         'id_usuario',
         'id_seccion',
@@ -29,5 +32,9 @@ class Estudiante extends Model
     public function seccion()
     {
         return $this->belongsTo(Seccion::class, 'id_seccion');
+    }
+    public function proyecto()
+    {
+        return $this->hasOneThrough(Proyecto::class,ProyectosEstudiantes::class, 'id_estudiante','id_proyecto','id_estudiante','id_proyectos_estudiante');
     }
 }

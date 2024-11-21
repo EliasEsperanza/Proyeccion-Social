@@ -1,0 +1,31 @@
+.btn-danger {
+    background-color: #800000;
+    border-color: #800000;
+}
+
+.btn-danger:hover {
+    background-color: #660000;
+    border-color: #660000;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+ul li {
+    font-size: 14px;
+    color: #333;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.btn-toolbar .btn {
+    padding: 0.4rem 0.6rem;
+}

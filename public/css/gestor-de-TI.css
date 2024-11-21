@@ -1,0 +1,79 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.job-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: black;
+    font-size: 24px;
+    margin: 0 0 20px 0;
+}
+h1:hover{
+    color: #8b0000;
+    font-size: 24px; 
+    margin: 0 0 20px 0; 
+}
+.section {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-weight: bold;
+    color: black;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+.section-title:hover{
+    color: #8b0000;
+
+}
+
+.section-content {
+    color: #333;
+    line-height: 1.5;
+    font-size: 14px;
+    margin-bottom: 16px;
+
+}
+
+.button-group {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-accept {
+    background-color: #8b0000;
+    color: white;
+}
+
+.btn-reject {
+    background-color: #f5f5f5;
+    border: 1px solid #333;
+    border: 1px solid #ccc;
+}
+
+.info-tag {
+    display: inline-block;
+    background-color: #f5f5f5;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #666;
+}

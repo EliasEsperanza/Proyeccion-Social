@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, sans-serif;
+    align-items: center;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    color: #333;
+    font-size: 25px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 500px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #141414;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #535353;
+    margin-bottom: 15px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 23px;
+    color: #353333;
+    font-size: 14px;
+}
+
+.info-item:before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.time:before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>');
+}
+
+.location:before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>');
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.ver-mas {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 15px;
+    display: block;
+}
+.ver-mas:hover{
+    color: #5e1d1d;
+    font-weight: bold;
+
+}
+
+.button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.accept {
+    background-color: #8B0000;
+    color: white;
+}
+
+.reject {
+    background-color: white;
+    color: #666;
+    border: 1px solid #ccc;
+}

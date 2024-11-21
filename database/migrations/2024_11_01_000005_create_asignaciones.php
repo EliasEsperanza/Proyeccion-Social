@@ -9,13 +9,17 @@ return new class extends Migration
     public function up()
     {
         Schema::create('asignaciones', function (Blueprint $table) {
-            $table->id('id_asignacion');
-            $table->foreignId('id_proyecto')->constrained('proyectos', 'id_proyecto');
-            $table->foreignId('id_estudiante')->constrained('estudiantes', 'id_estudiante');
-            $table->foreignId('id_tutor')->constrained('users', 'id_usuario');
-            $table->date('fecha_asignacion');
-            $table->timestamps();
-        });
+    $table->id('id_asignacion');
+    $table->unsignedBigInteger('id_proyecto');
+    $table->unsignedBigInteger('id_estudiante');
+    $table->unsignedBigInteger('id_tutor');
+    $table->date('fecha_asignacion');
+    $table->timestamps();
+    
+    $table->foreign('id_proyecto')->references('id_proyecto')->on('proyectos');
+    $table->foreign('id_estudiante')->references('id_estudiante')->on('estudiantes');
+    $table->foreign('id_tutor')->references('id_usuario')->on('users');
+});
     }
 
     public function down()

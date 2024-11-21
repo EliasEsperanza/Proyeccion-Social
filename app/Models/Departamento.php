@@ -19,4 +19,5 @@ class Departamento extends Model
     {
         return $this->hasMany(Seccion::class, 'id_departamento', 'id_departamento');
     }
+
 }

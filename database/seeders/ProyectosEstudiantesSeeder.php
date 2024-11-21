@@ -14,20 +14,9 @@ class ProyectosEstudiantesSeeder extends Seeder
     public function run(): void
     {
         DB::table('proyectos_estudiantes')->insert([
-            ['id_proyectos' => 1, 'id_estudiantes' => 1],
-            ['id_proyectos' => 2, 'id_estudiantes' => 2],
-            ['id_proyectos' => 3, 'id_estudiantes' => 3],
-            ['id_proyectos' => 4, 'id_estudiantes' => 4],
-            ['id_proyectos' => 5, 'id_estudiantes' => 5],
-            ['id_proyectos' => 6, 'id_estudiantes' => 6],
-            ['id_proyectos' => 7, 'id_estudiantes' => 7],
-            ['id_proyectos' => 8, 'id_estudiantes' => 8],
-            ['id_proyectos' => 1, 'id_estudiantes' => 9],
-            ['id_proyectos' => 1, 'id_estudiantes' => 10],
-            ['id_proyectos' => 1, 'id_estudiantes' => 11],
-            ['id_proyectos' => 1, 'id_estudiantes' => 12],
-            
-            
+            ['id_proyecto' => 1, 'id_estudiante' => 1],
+            ['id_proyecto' => 2, 'id_estudiante' => 2],
+            ['id_proyecto' => 3, 'id_estudiante' => 3],     
         ]);
     }
 }

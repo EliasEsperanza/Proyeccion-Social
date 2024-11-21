@@ -1,0 +1,50 @@
+body {
+    background-color: #f8f9fc;
+}
+.tarjeta {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem; 
+    background-color: #fff;
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+.encabezado-tarjeta {
+    margin-bottom: 1rem;
+}
+.encabezado-tarjeta h5 {
+    font-weight: bold;
+    color: #333;
+}
+.encabezado-tarjeta p {
+    color: #666;
+    margin: 0;
+    font-size: 0.9rem;
+}
+.campo-formulario {
+    margin-bottom: 1.5rem; 
+}
+.boton-principal {
+    background-color: #800000;
+    color: #fff;
+    border: none;
+}
+.boton-principal:hover {
+    background-color: transparent;
+    color: #800000;
+    border: 2px solid #800000;
+}
+.boton-secundario {
+    background-color: transparent;
+    color: #800000;
+    border: 2px solid #800000;
+}
+.boton-secundario:hover {
+    background-color: #800000;
+    color: #fff;
+    border: none;
+}
+.contenedor-principal {
+    margin-top: 5rem;
+}

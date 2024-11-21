@@ -1,0 +1,342 @@
+.card-med {
+    max-width: 1150px; 
+    margin: auto;     
+    width: 100%;     
+}
+
+.tarjeta-proceso {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border: none;
+}
+.titulo-proceso {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+.descripcion-proceso {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+@media (max-width: 576px) {
+    .titulo-proceso,
+    .titulo-proyectos,
+    .titulo-documentos {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+}
+.circulo-paso {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.2rem;
+    line-height: 2.5rem;
+    text-align: center;
+    border-radius: 50%;
+    color: #800000;
+    background-color: #d1d5db;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 576px) {
+    .circulo-paso {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+    }
+}
+.contenedor-carrusel {
+    height: 400px;
+    margin: 2rem 0;
+    text-align: center;
+}
+.carrusel {
+    display: flex;
+    overflow-x: auto;
+    gap: 2rem;
+    width: auto;
+    margin: auto;
+    padding: 0 1rem;
+    scrollbar-width: thin;
+    transition: transform 0.3s ease-in-out;
+    
+}
+.carrusel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Estilos para vista en moviles */
+@media (max-width: 768px) {
+    .carrusel {
+        gap: 1rem;
+        padding: 0 0.5rem; 
+        scrollbar-width: none; 
+    }
+
+    .carrusel::-webkit-scrollbar {
+        display: none; 
+    }
+}
+
+/* Tamaño diferente para vista de PC */
+@media (min-width: 992px) {
+    .tarjeta-proyecto {
+        min-width: 250px;
+        max-width: 440px;
+    }
+    
+}
+
+
+
+.tarjeta-proyecto {
+    flex-shrink: 0;
+    min-width: 200px;
+    max-width: 250px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    background-color: #fff;
+    text-align: left;
+    transition: transform 0.2s, box-shadow 0.3s ease-in-out;
+}
+
+.carru{
+    overflow-x: hidden;
+    overflow-y: hidden; 
+    width: 950px;
+    height: 300px;
+}
+
+.tarjeta-proyecto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para vista en moviles */
+@media (max-width: 768px) {
+    .carrusel {
+        gap: 1rem;
+        padding: 0 0.5rem; 
+        scrollbar-width: none; 
+    }
+
+    .carrusel::-webkit-scrollbar {
+        display: none; 
+    }
+}
+
+/* Tamaño diferente para vista de PC */
+@media (min-width: 992px) {
+    .tarjeta-proyecto {
+        min-width: 250px;
+        max-width: 440px;
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .card-med {
+        max-width: 90%;
+    }
+}
+
+
+.estado-boton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.estado-disponible {
+    background-color: #64d84d;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.estado-no-disponible {
+    background-color: #dd3d38;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+
+.ver-mas,
+.ver-mas-documentos {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #6c757d;
+    text-decoration: none;
+    display: block;
+}
+
+.ver-mas:hover,
+.ver-mas-documentos:hover {
+    text-decoration: underline;
+}
+
+.boton-carrusel {
+    width: 50px; 
+    height: 50px; 
+    background-color: #f5f5f5; 
+    border: 2px solid #ddd; 
+    border-radius: 50%; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    cursor: pointer; 
+    transition: background-color 0.3s, box-shadow 0.3s; 
+}
+.boton-carrusel:hover {
+    background-color: #e0e0e0; 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.boton-carrusel i{
+    font-size: 1.5rem; 
+    color: #333; 
+}
+@media (max-width: 576px) {
+    .boton-carrusel {
+        display: none;
+    }
+}
+
+.contenedor-documentos {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    margin: auto;
+}
+.titulo-documentos {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+.descripcion-documentos {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+.lista-documentos {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+}
+.list-group-item {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none; 
+    padding: 1rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.item-documento {
+    flex: 1 1 auto;
+    max-width: auto;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+.item-documento:hover {
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.enlace-documento {
+    display:flex;
+    align-items: center; 
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.icono-documento {
+    font-size: 1.2rem;
+    color: #007bff;
+    margin-right: 1rem;
+}
+.texto-documento {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    flex: 1;
+}
+.ver-mas-documentos {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #6c757d;
+    text-decoration: none;
+    display: block;
+    text-align: right;
+    margin-top: 1rem;
+    margin-right: 0;
+    padding-right: 1rem;
+}
+.ver-mas-documentos:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+    body {
+        font-size: 0.85rem;
+    }
+
+    .tarjeta-proceso,
+    .contenedor-carrusel,
+    .contenedor-documentos {
+        margin: 10px auto;
+        padding: 10px;
+    }
+}
+@media (min-width: 768px) {
+    body {
+        font-size: 1rem;
+    }
+}
+@media (min-width: 992px) {
+    .tarjeta-proceso,
+    .contenedor-carrusel,
+    .contenedor-documentos {
+        max-width: auto;
+        margin: auto;
+    }
+}
+@media (max-width: 576px) {
+    body {
+        font-size: 0.85rem;
+    }
+    .tarjeta-proceso,
+    .contenedor-carrusel,
+    .contenedor-documentos {
+        margin: 10px auto;
+        padding: 10px;
+    }
+}
