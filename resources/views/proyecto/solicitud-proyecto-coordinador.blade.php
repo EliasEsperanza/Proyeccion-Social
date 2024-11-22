@@ -32,7 +32,7 @@
         <div class="info-item time">{{ $proyecto->horas_requeridas }} horas</div>
         <div class="info-item location">{{ $proyecto->lugar }}</div>
 
-        <a class="ver-mas" href="{{ route('gestor_de_TI') }}" onclick="establecerActivo(this)">Ver más</a>
+        <a class="ver-mas" href="{{ route('detallesSolicitud', ['nombre_proyecto' => $proyecto->nombre_proyecto]) }}" onclick="establecerActivo(this)">Ver más</a>
         <div class="actions">
             <button class="button accept" onclick="aceptarSolicitud()">Aceptar</button>
             <button class="button reject" onclick="rechazarSolicitud()">Rechazar</button>

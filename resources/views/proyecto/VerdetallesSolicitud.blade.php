@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Gestor de TI')
+@section('title', 'Detalles')
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/proyecto-general.css') }}">
@@ -21,7 +21,7 @@
 
         <div class="section">
             <div class="section-title"><i class="fas fa-clock"></i> Horas requeridas:</div>
-            <div class="section-content">{{ $proyecto->horas_requeridas }} horas</div>
+            <div class="section-content">{{ $proyecto->horas_requeridas === 0 ? 'Sin asignar horas' : $proyecto->horas_requeridas . '  horas requeridas' }}</div>
         </div>
 
         <div class="section">
@@ -45,15 +45,7 @@
         <div class="section">
             <div class="section-title"><i class="fas fa-cogs"></i> Estado:</div>
             <div class="section-content">
-                @if($proyecto->estado == 9)
-                    Solicitud
-                @elseif($proyecto->estado == 1)
-                    En Proceso
-                @elseif($proyecto->estado == 2)
-                    Completado
-                @else
-                    No definido
-                @endif
+                {{$proyecto->estadoos->nombre_estado}}
             </div>
         </div>
 

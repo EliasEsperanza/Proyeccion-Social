@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Validación de correo
-    function validateEmail(email) {
-        return /^[a-zA-Z0-9._%+-]+@ues\.edu\.sv$/.test(email);
-    }
+    //function validateEmail(email) {
+    //    return /^[a-zA-Z0-9._%+-]+@example\.com$/.test(email);
+    //}
 
     // Validación en tiempo real del correo
     emailInput.addEventListener('input', function() {

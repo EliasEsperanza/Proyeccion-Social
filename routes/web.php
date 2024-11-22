@@ -118,7 +118,7 @@ Route::get('/proyecto-disponible',[ProyectoController::class, 'retornar_proyecto
 
 
 // Ruta para la página del gestor de TI
-Route::get('/gestor-de-ti/{nombre_proyecto}', [ProyectoController::class, 'gestorDeTI'])->name('gestor_de_TI');
+Route::get('/verDetallesSolicitud/{nombre_proyecto}', [ProyectoController::class, 'detallesSolicitud'])->name('detallesSolicitud');
 Route::post('/proyecto/aceptar/{nombre_proyecto}', [ProyectoController::class, 'aceptarSolicitud'])->name('proyectos.aceptar');
 Route::post('/proyecto/rechazar/{nombre_proyecto}', [ProyectoController::class, 'rechazarSolicitud'])->name('proyectos.rechazar');
 
@@ -376,8 +376,8 @@ Route::controller(ProyectosDocumentosController::class)
         return view('estudiantes.solicitud-proyecto');
     });
 
-    //Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
-    //Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
+    Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
+    Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
 
     Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
     Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');

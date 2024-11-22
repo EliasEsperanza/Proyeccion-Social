@@ -550,13 +550,13 @@ class ProyectoController extends Controller
 
 
     //retorna vista gertor de TI
-    public function gestorDeTI($nombre_proyecto)
+    public function detallesSolicitud($nombre_proyecto)
     {
         // Buscar el proyecto por su nombre
         $proyecto = Proyecto::where('nombre_proyecto', $nombre_proyecto)->firstOrFail();
 
         // Pasar el proyecto a la vista
-        return view('proyecto.gestor-de-TI', compact('proyecto'));
+        return view('proyecto.VerdetallesSolicitud', compact('proyecto'));
     }
     //aceptar solucitud
     public function aceptarSolicitud($nombre_proyecto)
