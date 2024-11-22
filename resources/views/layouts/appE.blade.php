@@ -41,7 +41,7 @@
         </a>
     </div>
 </nav>
-
+@if(auth()->user()->hasRole('Estudiante'))
 <div id="contenedor-principal" class="d-flex">
     <nav id="barra-lateral" class="p-3">
         <ul class="nav flex-column">
@@ -68,8 +68,13 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('docs_tramites') }}" onclick="establecerActivo(this)">
+                <a class="nav-link" href="{{ route('documentos') }}" onclick="establecerActivo(this)">
                     <i class="bi bi-folder2-open me-2"></i> Documentos
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('docs_tramites') }}" onclick="establecerActivo(this)">
+                    <i class="bi bi-folder2-open me-2"></i> Tramites Generales
                 </a>
             </li>
             <li class="nav-item text-muted mt-3">Mensajería</li>
@@ -96,6 +101,7 @@
         </main>
     </div>
 </div>
+@endif
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('js/appE.js') }}"></script>

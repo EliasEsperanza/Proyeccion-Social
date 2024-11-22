@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(auth()->user()->getRoleNames()->first() === 'Estudiante' ? 'layouts.appE' : 'layouts.app')
 
 @section('title', 'Perfil de Usuario')
 

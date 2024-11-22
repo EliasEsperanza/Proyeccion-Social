@@ -496,7 +496,8 @@ class UserController extends Controller
 
     public function show()
     {
-        if (auth()->check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
+        if (auth()->check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 
+        'Administrador', 'Estudiante'])) {
             return view('mensaje.mensaje');
         }
         return view('dashboard.dashboard');
