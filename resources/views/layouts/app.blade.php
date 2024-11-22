@@ -118,7 +118,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="" onclick="establecerActivo(this)">
+                        <a class="nav-link" href="{{ route('solicitudes_coordinador') }}" onclick="establecerActivo(this)">
                             <i class="fas fa-file-alt me-2"></i>Solicitud de Proyectos
                         </a>
                     </li>
