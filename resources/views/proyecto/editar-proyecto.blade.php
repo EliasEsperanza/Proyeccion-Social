@@ -53,49 +53,15 @@
                         <label for="id_seccion" class="form-label">Sección/Departamento</label>
                         <select name="id_seccion" class="form-select" id="id_seccion" required>
                             <option value="">Seleccionar sección</option>
-                            @php
-                                $user = auth()->user();
-                                $userSeccion = null;
-
-                                if ($user->hasRole('Estudiante')) {
-                                    $userSeccion = DB::table('estudiantes')
-                                        ->join('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
-                                        ->where('estudiantes.id_usuario', $user->id_usuario)
-                                        ->select('secciones.id_seccion', 'secciones.nombre_seccion')
-                                        ->first();
-                                } elseif ($user->hasRole('Tutor')) {
-                                    $userSeccion = DB::table('seccion_tutor')
-                                        ->join('secciones', 'seccion_tutor.id_seccion', '=', 'secciones.id_seccion')
-                                        ->where('seccion_tutor.id_tutor', $user->id_usuario)
-                                        ->select('secciones.id_seccion', 'secciones.nombre_seccion')
-                                        ->first();
-                                } elseif ($user->hasRole('Coordinador')) {
-                                    $userSeccion = DB::table('secciones')
-                                        ->where('id_coordinador', $user->id_usuario)
-                                        ->select('id_seccion', 'nombre_seccion')
-                                        ->first();
-                                }
-                            @endphp
-
-                            @if ($user->hasRole('Administrador'))
-                                @foreach ($departamentos as $departamento)
-                                    <optgroup label="{{ $departamento->nombre_departamento }}">
-                                        @foreach ($secciones->where('id_departamento', $departamento->id_departamento) as $seccion)
-                                            <option value="{{ $seccion->id_seccion }}" {{ $seccion->id_seccion == $proyecto->seccion->id_seccion ? 'selected' : '' }}>
-                                                {{ $seccion->nombre_seccion }}
-                                            </option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            @else
-                                @if ($userSeccion)
-                                    <option value="{{ $userSeccion->id_seccion }}" selected>
-                                        {{ $userSeccion->nombre_seccion }}
-                                    </option>
-                                @else
-                                    <option value="">No tiene una sección asignada</option>
-                                @endif
-                            @endif
+                            @foreach($departamentos as $departamento)
+                                <optgroup label="{{ $departamento->nombre_departamento }}">
+                                    @foreach($secciones->where('id_departamento', $departamento->id_departamento) as $seccion)
+                                        <option value="{{ $seccion->id_seccion }}" {{ $seccion->id_seccion == $proyecto->seccion->id_seccion ? 'selected' : '' }}>
+                                            {{ $seccion->nombre_seccion }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
                         </select>
                     </div>
                 </div>

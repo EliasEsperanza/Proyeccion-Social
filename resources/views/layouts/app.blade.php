@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboardStyle.css') }}">
     <link rel="stylesheet" href="{{ asset(path: 'css/mensaje.css')}}">
-    <link rel="stylesheet" href="{{ asset(path: 'css/soliproyecto.css')}}">
     @yield('styles')
     
 </head>
@@ -118,7 +117,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('solicitudes_coordinador') }}" onclick="establecerActivo(this)">
+                        <a class="nav-link" href="" onclick="establecerActivo(this)">
                             <i class="fas fa-file-alt me-2"></i>Solicitud de Proyectos
                         </a>
                     </li>
