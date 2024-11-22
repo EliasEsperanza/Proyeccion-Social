@@ -3,7 +3,8 @@
 @section('title', 'Mensajes')
 
 @section('content')
-
+<script src="https://cdn.socket.io/4.8.0/socket.io.min.js"></script>
+<script src="{{ asset(path: 'js/chat.js') }}"></script>
 <div class="container-fluid">
     <div class="row chat-container">
       
@@ -43,6 +44,6 @@
       </div>
     </div>
 </div>
-<script src="{{ asset(path: 'js/chat.js') }}"></script>
+
 
 @endsection

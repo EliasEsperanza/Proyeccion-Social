@@ -203,4 +203,17 @@ class EstudianteController extends Controller
 
         return response()->json($estudiantes);
     }
+
+    public function estudiantesPorSeccion_FIltroSinProyecto($idSeccion)
+    {
+        $estudiantes = Estudiante::with('usuario')
+            ->where('id_seccion', $idSeccion)
+            ->whereNotIn('id_estudiante', function($query) {
+                $query->select('id_estudiante')
+                      ->from('proyectos_estudiantes');
+            })
+            ->get();
+    
+        return response()->json($estudiantes);
+    }
 }

@@ -38,6 +38,31 @@ class ProyectoController extends Controller
 
         return view("proyecto.proyecto-general", compact("ListProyecto"));
     }
+
+    public function store_solicitud(Request $request)
+    {
+      
+        try {
+            $proyecto = new Proyecto();
+            $proyecto->nombre_proyecto = $request->nombre_proyecto;
+            $proyecto->descripcion_proyecto = strip_tags($request->descripcion);
+            $proyecto->lugar = $request->lugar;
+            $proyecto->estado = 9; //estado solicitud
+            $proyecto->horas_requeridas = 0;//a revisar 
+            $proyecto->periodo = now()->format('Y-m');
+            $proyecto->coordinador = auth()->id();  
+            $proyecto->seccion_id = $request->id_seccion; 
+            $proyecto->fecha_inicio = $request->fecha_inicio;
+            $proyecto->fecha_fin = $request->fecha_fin;
+    
+            $proyecto->save();
+    
+            return redirect()->back()->with('success', 'Proyecto creado exitosamente');
+        } catch (\Exception $e) {
+            \Log::error('Error al crear proyecto: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+    }
     public function solicitudes_coordinador()
     {
         $proyectos = Proyecto::where('estado', 9)

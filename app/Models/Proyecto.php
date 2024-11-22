@@ -74,13 +74,7 @@ public function departamento()
         return $this->belongsTo(User::class,'tutor','id_usuario');
 
     }
-
-    public function scopePorEstado(Builder $query, $estadoId)
-    {
-        return $query->where('estado', $estadoId);
-    }
-
-    public function scopePorCoordinador(Builder $query, $coordinadorId)
+  public function scopePorCoordinador(Builder $query, $coordinadorId)
     {
         return $query->where('coordinador', $coordinadorId);
     }
