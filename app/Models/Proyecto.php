@@ -127,6 +127,12 @@ public function departamento()
         return $this->fresh();
     }
 
+    public function asignaciones()
+    {
+        return $this->hasMany(Asignacion::class, 'id_proyecto', 'id_proyecto');
+    }
+
+
     public function removerTutor()
     {
         $this->update(['tutor' => null]);
