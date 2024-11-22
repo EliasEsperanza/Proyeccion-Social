@@ -9,9 +9,9 @@
 @endsection
 
 @section('content')
-<h1>Solicitudes de proyectos</h1>
+<h1 style=" margin-left: 30px;">Solicitudes de proyectos</h1>
 
-<div class="">
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" style="gap: 15px; margin-left: 60px;">
     @foreach($proyectos as $proyecto)
         <div class="card">
             <div class="title">{{ $proyecto->nombre_proyecto }}</div>
