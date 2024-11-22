@@ -1,4 +1,4 @@
-/*function sendMessage(event) {
+function sendMessage(event) {
     
     if (event.key === 'Enter' || event.type === 'click') {
        
@@ -34,4 +34,4 @@ document.getElementById('fileInput').addEventListener('change', function(event) 
     if (file) {
         console.log("Archivo seleccionado:", file.name);
     }
-});*/
+});

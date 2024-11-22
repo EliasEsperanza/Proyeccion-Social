@@ -13,37 +13,21 @@
     <div class="informacion">
         <div class="informacion__estudiantes">
             <h3>Total Estudiantes</h3>
-            <p>
-                @if(Auth::user()->hasRole('Tutor'))
-                    Estudiantes asignados a este tutor
-                @else
-                    Todos los estudiantes registrados en el sistema
-                @endif
-            </p>
+            <p>Todos los estudiantes registrados en el sistema</p>
             <h2>{{ $totalEstudiantes }}</h2>
         </div>
 
-
         <div class="informacion__proyectos">
-            <h3>Proyectos Asignados</h3>
-            <p>
-                @if(Auth::user()->hasRole('Tutor'))
-                    Todos los proyectos asignados a este tutor
-                @else
-                    Proyectos registrados en el sistema
-                @endif
-            </p>
-            <h2>{{ $totalProyectosAsignados }}</h2>
+            <h3>Proyectos Activos</h3>
+            <p>Proyectos en Curso</p>
+            <h2>{{ $totalProyectosActivos }}</h2>
         </div>
 
-        @if(!Auth::user()->hasRole('Tutor'))
         <div class="informacion__asesores">
             <h3>Tutores</h3>
             <p>Total de tutores</p>
             <h2>{{ $totalTutores }}</h2>
         </div>
-        @endif
-
     </div>
 
     <div class="graficos">

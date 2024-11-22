@@ -11,10 +11,10 @@ class DashboardController extends Controller
     {
         $totalEstudiantes = app(EstudianteController::class)->totalEstudiantes();
         $totalProyectosActivos = app(ProyectoController::class)->totalProyectosActivos();
-        $totalProyectosAsignados = app(ProyectoController::class)->totalProyectosAsignados(); 
         $totalTutores = app(UserController::class)->totalTutores();
 
-        return view('dashboard.dashboard', compact('totalEstudiantes', 'totalProyectosActivos', 'totalProyectosAsignados', 'totalTutores'));
+
+        return view('dashboard.dashboard', compact('totalEstudiantes', 'totalProyectosActivos', 'totalTutores'));
     }
 
     

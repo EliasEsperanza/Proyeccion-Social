@@ -18,8 +18,7 @@
             <div class="detalles-proyecto">
                 <p><strong>Horas requeridas:</strong> {{ $proyecto->horas_requeridas }}</p>
                 <p><strong>Ubicación:</strong> {{ $proyecto->lugar }}</p>
-                <p><strong>Sección:</strong> 
-                    {{ $proyecto->seccion->nombre_seccion ?? 'Sin sección asignada' }}</p>
+                <p><strong>Sección:</strong> {{ $proyecto->seccion->nombre ?? 'Sin sección asignada' }}</p>
                 <p><strong>Estado:</strong> {{ $proyecto->estadoo->nombre_estado ?? 'Sin estado definido' }}</p>
             </div>
             <div class="d-flex justify-content-between mt-4">

@@ -60,10 +60,6 @@ public function departamento()
         return $this->belongsTo(Estado::class,'estado','id_estado', 'estado', 'id_estado');
     }
 
-    public function estadoos()
-{
-    return $this->belongsTo(Estado::class, 'estado', 'id_estado');
-}
     public function coordinadorr()
     {
         return $this->belongsTo(User::class, 'coordinador', 'id_usuario');
@@ -74,7 +70,13 @@ public function departamento()
         return $this->belongsTo(User::class,'tutor','id_usuario');
 
     }
-  public function scopePorCoordinador(Builder $query, $coordinadorId)
+
+    public function scopePorEstado(Builder $query, $estadoId)
+    {
+        return $query->where('estado', $estadoId);
+    }
+
+    public function scopePorCoordinador(Builder $query, $coordinadorId)
     {
         return $query->where('coordinador', $coordinadorId);
     }
