@@ -425,6 +425,21 @@ class ProyectoController extends Controller
         return Proyecto::whereBetween('estado', [1, 6])->count();
     }
 
+    public function totalProyectosAsignados()
+    {
+        $user = Auth::user(); 
+
+        if ($user->hasRole('Tutor')) {
+            $totalProyectosAsignados = Asignacion::where('id_tutor', $user->id_usuario)
+                ->distinct('id_proyecto') 
+                ->count('id_proyecto'); 
+        } else {
+            $totalProyectosAsignados = \App\Models\Proyecto::count();
+        }
+
+        return $totalProyectosAsignados;
+    }
+
     public function obtenerDatosGrafico()
     {
         $user = Auth::user(); 
