@@ -9,9 +9,9 @@
 @endsection
 
 @section('content')
-<h1>Solicitudes de proyectos</h1>
+<h1 style=" margin-left: 30px;">Solicitudes de proyectos</h1>
 
-<div class="">
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" style="gap: 15px; margin-left: 60px;">
     @foreach($proyectos as $proyecto)
         <div class="card">
             <div class="title">{{ $proyecto->nombre_proyecto }}</div>
@@ -28,31 +28,24 @@
                 Estado: {{ $proyecto->estado }}
             </div>
             <div class="info-item period">Periodo: {{ $proyecto->periodo }}</div>
-            <a class="ver-mas" href="{{ route('gestor_de_TI') }}" onclick="establecerActivo(this)">Ver más</a>
+            <a class="ver-mas" href="{{ route('gestor_de_TI', ['nombre_proyecto' => $proyecto->nombre_proyecto]) }}">Ver más</a>
             <div class="actions">
-                <button class="button accept" onclick="aceptarSolicitud()">Aceptar</button>
-                <button class="button reject" onclick="rechazarSolicitud()">Rechazar</button>
+                <form action="{{ route('proyectos.aceptar', ['nombre_proyecto' => $proyecto->nombre_proyecto]) }}" method="POST" style="display: inline-block;">
+                    @csrf
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </form>
+
+                <form action="{{ route('proyectos.rechazar', ['nombre_proyecto' => $proyecto->nombre_proyecto]) }}" method="POST" style="display: inline-block;">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Rechazar</button>
+                </form>
             </div>
+
         </div>
-    @endforeach
+    @endforeach 
 </div>
 
 @endsection
 
 @section('scripts')
-<script>
-    // Función para manejar el clic en "Ver más"
-    function establecerActivo(element) {
-        // Cambiar el estado del enlace o agregar alguna acción, si es necesario
-    }
-
-    // Funciones para aceptar y rechazar la solicitud
-    function aceptarSolicitud() {
-        console.log('Solicitud aceptada');
-    }
-
-    function rechazarSolicitud() {
-        console.log('Solicitud rechazada');
-    }
-</script>
 @endsection

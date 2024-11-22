@@ -44,6 +44,8 @@ Route::post('/', [UserController::class, 'login'])->name('login.process');
 
 Route::get('/secciones-disponibles', [EstudianteController::class, 'seccionesDisponibles'])->name('secciones.disponibles');
 Route::get('/estudiantes-por-seccion/{idSeccion}', [EstudianteController::class, 'estudiantesPorSeccion'])->name('estudiantes.porSeccion');
+Route::get('//estudiantes-por-seccion-filtro-sin-proyecto/{idSeccion}', [EstudianteController::class, 'estudiantesPorSeccion_FIltroSinProyecto'])->name('estudiantes.porSeccionFiltroSinProyecto');
+
 Route::get('/proyectos-disponibles', [ProyectoController::class, 'proyectosDisponibles'])->name('proyectos.disponibles');
 Route::get('/proyectos-por-seccion/{id}', [ProyectoController::class, 'proyectosDisponiblesPorSeccion'])->name('proyectos.porSeccion');
 
@@ -116,8 +118,10 @@ Route::get('/proyecto-disponible',[ProyectoController::class, 'retornar_proyecto
 
 
 // Ruta para la página del gestor de TI
-Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])
-    ->name('gestor_de_TI');
+Route::get('/gestor-de-ti/{nombre_proyecto}', [ProyectoController::class, 'gestorDeTI'])->name('gestor_de_TI');
+Route::post('/proyecto/aceptar/{nombre_proyecto}', [ProyectoController::class, 'aceptarSolicitud'])->name('proyectos.aceptar');
+Route::post('/proyecto/rechazar/{nombre_proyecto}', [ProyectoController::class, 'rechazarSolicitud'])->name('proyectos.rechazar');
+
 // Ruta para la solicitud de proyecto
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])
     ->name('solicitud_proyecto');
@@ -183,11 +187,11 @@ Route::get('/detalle', function () {
     return view('dashboard.dashboard');
 })->middleware('auth')->name('detalle');
 
-
+Route::get('/usuarios2', [UserController::class, 'getUsers'])->name('usuarios.getUsers');
 Route::get('/crear', [UserController::class, 'allSeccion'])->name('crear');
 Route::get('/usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuarios.editarUsuario');
 Route::put('/usuarios/{id}/actualizar', [UserController::class, 'update'])->name('usuarios.actualizar');
-Route::get('/usuarios', [UserController::class, 'list'])->name('usuarios');
+Route::get('/usuarios', [UserController::class, 'list'])->name('usuarios'); 
 Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
 Route::delete('/usuarios/eliminar', [UserController::class, 'deleteSelected'])->name('usuarios.eliminar');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.eliminarUsuario');
@@ -245,9 +249,10 @@ Route::controller(EstudianteController::class)
 //         Route::delete('/{id}', 'destroy')->name('destroy'); 
 //     });
 
+Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
 
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'create'])->name('solicitud_proyecto.create');
-Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos.store');
+Route::post('/store_solicitud', [ProyectoController::class, 'store_solicitud'])->name('proyectos.store_solicitud');
 
 // Rutas de recuperación y reseteo de contraseña
 Route::get('/recuperarpassword', function () {
@@ -370,7 +375,7 @@ Route::controller(ProyectosDocumentosController::class)
         return view('estudiantes.solicitud-proyecto');
     });
 
-    Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
+    //Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
     //Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
 
     Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
