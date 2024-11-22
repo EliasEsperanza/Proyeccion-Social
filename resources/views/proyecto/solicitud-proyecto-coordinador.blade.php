@@ -13,27 +13,27 @@
 
 <div class="">
     @foreach($proyectos as $proyecto)
-        <div class="card">
-            <div class="title">{{ $proyecto->nombre_proyecto }}</div>
-            <div class="subtitle">{{ $proyecto->descripcion_proyecto }}</div>
-            <div class="info-item time">{{ $proyecto->horas_requeridas }} horas</div>
-            <div class="info-item location">{{ $proyecto->lugar }}</div>
-            <div class="info-item coordinator">Coordinador: {{ $proyecto->coordinador }}</div>
-            <div class="info-item tutor">Tutor: {{ $proyecto->tutor }}</div>
-            <div class="info-item date">
-                Fecha de inicio: {{ \Carbon\Carbon::parse($proyecto->fecha_inicio)->format('d-m-Y') }}<br>
-                Fecha de fin: {{ \Carbon\Carbon::parse($proyecto->fecha_fin)->format('d-m-Y') }}
-            </div>
-            <div class="info-item status">
-                Estado: {{ $proyecto->estado }}
-            </div>
-            <div class="info-item period">Periodo: {{ $proyecto->periodo }}</div>
-            <a class="ver-mas" href="{{ route('gestor_de_TI') }}" onclick="establecerActivo(this)">Ver más</a>
-            <div class="actions">
-                <button class="button accept" onclick="aceptarSolicitud()">Aceptar</button>
-                <button class="button reject" onclick="rechazarSolicitud()">Rechazar</button>
-            </div>
+    <div class="card">
+        <div class="title">{{ $proyecto->nombre_proyecto }}</div>
+        <div class="subtitle">{{ $proyecto->descripcion_proyecto }}</div>
+        <div class="info-item time">{{ $proyecto->horas_requeridas }} horas</div>
+        <div class="info-item location">{{ $proyecto->lugar }}</div>
+        <div class="info-item coordinator">Coordinador: {{ $proyecto->coordinador }}</div>
+        <div class="info-item tutor">Tutor: {{ $proyecto->tutor }}</div>
+        <div class="info-item date">
+            Fecha de inicio: {{ \Carbon\Carbon::parse($proyecto->fecha_inicio)->format('d-m-Y') }}<br>
+            Fecha de fin: {{ \Carbon\Carbon::parse($proyecto->fecha_fin)->format('d-m-Y') }}
         </div>
+        <div class="info-item status">
+            Estado: {{ $proyecto->estado }}
+        </div>
+        <div class="info-item period">Periodo: {{ $proyecto->periodo }}</div>
+        <a class="ver-mas" href="{{ route('gestor_de_TI') }}" onclick="establecerActivo(this)">Ver más</a>
+        <div class="actions">
+            <button class="button accept" onclick="aceptarSolicitud()">Aceptar</button>
+            <button class="button reject" onclick="rechazarSolicitud()">Rechazar</button>
+        </div>
+    </div>
     @endforeach
 </div>
 
