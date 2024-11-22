@@ -156,11 +156,11 @@ Route::get('/detalle', function () {
     return view('dashboard.dashboard');
 })->middleware('auth')->name('detalle');
 
-
+Route::get('/usuarios2', [UserController::class, 'getUsers'])->name('usuarios.getUsers');
 Route::get('/crear', [UserController::class, 'allSeccion'])->name('crear');
 Route::get('/usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuarios.editarUsuario');
 Route::put('/usuarios/{id}/actualizar', [UserController::class, 'update'])->name('usuarios.actualizar');
-Route::get('/usuarios', [UserController::class, 'list'])->name('usuarios');
+Route::get('/usuarios', [UserController::class, 'list'])->name('usuarios'); 
 Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
 Route::delete('/usuarios/eliminar', [UserController::class, 'deleteSelected'])->name('usuarios.eliminar');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.eliminarUsuario');
