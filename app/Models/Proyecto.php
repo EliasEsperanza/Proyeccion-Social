@@ -46,6 +46,12 @@ class Proyecto extends Model
         'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
     ];
 // En el modelo Seccion.php
+
+public function asignaciones()
+{
+    return $this->hasMany(Asignacion::class, 'id_proyecto', 'id_proyecto');
+}
+
 public function seccion()
 {
     return $this->belongsTo(Seccion::class, 'seccion_id', 'id_seccion');

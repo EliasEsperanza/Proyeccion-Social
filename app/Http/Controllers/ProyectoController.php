@@ -23,7 +23,27 @@ use Maatwebsite\Excel\Facades\Excel;
 class ProyectoController extends Controller
 {
     public function index()
-    {
+{
+    $user = Auth::user(); // Usuario autenticado
+
+    if ($user->hasRole('Tutor')) {
+        // Filtrar proyectos asignados al tutor autenticado mediante la tabla asignaciones
+        $ListProyecto = Proyecto::with([
+            'seccion.departamento',
+            'estudiantes',
+            'coordinadorr',
+            'tutorr.seccionesTutoreadas',
+            'estadoo'
+        ])
+            ->whereHas('asignaciones', function ($query) use ($user) {
+                $query->where('id_tutor', $user->id_usuario);
+            })
+            ->whereHas('estadoo', function ($query) {
+                $query->where('nombre_estado', '!=', 'Disponible');
+            })
+            ->get();
+    } else {
+        // Mostrar todos los proyectos para roles diferentes a tutor
         $ListProyecto = Proyecto::with([
             'seccion.departamento',
             'estudiantes',
@@ -35,9 +55,16 @@ class ProyectoController extends Controller
                 $query->where('nombre_estado', '!=', 'Disponible');
             })
             ->get();
-
-        return view("proyecto.proyecto-general", compact("ListProyecto"));
     }
+
+    return view("proyecto.proyecto-general", compact("ListProyecto"));
+}
+
+public function asignaciones()
+{
+    return $this->hasMany(Asignacion::class, 'id_proyecto', 'id_proyecto');
+}
+
 
     public function store_solicitud(Request $request)
     {
