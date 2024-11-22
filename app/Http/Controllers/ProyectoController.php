@@ -40,12 +40,11 @@ class ProyectoController extends Controller
     }
     public function solicitudes_coordinador()
     {
-        $proyectos = Proyecto::where('estado', 'Solicitud')->get();
-        //$proyectos = Proyecto::All();
-
-        // Retorna la vista con los proyectos
+        $proyectos = Proyecto::where('estado', 9)
+                            ->get();
         return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
     }
+
 
     public function retornar_proyectos()
     {
@@ -455,10 +454,16 @@ class ProyectoController extends Controller
 
 
     //retorna vista gertor de TI
-    public function gestor_de_TI()
+    public function gestorDeTI($nombre_proyecto)
     {
-        return view('proyecto.gestor-de-TI');
+        // Buscar el proyecto por su nombre
+        $proyecto = Proyecto::where('nombre_proyecto', $nombre_proyecto)->firstOrFail();
+
+        // Pasar el proyecto a la vista
+        return view('proyecto.gestor-de-TI', compact('proyecto'));
     }
+
+
     //retorna vista solicitud de proyecto
     public function solicitud_proyecto()
     {
