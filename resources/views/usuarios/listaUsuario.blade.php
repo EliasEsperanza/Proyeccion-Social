@@ -73,7 +73,14 @@
                             <td>{{ $usuario->id_usuario }}</td>
                             <td>{{ $usuario->name }}</td>
                             <td>{{ $usuario->email }}</td>
-                            <td>{{ $usuario->getRoleNames()->first() ?? 'Sin rol' }}</td>
+                            <td>
+                                @if (method_exists($usuario, 'getRoleNames'))
+                                    {{ $usuario->getRoleNames()->first() ?? 'Sin rol' }}
+                                @else
+                                    {{ $usuario->user_role ?? 'Sin rol' }}
+                                @endif
+                            </td>
+
                             <td>{{ $usuario->seccion }}</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">

@@ -137,7 +137,15 @@
         </div>
     </div>
 </div>
+@foreach ($tutores as $tutor)
+    <h3>{{ $tutor->name }}</h3> <!-- Nombre del tutor -->
+    <p>Email: {{ $tutor->email }}</p> 
+    <li>{{$tutor->seccionesTutoreadas->first()->id_seccion}}</li>
+    <li>{{$tutor->seccionesTutoreadas->first()->nombre_seccion}}</li>
+@endforeach
+<div id="tutores-data" data-tutores='@json($tutores)'></div>
 <div id="estudiantes-data" data-estudiantes='@json($estudiantes)'></div>
+<script src="{{ asset('js/filtrarTutor.js') }}"></script>
 <script src="{{ asset('js/filtrarEstudiantes.js') }}"></script>
 <script src="{{ asset('js/gestionProyecto.js') }}"></script>
 @endsection
