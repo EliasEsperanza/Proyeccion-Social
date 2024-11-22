@@ -49,7 +49,9 @@ Route::get('//estudiantes-por-seccion-filtro-sin-proyecto/{idSeccion}', [Estudia
 Route::get('/proyectos-disponibles', [ProyectoController::class, 'proyectosDisponibles'])->name('proyectos.disponibles');
 Route::get('/proyectos-por-seccion/{id}', [ProyectoController::class, 'proyectosDisponiblesPorSeccion'])->name('proyectos.porSeccion');
 
-Route::get('/dashboard/estudiantes', [ProyectoController::class, 'obtenerProyectosDashboard'])->name('estudiantes.dashboard');
+Route::get('/dashboard/estudiantes', [ProyectoController::class, 'obtenerProyectosDashboard'])
+    ->middleware('auth')
+    ->name('estudiantes.dashboard');
 Route::get('/proyectos/{id}/ver', [ProyectoController::class, 'mostrarProyecto'])->name('proyecto.ver');
 
 
@@ -378,11 +380,21 @@ Route::controller(ProyectosDocumentosController::class)
     //Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
     //Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
 
-    Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
-    Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
-    Route::get('/solicitud-proyecto', [ProyectosEstudiantesController::class, 'Solicitud_Proyecto_Student'])->name('solicitud-proyecto');
-    Route::get('/procesos', [ProyectosEstudiantesController::class, 'Procesos'])->name('vista_procesos_horas');
-    Route::get('/docs', [ProyectosEstudiantesController::class, 'docs'])->name('docs_tramites');
+    Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])
+    ->middleware(['auth']) 
+    ->name('detallesmio');
+    Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])
+    ->middleware(['auth']) 
+    ->name('proyectomio');
+    Route::get('/solicitud-proyecto', [ProyectosEstudiantesController::class, 'Solicitud_Proyecto_Student']
+    )->middleware(['auth']) 
+    ->name('solicitud-proyecto');
+    Route::get('/procesos', [ProyectosEstudiantesController::class, 'Procesos'])
+    ->middleware(['auth']) 
+    ->name('vista_procesos_horas');
+    Route::get('/docs', [ProyectosEstudiantesController::class, 'docs'])
+    ->middleware(['auth']) 
+    ->name('docs_tramites');
 
 Route::get('/descargar/{filename}', function ($filename) {
     $filePath = 'documentos/' . $filename;
