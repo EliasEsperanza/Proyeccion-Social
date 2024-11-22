@@ -65,12 +65,11 @@ class ProyectoController extends Controller
     }
     public function solicitudes_coordinador()
     {
-        //$proyectos = Proyecto::where('estado', 'Solicitud')->get();
-        $proyectos = Proyecto::All();
-
-        // Retorna la vista con los proyectos
+        $proyectos = Proyecto::where('estado', 9)
+                            ->get();
         return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
     }
+
 
     public function retornar_proyectos()
     {
@@ -551,10 +550,45 @@ class ProyectoController extends Controller
 
 
     //retorna vista gertor de TI
-    public function gestor_de_TI()
+    public function gestorDeTI($nombre_proyecto)
     {
-        return view('proyecto.gestor-de-TI');
+        // Buscar el proyecto por su nombre
+        $proyecto = Proyecto::where('nombre_proyecto', $nombre_proyecto)->firstOrFail();
+
+        // Pasar el proyecto a la vista
+        return view('proyecto.gestor-de-TI', compact('proyecto'));
     }
+    //aceptar solucitud
+    public function aceptarSolicitud($nombre_proyecto)
+    {
+        return $this->actualizarEstadoSolicitud($nombre_proyecto, 1, 'El proyecto ha sido aceptado exitosamente.');
+    }
+
+    public function rechazarSolicitud($nombre_proyecto)
+    {
+        return $this->actualizarEstadoSolicitud($nombre_proyecto, 7, 'El proyecto ha sido rechazado exitosamente.');
+    }
+
+    private function actualizarEstadoSolicitud($nombre_proyecto, $nuevoEstado, $mensaje)
+    {
+        $proyecto = Proyecto::where('nombre_proyecto', $nombre_proyecto)->first();
+
+        if ($proyecto) {
+            $proyecto->estado = $nuevoEstado;
+            $proyecto->save();
+
+            return redirect()->route('solicitudes_coordinador')
+                            ->with('success', $mensaje);
+        } else {
+
+            return redirect()->route('solicitudes_coordinador')
+                         ->with('error', 'El proyecto no fue encontrado.');
+    }
+}
+
+
+
+
     //retorna vista solicitud de proyecto
     public function solicitud_proyecto()
     {
