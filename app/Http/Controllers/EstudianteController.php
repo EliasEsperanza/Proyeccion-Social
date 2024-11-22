@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Exports\EstudianteExport;
@@ -55,7 +56,7 @@ class EstudianteController extends Controller
     {
         $query = $request->input('query');
         $ListEstudiantes = $this->buscarEstudiantes($query);
-        $User=User::all();
+        $User = User::all();
         // dd($ListEstudiantes);
         return view("estudiante.index", compact("ListEstudiantes"));
     }
@@ -63,9 +64,9 @@ class EstudianteController extends Controller
     // Mostrar formulario para crear un nuevo estudiante
     public function create()
     {
-        $secciones=Seccion::all();
+        $secciones = Seccion::all();
         // dd($secciones);
-        return view("estudiante.create",compact("secciones"));
+        return view("estudiante.create", compact("secciones"));
     }
 
     // Almacenar un nuevo estudiante en la base de datos
@@ -87,7 +88,7 @@ class EstudianteController extends Controller
             return redirect()->route('estudiantes.index')->with('error', 'Estudiante no encontrado');
         }
 
-        return view("estudiante.show", compact('estudiante')); 
+        return view("estudiante.show", compact('estudiante'));
     }
 
     // Mostrar formulario para editar un estudiante
@@ -132,7 +133,7 @@ class EstudianteController extends Controller
         return redirect()->route('estudiantes.index')->with('success', 'Estudiante eliminado con éxito');
     }
 
-    public function exportExcel() 
+    public function exportExcel()
     {
         return Excel::download(new EstudianteExport, 'estudiantes.xlsx');
     }
@@ -154,16 +155,17 @@ class EstudianteController extends Controller
             'id_seccion' => $data['id_seccion'],
             'nombre' => $data['name'],
             'porcentaje_completado' => 0,
-            'horas_sociales_completadas' => 0, 
+            'horas_sociales_completadas' => 0,
         ]);
 
         return redirect()->route('estudiantes.index')
             ->with('success', 'Estudiante registrado exitosamente');
     }
-    
-    public function exportPDF(){
+
+    public function exportPDF()
+    {
         $estudiantes = Estudiante::all();
-       
+
         $pdf = Pdf::loadView('exports.estudiantesPDF', ['estudiantes' => $estudiantes]);
         return $pdf->download('estudiantes.pdf');
     }
@@ -204,16 +206,29 @@ class EstudianteController extends Controller
         return response()->json($estudiantes);
     }
 
+    public function obtenerNombreEstudiante($id)
+    {
+        $estudiante = Estudiante::with('usuario')
+            ->where('id_estudiante', $id)
+            ->first();
+
+        if (!$estudiante || !$estudiante->usuario) {
+            return null;
+        }
+
+        return $estudiante->usuario->name;
+    }
+
     public function estudiantesPorSeccion_FIltroSinProyecto($idSeccion)
     {
         $estudiantes = Estudiante::with('usuario')
             ->where('id_seccion', $idSeccion)
-            ->whereNotIn('id_estudiante', function($query) {
+            ->whereNotIn('id_estudiante', function ($query) {
                 $query->select('id_estudiante')
-                      ->from('proyectos_estudiantes');
+                    ->from('proyectos_estudiantes');
             })
             ->get();
-    
+
         return response()->json($estudiantes);
     }
 }

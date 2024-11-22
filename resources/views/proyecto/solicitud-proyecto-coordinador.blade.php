@@ -15,19 +15,23 @@
     @foreach($proyectos as $proyecto)
     <div class="card">
         <div class="title">{{ $proyecto->nombre_proyecto }}</div>
-        <div class="subtitle">{{ $proyecto->descripcion_proyecto }}</div>
+
+        <div class="subtitle">
+            @if($proyecto->estudiantes->isNotEmpty())
+            @foreach($proyecto->estudiantes as $estudiante)
+            ID Usuario: {{ $estudiante->id_usuario }} <br>
+            @endforeach
+            @else
+            No hay estudiantes disponibles.
+            @endif
+        </div>
+        
+        <!--<div class="subtitle" id="nombreEstudiante">-</div>-->
+
+
         <div class="info-item time">{{ $proyecto->horas_requeridas }} horas</div>
         <div class="info-item location">{{ $proyecto->lugar }}</div>
-        <div class="info-item coordinator">Coordinador: {{ $proyecto->coordinador }}</div>
-        <div class="info-item tutor">Tutor: {{ $proyecto->tutor }}</div>
-        <div class="info-item date">
-            Fecha de inicio: {{ \Carbon\Carbon::parse($proyecto->fecha_inicio)->format('d-m-Y') }}<br>
-            Fecha de fin: {{ \Carbon\Carbon::parse($proyecto->fecha_fin)->format('d-m-Y') }}
-        </div>
-        <div class="info-item status">
-            Estado: {{ $proyecto->estado }}
-        </div>
-        <div class="info-item period">Periodo: {{ $proyecto->periodo }}</div>
+
         <a class="ver-mas" href="{{ route('gestor_de_TI') }}" onclick="establecerActivo(this)">Ver más</a>
         <div class="actions">
             <button class="button accept" onclick="aceptarSolicitud()">Aceptar</button>
@@ -53,6 +57,28 @@
 
     function rechazarSolicitud() {
         console.log('Solicitud rechazada');
+    }
+
+    const estudianteId = estudiantes.length > 0 ? estudiantes[0].id_estudiante : null; 
+
+    if (estudianteId) {
+        fetch(`/obtenerNombreEstudiante/${estudianteId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('error de red');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const nombre = data ? data.name : 'Nombre no encontrado';
+                document.getElementById('nombreEstudiante').innerText = nombre;
+            })
+            .catch(error => {
+                console.error('Hubo un problema con la solicitud fetch:', error);
+                document.getElementById('nombreEstudiante').innerText = 'Error al cargar el nombre';
+            });
+    } else {
+        document.getElementById('nombreEstudiante').innerText = 'No hay estudiantes disponibles';
     }
 </script>
 @endsection

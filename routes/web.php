@@ -234,6 +234,7 @@ Route::controller(EstudianteController::class)
         Route::put('/{id}', 'update')->name('update');    
         Route::delete('/{id}', 'destroy')->name('destroy'); 
     });
+    Route::get('/obtenerNombreEstudiante/{id}', [EstudianteController::class,'obtenerNombreEstudiante'])->name('obtenerNombreEstudiante');
 
 // Rutas del controlador Proyecto
 // Route::controller(ProyectoController::class)

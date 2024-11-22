@@ -10,14 +10,14 @@
 <div class="container mt-4">
     <h1 class="mb-2"><strong>Solicitud de Proyecto</strong></h1>
     @if (session('error'))
-    <p class="alert alert-danger">{{ session('error') }}</p>
-    @endif
+            <p class="alert alert-danger">{{ session('error') }}</p>
+        @endif
     <h3>Sección = {{$proyectoEstudiante->id_seccion}}</h3>
     <div class="card shadow-sm">
         <div class="card-body">
             <form id="formProyecto" method="POST" action="{{ route('proyectos.store_solicitud') }}">
                 @csrf
-
+                
                 <div class="mb-4">
                     <label for="nombreProyecto" class="form-label">Nombre del Proyecto</label>
                     <input type="text" class="form-control" id="nombreProyecto" name="nombre_proyecto" placeholder="Nombre del Proyecto" required>
@@ -35,8 +35,8 @@
                         <button type="button" class="btn btn-primary btn-gestion fw-bold" onclick="agregarEstudiante()">Agregar estudiante</button>
                     </div>
                     <ul class="mt-3" id="estudiantesList">
-                        <!-- Aquí se añadirán los estudiantes -->
-                    </ul>
+                            <!-- Aquí se añadirán los estudiantes -->
+                        </ul>
                 </div>
 
                 <div class="mb-3">
@@ -68,12 +68,7 @@
 <!-- Scripts de CKEditor -->
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 <script>
-    // Obtener el id de la sección desde el servidor
-    const idSeccion = {
-        {
-            $proyectoEstudiante - > id_seccion
-        }
-    };
+    const idSeccion = {{$proyectoEstudiante->id_seccion}};
     const selectEstudiantes = document.querySelector('#nombreEstudiante');
 
     // Cargar estudiantes por sección
@@ -137,7 +132,7 @@
         console.log('Fecha de inicio:', document.querySelector('#fechaInicio').value);
         console.log('Fecha de finalización:', document.querySelector('#fechaFin').value);
         console.log('id seccion:', document.querySelector('#id_seccion').value);
-
+        
     });
 </script>
 @endsection
