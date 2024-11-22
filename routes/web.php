@@ -32,6 +32,7 @@ Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.
 Route::get('/proyectos-solicitudes', [ProyectoController::class, 'solicitudes_coordinador'])->name('solicitudes_coordinador');
 
 
+
 Route::get('/prys', function () {
     return view('estudiantes.documentos-sociales');
 })->name('documentos');
