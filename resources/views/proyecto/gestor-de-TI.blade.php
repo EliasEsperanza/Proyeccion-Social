@@ -57,16 +57,16 @@
             </div>
         </div>
 
-        <div class="button-group">
-            <form action="" method="POST" style="display: inline;">
-                @csrf
-                <button class="btn btn-accept" type="submit">Aceptar</button>
-            </form>
+        <div class="actions">
+                <form action="{{ route('proyectos.aceptar', ['nombre_proyecto' => $proyecto->nombre_proyecto]) }}" method="POST" style="display: inline-block;">
+                    @csrf
+                    <button type="submit" class="btn btn-success">Aceptar</button>
+                </form>
 
-            <form action="{}" method="POST" style="display: inline;">
-                @csrf
-                <button class="btn btn-reject" type="submit">Rechazar</button>
-            </form>
-        </div>
+                <form action="{{ route('proyectos.rechazar', ['nombre_proyecto' => $proyecto->nombre_proyecto]) }}" method="POST" style="display: inline-block;">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Rechazar</button>
+                </form>
+            </div>
     </div>
 @endsection
