@@ -38,14 +38,6 @@ class User extends Authenticatable implements JWTSubject
         );
     }
 
-    public function getTutoresConSecciones()
-    {
-        $tutores = User::whereHas('seccionesTutoreadas')
-            ->with('seccionesTutoreadas') 
-            ->get();
-
-        return response()->json($tutores);
-    }
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -89,30 +81,6 @@ class User extends Authenticatable implements JWTSubject
             ->select('users.', 'secciones.nombre_seccion')
             ->distinct();
     }
-    public function scopeTutoresPorSeccionTu(Builder $query)
-    {
-        return $query->role('Tutor')
-            ->leftJoin('seccion_tutor', 'users.id_usuario', '=', 'seccion_tutor.id_tutor')
-            ->leftJoin('secciones', 'seccion_tutor.id_seccion', '=', 'secciones.id_seccion')
-            ->orderBy('secciones.id_seccion')
-            ->select('users.id_usuario', 'users.name', 'secciones.nombre_seccion', 'secciones.id_seccion')
-            ->distinct();
-    }
-    public function scopeTutoresPorSeccionProyecto(Builder $query, $idSeccion)
-    {
-        $query->role('Tutor')
-            ->leftJoin('seccion_tutor', 'users.id_usuario', '=', 'seccion_tutor.id_tutor')
-            ->leftJoin('secciones', 'seccion_tutor.id_seccion', '=', 'secciones.id_seccion')
-            ->orderBy('secciones.id_seccion')
-            ->select('users.*', 'secciones.nombre_seccion')
-            ->distinct();
-
-        if ($idSeccion) {
-            $query->where('secciones.id_seccion', $idSeccion);
-        }
-
-        return $query;
-    }
 
     public function scopeCoordinadoresPorSeccion(Builder $query)
     {
@@ -148,11 +116,6 @@ class User extends Authenticatable implements JWTSubject
             'coordinadores' => $coordinadores,
             'administradores' => $administradores
         ];
-    }
-
-        public function asignaciones()
-    {
-        return $this->hasMany(Asignacion::class, 'id_tutor', 'id_usuario');
     }
 }
 
