@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/dashboardStyle.css') }}">
     <link rel="stylesheet" href="{{ asset(path: 'css/mensaje.css')}}">
     <link rel="stylesheet" href="{{ asset(path: 'css/soliproyecto.css')}}">
+    <link rel="stylesheet" href="{{ asset(path: 'css/notificacion.css')}}">
     @yield('styles')
     
 </head>
@@ -23,10 +24,21 @@
             <i class="bi bi-list"></i>
         </button>
         
-        <div class="d-flex ms-auto position-relative me-3 topbar-notification">
+        <div class="d-flex ms-auto position-relative me-3 topbar-notification" id="notification-bell">
             <i class="bi bi-bell" style="font-size: 1.5rem; color: #800000;"></i>
-            <span class="badge">4</span>
-        </div>      
+            <span class="badge notification-count">0</span>
+            
+            <!-- Dropdown de notificaciones -->
+            <div class="notification-dropdown">
+                <div class="notification-header">
+                    <h6 class="m-0">Notificaciones</h6>
+                    <button class="mark-all-read">Marcar todo como leído</button>
+                </div>
+                <div class="notification-list">
+                    <!-- Las notificaciones se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>     
 
         <a href="{{ route('perfil_usuario') }}" class="text-decoration-none">
     <span class="rounded-circle text-white d-flex align-items-center justify-content-center" 
@@ -160,6 +172,7 @@
     <script src="{{asset(path:'js/mensaje.js') }}"></script>
     <script src="{{ asset('js/showPassword.js') }}"></script>
     <script src="{{ asset('js/busqueda.js') }}"></script>
+    <script src="{{ asset('js/notificacion.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
