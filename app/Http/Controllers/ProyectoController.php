@@ -521,12 +521,24 @@ class ProyectoController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('Tutor')) {
+        //hacemos el filtro para el rol coordinador
+        if($user->hasRole('Coordinador')){
+            $seccion = DB::table('secciones') //buscamos en la tabla secciones de la base de datos para tener acceso al id_coordinador y el id_seccion para tener el valor del departamento o seccion del coordinador
+                ->where('id_coordinador', $user->id_usuario)
+                ->pluck('id_seccion')
+                ->first();
+
+                //luego abrimos una query del modelo proyecto para tener acceso a seccion_id que es el id que almacena el valor del depa o seccion del coordinador
+                $query = Proyecto::query();
+                $query->where('seccion_id', $seccion); //comparamos con el depa del coordinador y procedemos a almacenar el count
+                $totalProyectosAsignados = $query->count();
+        }
+        elseif ($user->hasRole('Tutor')) {
             $totalProyectosAsignados = Asignacion::where('id_tutor', $user->id_usuario)
                 ->distinct('id_proyecto')
                 ->count('id_proyecto');
         } else {
-            $totalProyectosAsignados = \App\Models\Proyecto::count();
+            $totalProyectosAsignados = \App\Models\Proyecto::count();;
         }
 
         return $totalProyectosAsignados;

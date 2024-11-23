@@ -6,7 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable implements JWTSubject
@@ -41,7 +41,7 @@ class User extends Authenticatable implements JWTSubject
     public function getTutoresConSecciones()
     {
         $tutores = User::whereHas('seccionesTutoreadas')
-            ->with('seccionesTutoreadas') 
+            ->with('seccionesTutoreadas')
             ->get();
 
         return response()->json($tutores);
@@ -150,9 +150,20 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-        public function asignaciones()
+    public function asignaciones()
     {
         return $this->hasMany(Asignacion::class, 'id_tutor', 'id_usuario');
     }
-}
 
+    // User.php
+    public function getDepartamentoCoordinador()
+    {
+        if ($this->hasRole('Coordinador')) {
+            return DB::table('secciones')
+                ->where('id_coordinador', $this->id_usuario)
+                ->pluck('id_seccion')
+                ->first();
+        }
+        return null;
+    }
+}
