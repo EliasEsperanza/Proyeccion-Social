@@ -255,8 +255,8 @@ public function asignaciones()
         return back()->with('success', 'Estudiante asignado correctamente.');
     }
     public function gestionActualizar(Request $request, $id)
-    {
-        //dd( $request);
+    {   
+        $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
         $validatedData = $request->validate([
             'idTutor' => 'required|string|exists:users,id_usuario',
             'lugar' => 'nullable|string|max:255',
@@ -273,6 +273,12 @@ public function asignaciones()
         }
 
         $proyecto = Proyecto::findOrFail($id);
+
+        foreach ($estudiantesSeleccionados as $estudiante) {
+            $estudiante2 = Estudiante::find($estudiante);
+            $proyecto->estudiantes()->attach($estudiante2->id_estudiante);
+        };
+
         $proyecto->update([
             'tutor' => $tutor->id_usuario ?? null,
             'lugar' => $validatedData['lugar'],
@@ -296,7 +302,7 @@ public function asignaciones()
     }
     public function actualizar(Request $request, $id)
     {
-        //dd($request->all());
+        // dd($request->all());
 
         $validatedData = $request->validate([
             'nombre_proyecto' => 'required|string|max:255',

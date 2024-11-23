@@ -167,139 +167,98 @@
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const seccionSelect = document.getElementById('seccion_id');
-            const proyectoSelect = document.getElementById('nombre_proyecto');
-            const estudianteSelect = document.getElementById('idEstudiante');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const seccionSelect = document.getElementById('seccion_id');
+        const proyectoSelect = document.getElementById('nombre_proyecto');
+        const estudianteSelect = document.getElementById('idEstudiante');
+        const addStudentBtn = document.getElementById('addStudentBtn');
+        const studentList = document.getElementById('studentList');
+        const hiddenInput = document.getElementById('estudiantesSeleccionados');
+        const idTutor = document.getElementById('idTutor');
 
+        // Inicialmente, deshabilitar selectores dependientes
+        proyectoSelect.disabled = true;
+        estudianteSelect.disabled = true;
+        idTutor.disabled = true;
+        addStudentBtn.disabled = true;
 
-            seccionSelect.addEventListener('change', function() {
-                const seccionId = this.value;
+        // Mapa para almacenar estudiantes seleccionados (ID y nombre)
+        const selectedStudents = new Map();
 
-                //cambio valor disable para hasta seleccionar departamento/seccion
-                proyectoSelect.disabled = false;
-                idTutor.disabled = false;
-                estudianteSelect.disabled = false;
+        // Evento: Habilitar selectores al seleccionar una sección
+        seccionSelect.addEventListener('change', function () {
+            const seccionId = this.value;
 
+            // Habilitar selectores dependientes
+            proyectoSelect.disabled = false;
+            estudianteSelect.disabled = false;
+            idTutor.disabled = false;
+            addStudentBtn.disabled = false;
 
-                //borra lista carrgada previamente
-                proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
+            // Limpiar opciones del select de proyectos
+            proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
 
-                fetch(`/proyectos-por-seccion/${seccionId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(proyecto => {
-                            const option = document.createElement('option');
-                            option.value = proyecto.id_proyecto;
-                            option.textContent = proyecto.nombre_proyecto;
-                            proyectoSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error al cargar proyectos:', error));
-            });
+            // Cargar proyectos por sección
+            fetch(`/proyectos-por-seccion/${seccionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(proyecto => {
+                        const option = document.createElement('option');
+                        option.value = proyecto.id_proyecto;
+                        option.textContent = proyecto.nombre_proyecto;
+                        proyectoSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error al cargar proyectos:', error));
         });
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const selectEstudiante = document.getElementById("idEstudiante");
-            const selectProyecto = document.getElementById("nombre_proyecto");
-            const addButton = document.getElementById("addStudentBtn");
-            const studentList = document.getElementById("studentList");
+        // Evento: Agregar estudiantes seleccionados a la lista
+        addStudentBtn.addEventListener('click', function () {
+            const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
+            const studentId = selectedOption.value;
+            const studentName = selectedOption.textContent;
 
-            // Lista para almacenar estudiantes seleccionados
-            const selectedStudents = new Map();
-
-            // Evento para añadir estudiante a la lista
-            addButton.addEventListener("click", () => {
-                const proyectoSeleccionado = selectProyecto.value;
-
-                // Verificar si hay un proyecto seleccionado
-                if (!proyectoSeleccionado || proyectoSeleccionado === "Seleccione un proyecto") {
-                    alert("Por favor, seleccione un proyecto antes de añadir estudiantes.");
-                    return;
-                }
-
-                const studentId = selectEstudiante.value;
-                const studentName = selectEstudiante.options[selectEstudiante.selectedIndex].text;
-
-                // Verificar si ya está en la lista
-                if (selectedStudents.has(studentId)) {
-                    alert("Este estudiante ya está en la lista.");
-                    return;
-                }
-
-                // Añadir a la lista interna
+            // Evitar duplicados
+            if (!selectedStudents.has(studentId)) {
                 selectedStudents.set(studentId, studentName);
-
-                // Actualizar la lista visual
                 updateStudentList();
-            });
-
-            // Función para actualizar la lista de estudiantes visualmente
-            function updateStudentList() {
-                // Limpiar el listado actual
-                studentList.innerHTML = "";
-
-                // Iterar sobre los estudiantes seleccionados y mostrarlos
-                selectedStudents.forEach((name, id) => {
-                    const listItem = document.createElement("li");
-                    listItem.className = "d-flex justify-content-between align-items-center mb-2";
-
-                    listItem.innerHTML = `
-                ${name}
-                <button class="btn btn-danger btn-sm" data-id="${id}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            `;
-
-                    studentList.appendChild(listItem);
-                });
-
-                // Añadir eventos de eliminación a los botones
-                studentList.querySelectorAll("button").forEach(button => {
-                    button.addEventListener("click", () => {
-                        const studentId = button.getAttribute("data-id");
-                        selectedStudents.delete(studentId);
-                        updateStudentList();
-                    });
-                });
             }
         });
 
-        // Función para actualizar el campo oculto con los IDs de los estudiantes seleccionados
-        function updateHiddenInput() {
-            hiddenInput.value = JSON.stringify(Array.from(selectedStudents.keys()));
-        }
-
-        // Función para actualizar la lista de estudiantes visualmente
+        // Función: Actualizar la lista visual y el campo oculto
         function updateStudentList() {
-            // Limpiar el listado actual
+            // Limpiar la lista visual
             studentList.innerHTML = "";
 
-            // Iterar sobre los estudiantes seleccionados y mostrarlos
+            // Iterar sobre los estudiantes seleccionados y renderizar en la lista
             selectedStudents.forEach((name, id) => {
-                const listItem = document.createElement("li");
-                listItem.className = "d-flex justify-content-between align-items-center mb-2";
+                const listItem = document.createElement('li');
+                listItem.className = 'd-flex justify-content-between align-items-center mb-2';
 
                 listItem.innerHTML = `
-                ${name}
-                <button class="btn btn-danger btn-sm" data-id="${id}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            `;
+                    ${name}
+                    <button class="btn btn-danger btn-sm" data-id="${id}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
 
                 studentList.appendChild(listItem);
             });
 
+            // Actualizar el valor del campo oculto con los IDs seleccionados
+            hiddenInput.value = JSON.stringify([...selectedStudents.keys()]);
+
             // Añadir eventos de eliminación a los botones
-            studentList.querySelectorAll("button").forEach(button => {
-                button.addEventListener("click", () => {
-                    const studentId = button.getAttribute("data-id");
+            studentList.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const studentId = button.getAttribute('data-id');
                     selectedStudents.delete(studentId);
                     updateStudentList();
                 });
             });
         }
-    </script>
+    });
+</script>
 
     @endsection
