@@ -32,10 +32,16 @@
         <div class="info-item time">{{ $proyecto->horas_requeridas }} horas</div>
         <div class="info-item location">{{ $proyecto->lugar }}</div>
 
-        <a class="ver-mas" href="{{ route('detallesSolicitud', ['nombre_proyecto' => $proyecto->nombre_proyecto]) }}" onclick="establecerActivo(this)">Ver más</a>
+        <a class="ver-mas" href="{{ route('detallesSolicitud', ['id_proyecto' => $proyecto->id_proyecto]) }}" onclick="establecerActivo(this)">Ver más</a>
         <div class="actions">
-            <button class="button accept" onclick="aceptarSolicitud()">Aceptar</button>
-            <button class="button reject" onclick="rechazarSolicitud()">Rechazar</button>
+            <form action="{{ route('proyectos.aceptar', ['id_proyecto' => $proyecto->id_proyecto]) }}" method="POST" style="display: inline-block;">
+                @csrf
+                <button type="submit" class="btn btn-success">Aceptar</button>
+            </form>
+            <form action="{{ route('proyectos.rechazar', ['id_proyecto' => $proyecto->id_proyecto]) }}" method="POST" style="display: inline-block;">
+                @csrf
+                <button type="submit" class="btn btn-danger">Rechazar</button>
+            </form>
         </div>
     </div>
     @endforeach

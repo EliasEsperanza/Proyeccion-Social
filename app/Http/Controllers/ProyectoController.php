@@ -577,28 +577,28 @@ public function asignaciones()
 
 
     //retorna vista gertor de TI
-    public function detallesSolicitud($nombre_proyecto)
+    public function detallesSolicitud($id_proyecto)
     {
         // Buscar el proyecto por su nombre
-        $proyecto = Proyecto::where('nombre_proyecto', $nombre_proyecto)->firstOrFail();
+        $proyecto = Proyecto::where('id_proyecto', $id_proyecto)->firstOrFail();
 
         // Pasar el proyecto a la vista
         return view('proyecto.VerdetallesSolicitud', compact('proyecto'));
     }
     //aceptar solucitud
-    public function aceptarSolicitud($nombre_proyecto)
+    public function aceptarSolicitud($id_proyecto)
     {
-        return $this->actualizarEstadoSolicitud($nombre_proyecto, 1, 'El proyecto ha sido aceptado exitosamente.');
+        return $this->actualizarEstadoSolicitud($id_proyecto, 1, 'El proyecto ha sido aceptado exitosamente.');
     }
 
-    public function rechazarSolicitud($nombre_proyecto)
+    public function rechazarSolicitud($id_proyecto)
     {
-        return $this->actualizarEstadoSolicitud($nombre_proyecto, 7, 'El proyecto ha sido rechazado exitosamente.');
+        return $this->actualizarEstadoSolicitud($id_proyecto, 7, 'El proyecto ha sido rechazado exitosamente.');
     }
 
-    private function actualizarEstadoSolicitud($nombre_proyecto, $nuevoEstado, $mensaje)
+    private function actualizarEstadoSolicitud($id_proyecto, $nuevoEstado, $mensaje)
     {
-        $proyecto = Proyecto::where('nombre_proyecto', $nombre_proyecto)->first();
+        $proyecto = Proyecto::where('id_proyecto', $id_proyecto)->first();
 
         if ($proyecto) {
             $proyecto->estado = $nuevoEstado;
