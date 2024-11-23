@@ -18,6 +18,7 @@
 
         <div class="subtitle">
             @if($proyecto->estudiantes->isNotEmpty())
+
             Estudiantes asignados:
             <ul>
                 @foreach($proyecto->estudiantes as $estudiante)
@@ -27,6 +28,7 @@
                 </li>
                 @endforeach
             </ul>
+
             @else
             <p>No hay estudiantes disponibles.</p>
             @endif

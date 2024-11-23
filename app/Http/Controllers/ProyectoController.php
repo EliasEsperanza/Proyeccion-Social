@@ -70,31 +70,59 @@ class ProyectoController extends Controller
     public function store_solicitud(Request $request)
     {
 
+        $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
+
+        $validatedData = $request->validate([
+            'nombre_proyecto' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'lugar' => 'required|string|max:255',
+            'fecha_inicio' => 'required|date|before_or_equal:fecha_fin',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            'id_seccion' => 'required|integer|exists:secciones,id_seccion',
+            'estudiantes' => 'required|string', 
+        ]);
+
         try {
-            $proyecto = new Proyecto();
-            $proyecto->nombre_proyecto = $request->nombre_proyecto;
-            $proyecto->descripcion_proyecto = strip_tags($request->descripcion);
-            $proyecto->lugar = $request->lugar;
-            $proyecto->estado = 9; //estado solicitud
-            $proyecto->horas_requeridas = 0; //horas en 0 
-            $proyecto->periodo = now()->format('Y-m');
-            $proyecto->coordinador = auth()->id();
-            $proyecto->seccion_id = $request->id_seccion;
-            $proyecto->fecha_inicio = $request->fecha_inicio;
-            $proyecto->fecha_fin = $request->fecha_fin;
 
-            $proyecto->save();
+            $proyecto = Proyecto::create([
+                'nombre_proyecto' => $validatedData['nombre_proyecto'],
+                'descripcion_proyecto' => strip_tags($validatedData['descripcion']),
+                'lugar' => $validatedData['lugar'],
+                'estado' => 9, // Estado inicial de solicitud
+                'horas_requeridas' => 0, // Inicialmente en 0
+                'periodo' => now()->format('Y-m'),
+                'coordinador' => auth()->id(),
+                'seccion_id' => $validatedData['id_seccion'],
+                'fecha_inicio' => $validatedData['fecha_inicio'],
+                'fecha_fin' => $validatedData['fecha_fin'],
+            ]);
 
-            return redirect()->back()->with('success', 'Proyecto creado exitosamente');
+            if (is_array($estudiantesSeleccionados)) {
+                foreach ($estudiantesSeleccionados as $idEstudiante) {
+                    $estudiante = Estudiante::find($idEstudiante);
+
+                    if ($estudiante) {
+                        $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', 'Proyecto creado exitosamente.');
+
         } catch (\Exception $e) {
-            \Log::error('Error al crear proyecto: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
+            \Log::error('Error al crear el proyecto: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
         }
     }
+
+
+
     public function solicitudes_coordinador()
     {
         $proyectos = Proyecto::with('estudiantes.usuario')
-            ->where('estado', 9)->get();
+
+        ->where('estado',9)
+                            ->get();
         return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
     }
 
@@ -860,4 +888,20 @@ class ProyectoController extends Controller
             ->get();
         return response()->json($tutoresSeccion);
     }
+
+    public function obtenerDetallesProyectoFU($id)
+{
+    try {
+        $proyecto = Proyecto::findOrFail($id);
+        return response()->json([
+            'ubicacion' => $proyecto->lugar,
+            'fecha_inicio' => $proyecto->fecha_inicio,
+            'fecha_fin' => $proyecto->fecha_fin,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Proyecto no encontrado'], 404);
+    }
 }
+
+}
+

@@ -160,8 +160,8 @@ class ProyectosEstudiantesController extends Controller
             $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
             
             return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
-        }
-}
+        }  
+    }
 
 
     public function Procesos()
