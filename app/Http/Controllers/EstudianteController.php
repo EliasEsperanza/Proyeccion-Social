@@ -189,18 +189,13 @@ class EstudianteController extends Controller
             $query->where('id_seccion', $seccion);
             $totalEstudiantes = $query->count();
         } else if ($user->hasRole('Tutor')) {
-            // Obtener las secciones tutoreadas por el tutor
+            // Obtener estudiantes asignados al tutor
             $totalEstudiantes = Asignacion::where('id_tutor', $user->id_usuario)
-                ->distinct('id_estudiante') //Asegurate de no contar estudiantes duplicados
+                ->distinct('id_estudiante') // Asegúrate de no contar estudiantes duplicados
                 ->count('id_estudiante');
         } else {
-            //Total general de estudiantes
+            // Total general de estudiantes
             $totalEstudiantes = Estudiante::count();
-            //Obtener las secciones tutoreadas por el tutor
-            $SeccionesTutoreadas = $user->seccionesTutoreadas()->pluck('id_seccion');
-
-            //Filtrar estudiantes por las secciones tutoreadas
-            $query->whereIn('id_seccion', $SeccionesTutoreadas);
         }
 
         return $totalEstudiantes;

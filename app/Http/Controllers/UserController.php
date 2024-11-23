@@ -20,10 +20,11 @@ class UserController extends Controller
         $perPage = $request->input('per_page', 10);
         $search = $request->input('search');
         $role = $request->input('role');
-
+    
         $user = Auth::user();
-
+    
         if ($user->hasRole('Tutor')) {
+            // Lógica para tutores
             $query = DB::table('users')
                 ->join('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
                 ->join('asignaciones', 'estudiantes.id_estudiante', '=', 'asignaciones.id_estudiante')
@@ -36,88 +37,76 @@ class UserController extends Controller
                 )
                 ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->distinct();
-
-
+    
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('users.name', 'LIKE', "%{$search}%")
                         ->orWhere('users.email', 'LIKE', "%{$search}%");
                 });
             }
-
-            
         } else if ($user->hasRole('Coordinador')) {
-            // Si el usuario es coordinador, creamos la consulta
-            $query = DB::table('users')
-                ->join('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
-                ->join('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
-                ->select(
-                    'users.*',
-                    'secciones.nombre_seccion as seccion',
-                    \DB::raw("'estudiante' as user_role")
-                )
-                // Filtrar los estudiantes por el departamento del coordinador
-                ->where('secciones.id_seccion', $user->getDepartamentoCoordinador())
-                ->distinct();
-        
-            // Si hay una búsqueda, aplicar el filtro de búsqueda como en el código original
-            if ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('users.name', 'LIKE', "%{$search}%")
-                        ->orWhere('users.email', 'LIKE', "%{$search}%");
-                });
-            }
-        }        
-        else {
-            $estudiantes = User::estudiantesPorSeccion()
-                ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'estudiante' as user_role"))
-                ->toBase();
-
-            $tutores = User::tutoresPorSeccion()
-                ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'tutor' as user_role"))
-                ->toBase();
-
-            $coordinadores = User::coordinadoresPorSeccion()
-                ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'coordinador' as user_role"))
-                ->toBase();
-
-            $administradores = User::administradoresPorSeccion()
-                ->select('users.*', \DB::raw("NULL as seccion"), \DB::raw("'administrador' as user_role"))
-                ->toBase();
-
-            $query = User::query()->fromSub(
-                $administradores
-                    ->unionAll($coordinadores)
-                    ->unionAll($tutores)
-                    ->unionAll($estudiantes),
-                'users_ordenados'
-            );
-
-            if ($search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('name', 'LIKE', "%{$search}%")
-                        ->orWhere('email', 'LIKE', "%{$search}%")
-                        ->orWhere('seccion', 'LIKE', "%{$search}%");
-                });
-            }
-
-            if ($role) {
-                $query->where('user_role', '=', $role);
-
-                if ($role !== 'administrador') {
-                    $query->whereNotNull('seccion');
+            // Lógica para coordinadores
+            $departamento = $user->getDepartamentoCoordinador();
+    
+            if ($departamento) {
+                $query = DB::table('users')
+                    ->leftJoin('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
+                    ->leftJoin('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
+                    ->leftJoin('seccion_tutor', function ($join) {
+                        $join->on('users.id_usuario', '=', 'seccion_tutor.id_tutor');
+                    })
+                    ->leftJoin('secciones as tutor_seccion', 'seccion_tutor.id_seccion', '=', 'tutor_seccion.id_seccion')
+                    ->select(
+                        'users.*',
+                        \DB::raw("CASE 
+                            WHEN seccion_tutor.id_tutor IS NOT NULL THEN 'tutor'
+                            WHEN estudiantes.id_usuario IS NOT NULL THEN 'estudiante'
+                            ELSE 'sin rol'
+                        END as user_role"),
+                        \DB::raw("COALESCE(secciones.nombre_seccion, tutor_seccion.nombre_seccion) as seccion")
+                    )
+                    ->where(function ($query) use ($departamento) {
+                        $query->where('secciones.id_seccion', '=', $departamento)
+                            ->orWhere('tutor_seccion.id_seccion', '=', $departamento);
+                    });
+    
+                if ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('users.name', 'LIKE', "%{$search}%")
+                            ->orWhere('users.email', 'LIKE', "%{$search}%");
+                    });
                 }
             }
-
-           
+        } else {
+            // Lógica para otros roles (administradores, etc.)
+            $query = DB::table('users')
+                ->select(
+                    'users.*',
+                    \DB::raw("'administrador' as user_role"),
+                    \DB::raw("NULL as seccion")
+                );
+    
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('users.name', 'LIKE', "%{$search}%")
+                        ->orWhere('users.email', 'LIKE', "%{$search}%");
+                });
+            }
         }
-
-        $users = $query->paginate($perPage);
-
+    
+        if (isset($query)) {
+            if ($role) {
+                $query->where('user_role', '=', $role);
+            }
+    
+            $users = $query->paginate($perPage);
+        } else {
+            $users = collect()->paginate($perPage); // Si no hay query definida, devolvemos una paginación vacía.
+        }
+    
         return view('usuarios.listaUsuario', compact('users'));
     }
-
-
+    
 
     public function buscar(Request $request)
     {
