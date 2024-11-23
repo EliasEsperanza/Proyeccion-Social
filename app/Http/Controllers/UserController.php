@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Mail\mailrecuperarpassword;
@@ -18,48 +19,72 @@ class UserController extends Controller
     {
         $perPage = $request->input('per_page', 10);
         $search = $request->input('search');
-        $role = $request->input('role'); 
-    
-        $user = Auth::user(); 
-    
+        $role = $request->input('role');
+
+        $user = Auth::user();
+
         if ($user->hasRole('Tutor')) {
             $query = DB::table('users')
-                    ->join('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
-                    ->join('asignaciones', 'estudiantes.id_estudiante', '=', 'asignaciones.id_estudiante')
-                    ->join('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion') 
-                    ->select(
-                        'users.*',
-                        'secciones.nombre_seccion as seccion', 
-                        'asignaciones.fecha_asignacion',
-                        \DB::raw("'estudiante' as user_role")
-                    )
-                    ->where('asignaciones.id_tutor', $user->id_usuario)
-                    ->distinct();
+                ->join('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
+                ->join('asignaciones', 'estudiantes.id_estudiante', '=', 'asignaciones.id_estudiante')
+                ->join('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
+                ->select(
+                    'users.*',
+                    'secciones.nombre_seccion as seccion',
+                    'asignaciones.fecha_asignacion',
+                    \DB::raw("'estudiante' as user_role")
+                )
+                ->where('asignaciones.id_tutor', $user->id_usuario)
+                ->distinct();
 
-    
+
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('users.name', 'LIKE', "%{$search}%")
-                      ->orWhere('users.email', 'LIKE', "%{$search}%");
+                        ->orWhere('users.email', 'LIKE', "%{$search}%");
                 });
             }
-        } else {
+
+            
+        } else if ($user->hasRole('Coordinador')) {
+            // Si el usuario es coordinador, creamos la consulta
+            $query = DB::table('users')
+                ->join('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
+                ->join('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
+                ->select(
+                    'users.*',
+                    'secciones.nombre_seccion as seccion',
+                    \DB::raw("'estudiante' as user_role")
+                )
+                // Filtrar los estudiantes por el departamento del coordinador
+                ->where('secciones.id_seccion', $user->getDepartamentoCoordinador())
+                ->distinct();
+        
+            // Si hay una búsqueda, aplicar el filtro de búsqueda como en el código original
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('users.name', 'LIKE', "%{$search}%")
+                        ->orWhere('users.email', 'LIKE', "%{$search}%");
+                });
+            }
+        }        
+        else {
             $estudiantes = User::estudiantesPorSeccion()
                 ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'estudiante' as user_role"))
                 ->toBase();
-    
+
             $tutores = User::tutoresPorSeccion()
                 ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'tutor' as user_role"))
                 ->toBase();
-    
+
             $coordinadores = User::coordinadoresPorSeccion()
                 ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'coordinador' as user_role"))
                 ->toBase();
-    
+
             $administradores = User::administradoresPorSeccion()
                 ->select('users.*', \DB::raw("NULL as seccion"), \DB::raw("'administrador' as user_role"))
                 ->toBase();
-    
+
             $query = User::query()->fromSub(
                 $administradores
                     ->unionAll($coordinadores)
@@ -67,52 +92,54 @@ class UserController extends Controller
                     ->unionAll($estudiantes),
                 'users_ordenados'
             );
-    
+
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
-                      ->orWhere('email', 'LIKE', "%{$search}%")
-                      ->orWhere('seccion', 'LIKE', "%{$search}%");
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+                        ->orWhere('seccion', 'LIKE', "%{$search}%");
                 });
             }
-    
+
             if ($role) {
                 $query->where('user_role', '=', $role);
-    
+
                 if ($role !== 'administrador') {
                     $query->whereNotNull('seccion');
                 }
             }
+
+           
         }
-    
+
         $users = $query->paginate($perPage);
-    
+
         return view('usuarios.listaUsuario', compact('users'));
     }
-    
+
 
 
     public function buscar(Request $request)
     {
         $search = $request->input('search');
-        
+
         // Subconsultas similares a tu método list
         $estudiantes = User::estudiantesPorSeccion()
             ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'estudiante' as user_role"))
             ->toBase();
-    
+
         $tutores = User::tutoresPorSeccion()
             ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'tutor' as user_role"))
             ->toBase();
-    
+
         $coordinadores = User::coordinadoresPorSeccion()
             ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'coordinador' as user_role"))
             ->toBase();
-    
+
         $administradores = User::administradoresPorSeccion()
             ->select('users.*', \DB::raw("NULL as seccion"), \DB::raw("'administrador' as user_role"))
             ->toBase();
-    
+
         // Unir las subconsultas
         $users = User::query()
             ->fromSub(
@@ -124,11 +151,11 @@ class UserController extends Controller
             )
             ->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%")
-                  ->orWhere('seccion', 'LIKE', "%{$search}%");
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('seccion', 'LIKE', "%{$search}%");
             })
             ->get()
-            ->map(function($user) {
+            ->map(function ($user) {
                 return [
                     'id_usuario' => $user->id_usuario,
                     'name' => $user->name,
@@ -137,26 +164,26 @@ class UserController extends Controller
                     'seccion' => $user->seccion ?? 'Sin sección',
                 ];
             });
-    
+
         return response()->json($users);
     }
-    
+
     //mostrar usuario especifico
     public function showPerfil($id)
     {
         $usuario = User::findOrFail($id);
-    
+
         return view('perfil.perfilUsuario', compact('usuario'));
     }
     public function allSeccion()
     {
-        $secciones=Seccion::all();
-        return view("usuarios.crearUsuario",compact("secciones"));
+        $secciones = Seccion::all();
+        return view("usuarios.crearUsuario", compact("secciones"));
     }
     public function allSeccionRegistro()
     {
-        $secciones=Seccion::all();
-        return view("registro.registro",compact("secciones"));
+        $secciones = Seccion::all();
+        return view("registro.registro", compact("secciones"));
     }
 
     public function registro(Request $request)
@@ -180,24 +207,24 @@ class UserController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }
-    
+
         $user = User::create([
             'name' => $request->nombre,
             'email' => $request->correo,
             'password' => bcrypt($request->password),
         ]);
-    
+
         $user->assignRole('estudiante');
-    
+
         if ($request->filled('id_seccion')) {
             \DB::table('estudiantes')->insert([
-                'id_usuario' => $user->id_usuario, 
+                'id_usuario' => $user->id_usuario,
                 'id_seccion' => $request->id_seccion,
-                'porcentaje_completado' => 0, 
+                'porcentaje_completado' => 0,
                 'horas_sociales_completadas' => 0,
             ]);
         }
-    
+
         return redirect()->route('login')->with('success', 'Usuario creado exitosamente');
     }
 
@@ -225,39 +252,37 @@ class UserController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }
-    
+
         $user = User::create([
             'name' => $request->nombre,
             'email' => $request->correo,
             'password' => bcrypt($request->password),
         ]);
-    
+
         $user->assignRole($request->rol);
-    
+
         if ($request->filled('id_seccion')) {
             $idSeccion = $request->id_seccion;
-    
+
             if ($request->rol === 'estudiante') {
                 \DB::table('estudiantes')->insert([
                     'id_usuario' => $user->id_usuario,
                     'id_seccion' => $idSeccion,
-                    'porcentaje_completado' => 0, 
+                    'porcentaje_completado' => 0,
                     'horas_sociales_completadas' => 0,
                 ]);
-            }
-            elseif ($request->rol === 'tutor') {
+            } elseif ($request->rol === 'tutor') {
                 \DB::table('seccion_tutor')->insert([
                     'id_tutor' => $user->id_usuario,
                     'id_seccion' => $idSeccion
                 ]);
-            }
-            elseif ($request->rol === 'coordinador') {
+            } elseif ($request->rol === 'coordinador') {
                 \DB::table('secciones')
                     ->where('id_seccion', $idSeccion)
                     ->update(['id_coordinador' => $user->id]);
             }
         }
-    
+
         return redirect()->route('usuarios')->with('success', 'Usuario creado exitosamente');
     }
 
@@ -285,7 +310,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $usuario = User::findOrFail($id);
-        $secciones=Seccion::all();
+        $secciones = Seccion::all();
         return view('usuarios.editarUsuario', compact('usuario', 'secciones'));
     }
     public function update(Request $request, $id)
@@ -308,24 +333,24 @@ class UserController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }
-    
+
         $usuario = User::findOrFail($id);
         $usuario->name = $request->nombre;
         $usuario->email = $request->correo;
         $usuario->save();
-    
+
         $usuario->syncRoles($request->rol);
-    
+
         if ($request->filled('id_seccion')) {
             $idSeccion = $request->id_seccion;
-    
+
             if ($request->rol === 'estudiante') {
 
                 \DB::table('estudiantes')
                     ->updateOrInsert(
-                        ['id_usuario' => $usuario->id_usuario], 
+                        ['id_usuario' => $usuario->id_usuario],
                         [
-                            'id_seccion' => $idSeccion, 
+                            'id_seccion' => $idSeccion,
                             'porcentaje_completado' => 0,
                             'horas_sociales_completadas' => 0
                         ]
@@ -343,11 +368,12 @@ class UserController extends Controller
                     ->update(['id_coordinador' => $usuario->id_usuario]);
             }
         }
-    
+
         return redirect()->route('usuarios')->with('success', 'Usuario y sección actualizados exitosamente');
     }
 
-    public function enviocorreocode(Request $request){
+    public function enviocorreocode(Request $request)
+    {
         try {
             $email = $request->correo;
             $user = User::where('email', $email)->first();
@@ -358,22 +384,24 @@ class UserController extends Controller
             CodigosRecuperacion::create([
                 'codigo' => $codigo
             ]);
-            $urlpassword = url('/resetearpassword/'.$user->id_usuario);
+            $urlpassword = url('/resetearpassword/' . $user->id_usuario);
             Mail::to($email)->send(new mailrecuperarpassword($user, $codigo, $urlpassword));
             session()->flash('success', 'Se ha enviado un correo con el código de recuperación');
             return view('auth.recupassword');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             session()->flash('error', 'El correo no existe');
             return view('auth.recupassword');
         }
     }
-    public function resetearpassword($idUser){
+    public function resetearpassword($idUser)
+    {
         return view('auth.resetpassword', compact('idUser'));
     }
-    public function updatepassword(Request $request, $idUser){
+    public function updatepassword(Request $request, $idUser)
+    {
         $user = User::find($idUser);
         $codigo = CodigosRecuperacion::where('codigo', $request->codigo_verificacion)->first();
-        if(!$codigo){
+        if (!$codigo) {
             session()->flash('error', 'El código de verificación es incorrecto');
             return view('auth.resetpassword', compact('idUser'));
         }
@@ -405,9 +433,9 @@ class UserController extends Controller
             'nueva_contrasena.regex' => 'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial',
             'nueva_contrasena_confirmation.required' => 'Debe confirmar la nueva contraseña'
         ]);
-    
+
         $user = User::find(Auth::user()->id_usuario);
-            if (!Hash::check($request->contrasena_actual, $user->password)) {
+        if (!Hash::check($request->contrasena_actual, $user->password)) {
             return back()->withErrors([
                 'contrasena_actual' => 'La contraseña actual es incorrecta.',
             ])->withInput();
@@ -425,7 +453,7 @@ class UserController extends Controller
 
     public function mostrarPerfil()
     {
-        $usuario = Auth::user(); 
+        $usuario = Auth::user();
         return view('usuarios.perfilUsuario', compact('usuario'));
     }
     public function updateusuario(Request $request, $id)
@@ -446,33 +474,33 @@ class UserController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }
-    
+
         $usuario = User::findOrFail($id);
         $usuario->name = $request->nombre;
         $usuario->save();
-    
+
         return redirect()->route('perfil_usuario')->with('success', 'Perfil actualizado correctamente');
     }
 
     public function login(Request $request)
     {
         $credentials = $request->only('correo', 'contrasena');
-    
+
         if (Auth::attempt(['email' => $credentials['correo'], 'password' => $credentials['contrasena']])) {
             $request->session()->regenerate();
-            
+
             // Obtener el usuario autenticado
             $user = Auth::user();
-            
+
             // Verificar si el usuario tiene el rol de Estudiante
             if ($user->hasRole('Estudiante')) {
                 return redirect()->route('estudiantes.dashboard');
             }
-            
+
             // Redireccionamiento por defecto para otros roles
             return redirect()->intended('/dashboard');
         }
-    
+
         return redirect()->route('login')->withErrors([
             'error' => 'Usuario o contraseña inválidos.',
         ]);
@@ -487,7 +515,7 @@ class UserController extends Controller
 
     public function totalCoordinadores()
     {
-        return User::whereHas('roles', function ($query){
+        return User::whereHas('roles', function ($query) {
             $query->where('name', 'Coordinador');
         })->count();
     }
@@ -503,8 +531,12 @@ class UserController extends Controller
 
     public function show()
     {
-        if (auth()->check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 
-        'Administrador', 'Estudiante'])) {
+        if (auth()->check() && auth()->user()->hasAnyRole([
+            'Tutor',
+            'Coordinador',
+            'Administrador',
+            'Estudiante'
+        ])) {
             return view('mensaje.mensaje');
         }
         return view('dashboard.dashboard');
