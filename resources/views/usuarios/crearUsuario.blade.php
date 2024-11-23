@@ -33,10 +33,13 @@
                     <label for="rol" class="form-label">Rol</label>
                     <select name="rol" class="form-select @error('rol') is-invalid @enderror" id="rol">
                         <option selected>Seleccionar Rol</option>
-                        <option value="administrador">administrador</option>
-                        <option value="tutor">tutor</option>
-                        <option value="estudiante">estudiante</option>
-                        <option value="coordinador">coordinador</option>
+                        @if(auth()->check() && auth()->user()->hasRole('Coordinador'))
+                            <option value="tutor">tutor</option>
+                            <option value="estudiante">estudiante</option>
+                        @else
+                            <option value="administrador">administrador</option>
+                            <option value="coordinador">coordinador</option>
+                        @endif
                     </select>
                 </div>
             </div>
