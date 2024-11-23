@@ -25,6 +25,10 @@ use App\Models\Proyecto;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
+    return view('Bienvenida');
+})->name('welcome');
+
+Route::get('/login', function () {
     return view('login.login');
 })->name('login');
 
