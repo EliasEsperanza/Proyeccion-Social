@@ -15,7 +15,7 @@
             <h3>Total Estudiantes</h3>
             <p>
                 @if(Auth::user()->hasRole('Coordinador'))
-                    Estudiantes en la sección del coordinador
+                    Todos los estudiantes en la sección del coordinador
                 @elseif(Auth::user()->hasRole('Tutor'))
                     Estudiantes asignados a este tutor
                 @else
@@ -31,7 +31,7 @@
                 @if(Auth::user()->hasRole('Tutor'))
                     Todos los proyectos asignados a este tutor
                 @elseif(Auth::user()->hasRole('Coordinador'))
-                    Todos los proyectos asignables para el coordinador
+                    Todos los proyectos disponibles para el coordinador
                 @else
                     Proyectos registrados en el sistema
                 @endif
