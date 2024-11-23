@@ -34,7 +34,7 @@
         </div>
 
         <!-- Ícono del perfil -->
-        <a href="#" class="text-decoration-none">
+        <a href="{{ route('perfil_usuario') }}" class="text-decoration-none">
             <span class="rounded-circle text-white p-2 ms-2" style="background-color: #800000;">
                 {{ strtoupper(substr(auth()->user()->name ?? 'DU', 0, 2)) }}
             </span>
