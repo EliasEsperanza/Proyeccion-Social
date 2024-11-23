@@ -19,7 +19,7 @@
         <div class="subtitle">
             @if($proyecto->estudiantes->isNotEmpty())
             @foreach($proyecto->estudiantes as $estudiante)
-            ID Usuario: {{ $estudiante->id_usuario }} <br>
+            Nombre: {{ $estudiante->usuario ? $estudiante->usuario->name : 'No disponible' }} <br>
             @endforeach
             @else
             No hay estudiantes disponibles.
