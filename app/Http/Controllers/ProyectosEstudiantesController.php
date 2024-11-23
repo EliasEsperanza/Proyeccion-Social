@@ -97,20 +97,22 @@ class ProyectosEstudiantesController extends Controller
 
     public function Detalles_proyecto()
     {
-        $estudianteId = auth()->user()->id_estudiante;
+        $userId = auth()->user()->id_usuario;
+        $estudiante = Estudiante::where('id_usuario', $userId)->first();
 
-        // prueba CON ID 3
-        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', 2)
+        if (!$estudiante) {
+            return 'Estudiante no encontrado';
+        }
+
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
             ->with('proyecto')
-            ->get()->first();
-
+            ->first();
 
         if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
-            return view('estudiantes.detallesmio')->withErrors('No tienes un proyecto asignado actualmente.');
+            return 'No posee proyecto asignado';
         }
 
         $porcentaje = ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100;
-        //dd($proyectoEstudiante->horas_sociales_completadas);
 
         return view('estudiantes.detallesmio', compact('proyectoEstudiante', 'porcentaje'));
     }
@@ -118,19 +120,22 @@ class ProyectosEstudiantesController extends Controller
     //retorna vista solicitud de proyecto
     public function Mi_proyecto()
     {
-        $estudianteId = auth()->user()->id_estudiante;
+        $userId = auth()->user()->id_usuario;
+        $estudiante = Estudiante::where('id_usuario', $userId)->first();
 
-        // prueba CON ID 3 
-        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', 2)
+        if (!$estudiante) {
+            return 'Estudiante no encontrado';
+        }
+
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
             ->with('proyecto')
-            ->get()->first();
+            ->first();
 
         if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
-            return view('estudiantes.detallesmio')->withErrors('No tienes un proyecto asignado actualmente.');
+            return 'No posee proyecto asignado';
         }
 
         $porcentaje = ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100;
-        //dd($proyectoEstudiante->horas_sociales_completadas);
 
         return view('estudiantes.proyectomio', compact('proyectoEstudiante', 'porcentaje'));
     }
