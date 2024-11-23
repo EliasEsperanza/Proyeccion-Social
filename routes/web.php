@@ -34,6 +34,7 @@ Route::get('/login', function () {
 
 Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
 Route::get('/proyectos-solicitudes', [ProyectoController::class, 'solicitudes_coordinador'])->name('solicitudes_coordinador');
+Route::get('/proyectos/{id}', [ProyectoController::class, 'obtenerDetallesProyectoFU']);
 
 
 Route::get('/prys', function () {
