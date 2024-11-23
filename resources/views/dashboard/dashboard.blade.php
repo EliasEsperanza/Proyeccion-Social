@@ -14,7 +14,9 @@
         <div class="informacion__estudiantes">
             <h3>Total Estudiantes</h3>
             <p>
-                @if(Auth::user()->hasRole('Tutor'))
+                @if(Auth::user()->hasRole('Coordinador'))
+                    Estudiantes en la sección del coordinador
+                @elseif(Auth::user()->hasRole('Tutor'))
                     Estudiantes asignados a este tutor
                 @else
                     Todos los estudiantes registrados en el sistema
@@ -22,7 +24,6 @@
             </p>
             <h2>{{ $totalEstudiantes }}</h2>
         </div>
-
 
         <div class="informacion__proyectos">
             <h3>Proyectos Asignados</h3>
