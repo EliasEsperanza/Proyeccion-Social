@@ -88,7 +88,6 @@
         </select>
         <span class="ms-2">por página</span>
     </div>
-    <!-- Paginación -->
     <ul id="pagination-buttons" class="pagination mb-0"></ul>
 </div>
 
@@ -96,28 +95,24 @@
 <div id="all-projects" style="display: none;">{{ $filteredProjectsJson }}</div>
 
 <script>
-    let currentPage = 1; // Página actual
-    let rowsPerPage = 10; // Número de filas por página
-    let allProjects = []; // Todos los datos filtrados
-    let filteredProjects = []; // Datos filtrados por buscador
+    let currentPage = 1; 
+    let rowsPerPage = 10; 
+    let allProjects = []; 
+    let filteredProjects = [];
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Cargar los datos del contenedor oculto
         allProjects = JSON.parse(document.getElementById('all-projects').textContent);
         filteredProjects = allProjects;
 
-        // Configurar eventos
         document.getElementById('search-input').addEventListener('input', filterTable);
         document.getElementById('rows-per-page').addEventListener('change', updateRowsPerPage);
 
-        // Renderizar la tabla inicial
         renderTable();
     });
 
-    // Actualizar el número de filas por página
     function updateRowsPerPage() {
         rowsPerPage = parseInt(document.getElementById('rows-per-page').value);
-        currentPage = 1; // Reiniciar a la primera página
+        currentPage = 1; 
         renderTable();
     }
 
@@ -125,28 +120,24 @@
     function filterTable() {
         const searchValue = document.getElementById('search-input').value.toLowerCase();
 
-        // Filtrar los datos
         filteredProjects = allProjects.filter(project =>
             project.nombre_proyecto.toLowerCase().includes(searchValue) ||
             project.descripcion_proyecto.toLowerCase().includes(searchValue) ||
             project.lugar.toLowerCase().includes(searchValue)
         );
 
-        currentPage = 1; // Reiniciar a la primera página
+        currentPage = 1; 
         renderTable();
     }
 
-    // Renderizar la tabla y los controles de paginación
     function renderTable() {
         const tbody = document.getElementById('projects-tbody');
-        tbody.innerHTML = ''; // Limpiar contenido existente
+        tbody.innerHTML = ''; 
 
-        // Calcular los datos de la página actual
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         const pageData = filteredProjects.slice(start, end);
 
-        // Generar filas de la tabla
         pageData.forEach(project => {
             const row = `
                 <tr>

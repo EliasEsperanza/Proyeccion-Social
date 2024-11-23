@@ -16,11 +16,21 @@
     @php
         // Configuración de la paginación
         $page = request('page', 1); // Página actual
-        $perPage = 10; // Número de elementos por página
+        $perPage = request('perPage', 10); // Número de elementos por página, por defecto 10
         $total = $ListProyecto->count(); // Total de elementos
         $paginatedProjects = $ListProyecto->slice(($page - 1) * $perPage, $perPage); // Elementos para la página actual
         $totalPages = ceil($total / $perPage); // Total de páginas
     @endphp
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <span>Elementos por página:</span>
+        <select id="perPageSelect" class="form-select w-auto">
+            <option value="5" {{ request('perPage', 10) == 5 ? 'selected' : '' }}>5</option>
+            <option value="10" {{ request('perPage', 10) == 10 ? 'selected' : '' }}>10</option>
+            <option value="20" {{ request('perPage', 10) == 20 ? 'selected' : '' }}>20</option>
+            <option value="50" {{ request('perPage', 10) == 50 ? 'selected' : '' }}>50</option>
+        </select>
+    </div>
 
     <div class="tabla-contenedor shadow-sm rounded bg-white">
         <div class="table-responsive">
@@ -64,7 +74,6 @@
                         <td>{{ $proyecto->estadoo->nombre_estado }}</td>
                         <td>{{ $proyecto->seccion->nombre_seccion }}</td>
                         <td>
-                            <!-- Botón de edición -->
                             <a href="{{ route('proyecto.proyecto-editar', ['id' => $proyecto->id_proyecto]) }}" class="btn btn-light btn-sm p-2 px-3">
                                 <i class="bi bi-pencil text-warning"></i>
                             </a>
@@ -79,7 +88,6 @@
             </table>
         </div>
 
-        <!-- Paginación -->
         <div class="p-3 d-flex justify-content-between align-items-center bg-light border-top">
             <span class="text-muted mb-2 mb-md-0">
                 Mostrando {{ ($page - 1) * $perPage + 1 }} a {{ min($page * $perPage, $total) }} de {{ $total }} resultados
@@ -88,7 +96,7 @@
                 <ul class="pagination">
                     @for ($i = 1; $i <= $totalPages; $i++)
                         <li class="page-item {{ $i == $page ? 'active' : '' }}">
-                            <a class="page-link" href="{{ request()->fullUrlWithQuery(['page' => $i]) }}">{{ $i }}</a>
+                            <a class="page-link" href="{{ request()->fullUrlWithQuery(['page' => $i, 'perPage' => $perPage]) }}">{{ $i }}</a>
                         </li>
                     @endfor
                 </ul>
@@ -111,13 +119,11 @@
         const actionInput = document.getElementById('actionInput');
         const selectedItems = document.querySelectorAll('input[name="proyectos[]"]:checked');
 
-        // Validación de selección
         if (selectedItems.length === 0) {
-            alert(`Por favor, selecciona al menos un proyecto para realizar esta acción.`);
+            alert('Por favor, selecciona al menos un proyecto para realizar esta acción.');
             return false;
         }
 
-        // Confirmación para eliminación
         if (action === 'delete') {
             const confirmDelete = confirm(`¿Estás seguro de que deseas eliminar los ${selectedItems.length} proyectos seleccionados?`);
             if (!confirmDelete) {
@@ -125,18 +131,23 @@
             }
         }
 
-        // Configurar acción
         actionInput.value = action;
 
-        // Enviar formulario
         form.submit();
         return false;
     }
 
-    // Seleccionar todos los checkboxes
     document.getElementById('selectAll').addEventListener('change', function () {
         const checkboxes = document.querySelectorAll('input[name="proyectos[]"]');
         checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+    });
+
+    document.getElementById('perPageSelect').addEventListener('change', function () {
+        const perPage = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('perPage', perPage); 
+        url.searchParams.set('page', 1);
+        window.location.href = url.toString();
     });
 </script>
 @endsection
