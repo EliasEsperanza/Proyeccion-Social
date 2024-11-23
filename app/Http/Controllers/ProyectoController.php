@@ -864,4 +864,19 @@ public function asignaciones()
             ->get();
         return response()->json($tutoresSeccion);
     }
+
+    public function obtenerDetallesProyectoFU($id)
+{
+    try {
+        $proyecto = Proyecto::findOrFail($id);
+        return response()->json([
+            'ubicacion' => $proyecto->lugar,
+            'fecha_inicio' => $proyecto->fecha_inicio,
+            'fecha_fin' => $proyecto->fecha_fin,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Proyecto no encontrado'], 404);
+    }
+}
+
 }

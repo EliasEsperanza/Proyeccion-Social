@@ -105,22 +105,22 @@
                         </select>
                     </div>
 
-
                     <div class="mb-3">
                         <label for="ubicacion" class="form-label">Ubicación</label>
-                        <input type="text" class="form-control" id="lugar" name="lugar">
+                        <input type="text" class="form-control" id="lugar" name="lugar" readonly>
                     </div>
-
+                    
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio">
+                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="fechaFin" class="form-label">Fecha de Finalización</label>
-                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin">
+                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" readonly>
                         </div>
                     </div>
+
 
                     <div class="mb-3">
                         <label for="estado" class="form-label">Estado</label>
@@ -259,6 +259,35 @@
             });
         }
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const proyectoSelect = document.getElementById('nombre_proyecto');
+    const ubicacionInput = document.getElementById('lugar');
+    const fechaInicioInput = document.getElementById('fecha_inicio');
+    const fechaFinInput = document.getElementById('fecha_fin');
+
+    proyectoSelect.addEventListener('change', function () {
+        const proyectoId = this.value;
+
+        if (proyectoId) {
+            fetch(`/proyectos/${proyectoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Rellenar los campos con los datos del proyecto
+                    ubicacionInput.value = data.ubicacion || '';
+                    fechaInicioInput.value = data.fecha_inicio || '';
+                    fechaFinInput.value = data.fecha_fin || '';
+                })
+                .catch(error => console.error('Error al obtener los detalles del proyecto:', error));
+        }
+    });
+});
+
 </script>
 
     @endsection
