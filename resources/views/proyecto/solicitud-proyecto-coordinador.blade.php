@@ -18,18 +18,21 @@
 
         <div class="subtitle">
             @if($proyecto->estudiantes->isNotEmpty())
-            @foreach($proyecto->estudiantes as $estudiante)
-            ID Usuario: {{ $estudiante->id_usuario }} <br>
-            @endforeach
+            Estudiantes asignados:
+            <ul>
+                @foreach($proyecto->estudiantes as $estudiante)
+                <li>
+                    ID Estudiante: {{ $estudiante->id_estudiante }},
+                    Nombre: {{ $estudiante->usuario ? $estudiante->usuario->name : 'No disponible' }}
+                </li>
+                @endforeach
+            </ul>
             @else
-            No hay estudiantes disponibles.
+            <p>No hay estudiantes disponibles.</p>
             @endif
         </div>
-        
-        <!--<div class="subtitle" id="nombreEstudiante">-</div>-->
 
-
-        <div class="info-item time">{{ $proyecto->horas_requeridas }} horas</div>
+        <div class="info-item time">{{ $proyecto->horas_requeridas > 0 ? $proyecto->horas_requeridas . ' horas' : 'Sin asignar horas' }}</div>
         <div class="info-item location">{{ $proyecto->lugar }}</div>
 
         <a class="ver-mas" href="{{ route('detallesSolicitud', ['id_proyecto' => $proyecto->id_proyecto]) }}" onclick="establecerActivo(this)">Ver más</a>
@@ -51,6 +54,19 @@
 
 @section('scripts')
 <script>
+    // Cargar estudiantes por sección
+    fetch(`/obtenerNombreEstudiante/{id}`)
+        .then(response => response.json())
+        .then(estudiantes => {
+            estudiantes.forEach(estudiante => {
+                const option = document.createElement('option');
+                option.value = estudiante.id_estudiante;
+                option.textContent = estudiante.usuario.name;
+                selectEstudiantes.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error al cargar estudiantes:', error));
+
     // Función para manejar el clic en "Ver más"
     function establecerActivo(element) {
         // Cambiar el estado del enlace o agregar alguna acción, si es necesario
@@ -65,7 +81,7 @@
         console.log('Solicitud rechazada');
     }
 
-    const estudianteId = estudiantes.length > 0 ? estudiantes[0].id_estudiante : null; 
+    const estudianteId = estudiantes.length > 0 ? estudiantes[0].id_estudiante : null;
 
     if (estudianteId) {
         fetch(`/obtenerNombreEstudiante/${estudianteId}`)
