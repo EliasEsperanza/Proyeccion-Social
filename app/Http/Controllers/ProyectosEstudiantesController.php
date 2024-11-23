@@ -112,8 +112,7 @@ class ProyectosEstudiantesController extends Controller
             return 'No posee proyecto asignado';
         }
 
-        $porcentaje = ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100;
-
+        $porcentaje = ($proyectoEstudiante->proyecto->horas_requeridas > 0) ? ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100 : 0;
         return view('estudiantes.detallesmio', compact('proyectoEstudiante', 'porcentaje'));
     }
 
@@ -124,7 +123,7 @@ class ProyectosEstudiantesController extends Controller
         $estudiante = Estudiante::where('id_usuario', $userId)->first();
 
         if (!$estudiante) {
-            return 'Estudiante no encontrado';
+            return redirect()->back()->with('warning', 'Estudiante no encontrado.');
         }
 
         $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
@@ -132,10 +131,10 @@ class ProyectosEstudiantesController extends Controller
             ->first();
 
         if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
-            return 'No posee proyecto asignado';
+            return redirect()->back()->with('warning', 'No posee proyecto asignado.');
         }
 
-        $porcentaje = ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100;
+        $porcentaje = ($proyectoEstudiante->proyecto->horas_requeridas > 0) ? ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100 : 0;
 
         return view('estudiantes.proyectomio', compact('proyectoEstudiante', 'porcentaje'));
     }
@@ -151,10 +150,10 @@ class ProyectosEstudiantesController extends Controller
         if ($estudiante) {
             $tieneProyecto = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
                 ->exists();
-
-            if ($tieneProyecto) {
-                return "tiene proyecto";
-            }
+                if ($tieneProyecto) {
+                    return redirect()->back()->with('warning', 'Este estudiante ya tiene un proyecto asignado.');
+                }
+                
 
             $seccion_id = $estudiante->id_seccion;
             $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
