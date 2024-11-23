@@ -1,4 +1,14 @@
-@extends(auth()->user()->getRoleNames()->first() === 'Estudiante' ? 'layouts.appE' : 'layouts.app')
+@php
+    $role = auth()->user()->roles->first()->name ?? null;
+@endphp
+
+@extends(
+    $role === 'Estudiante' ? 'layouts.appE' : 
+    ($role === 'Tutor' ? 'layouts.app' : 
+    ($role === 'Coordinador' ? 'layouts.app' : 
+    'layouts.app'))
+)
+
 
 @section('title', 'Perfil de Usuario')
 
@@ -35,8 +45,9 @@
                 </div>
                 <div class="mb-3 w-50">
                     <label for="rol" class="form-label">Rol</label>
-                    <input type="text" class="form-control" id="rol" value="{{ $usuario->getRoleNames()->first() ?? 'Sin rol' }}" readonly>
+                    <p id="rol" class="form-control-plaintext">{{ $usuario->getRoleNames()->first() ?? 'Sin rol' }}</p>
                 </div>
+
                 <button type="submit" class="btn-custom">Aceptar cambios</button>
             </form>
         </div>
