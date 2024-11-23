@@ -37,6 +37,8 @@
                             <option value="tutor">tutor</option>
                             <option value="estudiante">estudiante</option>
                         @else
+                            <option value="tutor">tutor</option>
+                            <option value="estudiante">estudiante</option>
                             <option value="administrador">administrador</option>
                             <option value="coordinador">coordinador</option>
                         @endif
