@@ -167,28 +167,31 @@
     </script>
 
     <script>
-        
-            document.addEventListener('DOMContentLoaded', function () {
-        const seccionSelect = document.getElementById('seccion_id');
-        const proyectoSelect = document.getElementById('nombre_proyecto');
+      document.addEventListener('DOMContentLoaded', function() {
+    const seccionSelect = document.getElementById('seccion_id');
+    const proyectoSelect = document.getElementById('nombre_proyecto');
 
-        seccionSelect.addEventListener('change', function () {
-            const seccionId = this.value;
-            proyectoSelect.disabled = false;
+    seccionSelect.addEventListener('change', function() {
+        const seccionId = this.value;
 
-            fetch(`/api/proyectos?seccion_id=${seccionId}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(proyecto => {
-                        const option = document.createElement('option');
-                        option.value = proyecto.id_proyecto;
-                        option.textContent = proyecto.nombre_proyecto;
-                        proyectoSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error al cargar proyectos:', error));
-        });
+        proyectoSelect.disabled = false;
+        //borra lista carrgada previamente
+        proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
+
+        fetch(`/proyectos-por-seccion/${seccionId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(proyecto => {
+                    const option = document.createElement('option');
+                    option.value = proyecto.id_proyecto;
+                    option.textContent = proyecto.nombre_proyecto;
+                    proyectoSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error al cargar proyectos:', error));
     });
+});
+
 
         document.addEventListener("DOMContentLoaded", () => {
             const selectEstudiante = document.getElementById("idEstudiante");
