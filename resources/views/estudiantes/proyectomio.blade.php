@@ -41,8 +41,14 @@
     </div>
 
       <div class="mr-4">
-        <p class="card-text"><i class="bi bi-calendar"></i>Inicio: {{ $proyectoEstudiante->proyecto->fecha_inicio }}</p>
-        <p class="card-text"><i class="bi bi-calendar-event"></i>Fin: {{ $proyectoEstudiante->proyecto->fecha_fin }}</p>
+      <p class="card-text">
+          <i class="bi bi-calendar"></i>
+          Inicio: {{ \Carbon\Carbon::parse($proyectoEstudiante->proyecto->fecha_inicio)->translatedFormat('d F Y') }}
+        </p>
+        <p class="card-text">
+          <i class="bi bi-calendar-event"></i>
+          Fin: {{ \Carbon\Carbon::parse($proyectoEstudiante->proyecto->fecha_fin)->translatedFormat('d F Y') }}
+        </p>
         <p class="card-text"><i class="bi bi-geo-alt-fill"></i></i>{{ $proyectoEstudiante->proyecto->lugar }}</p>
         <p class="card-text"><i class="bi bi-person-fill"></i></i>Tutor: {{ $proyectoEstudiante->proyecto->tutorr->name }}</p>
         <button class="btn-verde btn m-3">{{ $proyectoEstudiante->proyecto->estadoos->nombre_estado }}</button>

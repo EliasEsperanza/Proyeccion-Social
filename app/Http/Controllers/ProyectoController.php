@@ -256,6 +256,7 @@ public function asignaciones()
     }
     public function gestionActualizar(Request $request, $id)
     {
+        //dd( $request);
         $validatedData = $request->validate([
             'idTutor' => 'required|string|exists:users,id_usuario',
             'lugar' => 'nullable|string|max:255',
