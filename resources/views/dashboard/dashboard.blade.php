@@ -30,6 +30,8 @@
             <p>
                 @if(Auth::user()->hasRole('Tutor'))
                     Todos los proyectos asignados a este tutor
+                @elseif(Auth::user()->hasRole('Coordinador'))
+                    Todos los proyectos asignables para el coordinador
                 @else
                     Proyectos registrados en el sistema
                 @endif
@@ -37,7 +39,19 @@
             <h2>{{ $totalProyectosAsignados }}</h2>
         </div>
 
-        @if(!Auth::user()->hasRole('Tutor'))
+        @if(Auth::user()->hasRole('Tutor'))
+        <div class="informacion__asesores">
+            <h3>Tutores</h3>
+            <p>Total de tutores</p>
+            <h2>{{ $totalTutores }}</h2>
+        </div>
+        @elseif(Auth::user()->hasRole('Coordinador'))
+        <div class="informacion__asesores">
+            <h3>Coordinadores</h3>
+            <p>Total de coordinadores</p>
+            <h2>{{ $totalCoordinadores }}</h2>
+        </div>
+        @else
         <div class="informacion__asesores">
             <h3>Tutores</h3>
             <p>Total de tutores</p>

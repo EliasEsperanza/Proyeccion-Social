@@ -485,6 +485,13 @@ class UserController extends Controller
         })->count();
     }
 
+    public function totalCoordinadores()
+    {
+        return User::whereHas('roles', function ($query){
+            $query->where('name', 'Coordinador');
+        })->count();
+    }
+
     public function getUsers()
     {
         // Obtener todos los usuarios de la base de datos
