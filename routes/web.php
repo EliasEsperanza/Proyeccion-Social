@@ -138,7 +138,8 @@ Route::post('/proyectos/{proyecto}/asignar-estudiantes', [ProyectoController::cl
 Route::post('/proyectos/{proyecto}/asignar-estudiantes-gestion', [ProyectoController::class, 'asignarEstudianteGestion'])->name('proyectos.asignarEstudianteGestion');
 Route::delete('/proyectos/{proyecto}/eliminar-estudiante/{estudiante}', [ProyectoController::class, 'eliminarEstudiante'])->name('proyectos.eliminarEstudiante');
 Route::put('/proyectos/{proyecto}/actualizar', [ProyectoController::class, 'actualizar'])->name('proyectos.actualizar');
-Route::post('/proyectos/asignar', [ProyectoController::class, 'asignarProyecto'])->name('proyectos.asignar');Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
+Route::post('/proyectos/asignar', [ProyectoController::class, 'asignarProyecto'])->name('proyectos.asignar');
+Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
 
 Route::get('/proyectos/{proyecto}/estudiantes', function ($proyectoId) {
     $proyecto = Proyecto::with('estudiantes.usuario')->findOrFail($proyectoId);
