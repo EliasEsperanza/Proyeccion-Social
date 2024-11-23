@@ -165,9 +165,6 @@
                 }
             });
         });
-
-
-      
     </script>
 
     <script>
@@ -203,6 +200,76 @@
             });
         });
 
+        document.addEventListener("DOMContentLoaded", () => {
+            const selectEstudiante = document.getElementById("idEstudiante");
+            const selectProyecto = document.getElementById("nombre_proyecto");
+            const addButton = document.getElementById("addStudentBtn");
+            const studentList = document.getElementById("studentList");
+
+            // Lista para almacenar estudiantes seleccionados
+            const selectedStudents = new Map();
+
+            // Evento para añadir estudiante a la lista
+            addButton.addEventListener("click", () => {
+                const proyectoSeleccionado = selectProyecto.value;
+
+                // Verificar si hay un proyecto seleccionado
+                if (!proyectoSeleccionado || proyectoSeleccionado === "Seleccione un proyecto") {
+                    alert("Por favor, seleccione un proyecto antes de añadir estudiantes.");
+                    return;
+                }
+
+                const studentId = selectEstudiante.value;
+                const studentName = selectEstudiante.options[selectEstudiante.selectedIndex].text;
+
+                // Verificar si ya está en la lista
+                if (selectedStudents.has(studentId)) {
+                    alert("Este estudiante ya está en la lista.");
+                    return;
+                }
+
+                // Añadir a la lista interna
+                selectedStudents.set(studentId, studentName);
+
+                // Actualizar la lista visual
+                updateStudentList();
+            });
+
+            // Función para actualizar la lista de estudiantes visualmente
+            function updateStudentList() {
+                // Limpiar el listado actual
+                studentList.innerHTML = "";
+
+                // Iterar sobre los estudiantes seleccionados y mostrarlos
+                selectedStudents.forEach((name, id) => {
+                    const listItem = document.createElement("li");
+                    listItem.className = "d-flex justify-content-between align-items-center mb-2";
+
+                    listItem.innerHTML = `
+                ${name}
+                <button class="btn btn-danger btn-sm" data-id="${id}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `;
+
+                    studentList.appendChild(listItem);
+                });
+
+                // Añadir eventos de eliminación a los botones
+                studentList.querySelectorAll("button").forEach(button => {
+                    button.addEventListener("click", () => {
+                        const studentId = button.getAttribute("data-id");
+                        selectedStudents.delete(studentId);
+                        updateStudentList();
+                    });
+                });
+            }
+        });
+
+        // Función para actualizar el campo oculto con los IDs de los estudiantes seleccionados
+        function updateHiddenInput() {
+            hiddenInput.value = JSON.stringify(Array.from(selectedStudents.keys()));
+        }
 
         // Función para actualizar la lista de estudiantes visualmente
         function updateStudentList() {
