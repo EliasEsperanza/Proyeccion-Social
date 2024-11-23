@@ -40,11 +40,7 @@
         </div>
 
         @if(Auth::user()->hasRole('Tutor'))
-        <div class="informacion__asesores">
-            <h3>Tutores</h3>
-            <p>Total de tutores</p>
-            <h2>{{ $totalTutores }}</h2>
-        </div>
+        
         @elseif(Auth::user()->hasRole('Coordinador'))
         <div class="informacion__asesores">
             <h3>Coordinadores</h3>
