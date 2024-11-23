@@ -259,6 +259,8 @@ Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos
 
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'create'])->name('solicitud_proyecto.create');
 Route::post('/store_solicitud', [ProyectoController::class, 'store_solicitud'])->name('proyectos.store_solicitud');
+Route::post('/store_solicitud_alumno', [ProyectoController::class, 'store_solicitud_alumno'])->name('store_solicitud_alumno');
+
 
 // Rutas de recuperación y reseteo de contraseña
 Route::get('/recuperarpassword', function () {
