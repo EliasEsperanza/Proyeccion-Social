@@ -619,8 +619,10 @@ class ProyectoController extends Controller
     //retorna vista gertor de TI
     public function detallesSolicitud($id_proyecto)
     {
+
+        $proyectos = Proyecto::with('estudiantes.usuario')->get();
         // Buscar el proyecto por su nombre
-        $proyecto = Proyecto::where('id_proyecto', $id_proyecto)->firstOrFail();
+        $proyecto = Proyecto::where('id_proyecto', $id_proyecto)->with('estudiantes.usuario')->firstOrFail();
 
         // Pasar el proyecto a la vista
         return view('proyecto.VerdetallesSolicitud', compact('proyecto'));

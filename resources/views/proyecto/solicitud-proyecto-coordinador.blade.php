@@ -23,7 +23,7 @@
             <ul>
                 @foreach($proyecto->estudiantes as $estudiante)
                 <li>
-                    ID Estudiante: {{ $estudiante->id_estudiante }},
+                    DUE Estudiante: {{ $estudiante->id_estudiante }},
                     Nombre: {{ $estudiante->usuario ? $estudiante->usuario->name : 'No disponible' }}
                 </li>
                 @endforeach
