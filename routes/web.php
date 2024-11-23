@@ -237,7 +237,6 @@ Route::controller(EstudianteController::class)
         Route::get('/', 'index')->name('index');          
         Route::get('/create', 'create')->name('create');          
         Route::post('/', 'store')->name('store'); 
-
         Route::get('/{id}', 'show')->name('show');        
         Route::put('/{id}', 'update')->name('update');    
         Route::delete('/{id}', 'destroy')->name('destroy'); 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 
@@ -23,51 +24,52 @@ use Maatwebsite\Excel\Facades\Excel;
 class ProyectoController extends Controller
 {
     public function index()
-{
-    $user = Auth::user(); // Usuario autenticado
+    {
+        $user = Auth::user(); // Usuario autenticado
 
-    if ($user->hasRole('Tutor')) {
-        // Filtrar proyectos asignados al tutor autenticado mediante la tabla asignaciones
-        $ListProyecto = Proyecto::with([
-            'seccion.departamento',
-            'estudiantes',
-            'coordinadorr',
-            'tutorr.seccionesTutoreadas',
-            'estadoo'
-        ])
-            ->whereHas('asignaciones', function ($query) use ($user) {
-                $query->where('id_tutor', $user->id_usuario);
-            })
-            ->whereHas('estadoo', function ($query) {
-                $query->where('nombre_estado', '!=', 'Disponible');
-            })
-            ->get();
-    } else {
-        // Mostrar todos los proyectos para roles diferentes a tutor
-        $ListProyecto = Proyecto::with([
-            'seccion.departamento',
-            'estudiantes',
-            'coordinadorr',
-            'tutorr.seccionesTutoreadas',
-            'estadoo'
-        ])
-            ->whereHas('estadoo', function ($query) {
-                $query->where('nombre_estado', '!=', 'Disponible');
-            })
-            ->get();
+        if ($user->hasRole('Tutor')) {
+            // Filtrar proyectos asignados al tutor autenticado mediante la tabla asignaciones
+            $ListProyecto = Proyecto::with([
+                'seccion.departamento',
+                'estudiantes',
+                'coordinadorr',
+                'tutorr.seccionesTutoreadas',
+                'estadoo'
+            ])
+                ->whereHas('asignaciones', function ($query) use ($user) {
+                    $query->where('id_tutor', $user->id_usuario);
+                })
+                ->whereHas('estadoo', function ($query) {
+                    $query->where('nombre_estado', '!=', 'Disponible');
+                })
+                ->get();
+        } else {
+            // Mostrar todos los proyectos para roles diferentes a tutor
+            $ListProyecto = Proyecto::with([
+                'seccion.departamento',
+                'estudiantes',
+                'coordinadorr',
+                'tutorr.seccionesTutoreadas',
+                'estadoo'
+            ])
+                ->whereHas('estadoo', function ($query) {
+                    $query->where('nombre_estado', '!=', 'Disponible');
+                })
+                ->get();
+        }
+
+        return view("proyecto.proyecto-general", compact("ListProyecto"));
     }
 
-    return view("proyecto.proyecto-general", compact("ListProyecto"));
-}
-
-public function asignaciones()
-{
-    return $this->hasMany(Asignacion::class, 'id_proyecto', 'id_proyecto');
-}
+    public function asignaciones()
+    {
+        return $this->hasMany(Asignacion::class, 'id_proyecto', 'id_proyecto');
+    }
 
 
     public function store_solicitud(Request $request)
     {
+
         $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
 
         $validatedData = $request->validate([
@@ -106,6 +108,7 @@ public function asignaciones()
             }
 
             return redirect()->back()->with('success', 'Proyecto creado exitosamente.');
+
         } catch (\Exception $e) {
             \Log::error('Error al crear el proyecto: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
@@ -117,11 +120,11 @@ public function asignaciones()
     public function solicitudes_coordinador()
     {
         $proyectos = Proyecto::with('estudiantes.usuario')
+
         ->where('estado',9)
                             ->get();
         return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
     }
-
 
     public function retornar_proyectos()
     {
@@ -167,7 +170,6 @@ public function asignaciones()
             return redirect()
                 ->back()
                 ->with('success', 'Proyecto creado exitosamente');
-
         } catch (\Exception $e) {
             \Log::error('Error al crear proyecto: ' . $e->getMessage());
             return redirect()
@@ -176,7 +178,6 @@ public function asignaciones()
                 ->with('error', 'Error al crear el proyecto. Por favor intente nuevamente.');
         }
     }
-
 
     public function show(string $id)
     {
@@ -190,10 +191,10 @@ public function asignaciones()
         $estados = Estado::all();
         $estudiantes = Estudiante::all();
         $secciones = Seccion::all();
-        $tutores = User::role('tutor') 
-        ->whereHas('seccionesTutoreadas')
-        ->with('seccionesTutoreadas')
-        ->get();
+        $tutores = User::role('tutor')
+            ->whereHas('seccionesTutoreadas')
+            ->with('seccionesTutoreadas')
+            ->get();
         if (!$proyecto) {
             return redirect()->route('proyectos.index')->with('error', 'Proyecto no encontrado');
         }
@@ -213,19 +214,19 @@ public function asignaciones()
                 $query->where('nombre_estado', '=', 'Disponible');
             })
             ->get();
-            
+
         $estados = Estado::all();
         $estudiantes = Estudiante::all();
         $secciones = Seccion::all();
-        $tutores = User::role('tutor') 
-        ->whereHas('seccionesTutoreadas')
-        ->with('seccionesTutoreadas')
-        ->get();
+        $tutores = User::role('tutor')
+            ->whereHas('seccionesTutoreadas')
+            ->with('seccionesTutoreadas')
+            ->get();
 
         if (!$proyectos) {
             return redirect()->route('gestionProyectos.gestionProyectos')->with('error', 'Proyecto no encontrado');
         }
-       // dd($proyectos);
+        // dd($proyectos);
 
         return view("gestionProyectos.gestionProyectos", compact('proyectos', 'estados', 'estudiantes', 'tutores', 'secciones'));
     }
@@ -280,7 +281,7 @@ public function asignaciones()
         return back()->with('success', 'Estudiante asignado correctamente.');
     }
     public function gestionActualizar(Request $request, $id)
-    {   
+    {
         $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
         $validatedData = $request->validate([
             'idTutor' => 'required|string|exists:users,id_usuario',
@@ -518,12 +519,12 @@ public function asignaciones()
 
     public function totalProyectosAsignados()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         if ($user->hasRole('Tutor')) {
             $totalProyectosAsignados = Asignacion::where('id_tutor', $user->id_usuario)
-                ->distinct('id_proyecto') 
-                ->count('id_proyecto'); 
+                ->distinct('id_proyecto')
+                ->count('id_proyecto');
         } else {
             $totalProyectosAsignados = \App\Models\Proyecto::count();
         }
@@ -533,7 +534,7 @@ public function asignaciones()
 
     public function obtenerDatosGrafico()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         if ($user->hasRole('Tutor')) {
             $datos = DB::table('asignaciones')
@@ -543,10 +544,10 @@ public function asignaciones()
                     COUNT(CASE WHEN proyectos.estado IN (5, 7) THEN 1 END) as completados,
                     COUNT(CASE WHEN proyectos.estado IN (1, 8, 9) THEN 1 END) as en_revision
                 ")
-                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->first();
         } else {
-           
+
             $datos = DB::table('proyectos')
                 ->selectRaw("
                     COUNT(CASE WHEN estado IN (2, 3, 4) THEN 1 END) as en_progreso,
@@ -564,13 +565,13 @@ public function asignaciones()
 
     public function obtenerEstudiantesYProyectosPorFecha()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         if ($user->hasRole('Tutor')) {
             $estudiantesPorFecha = DB::table('asignaciones')
                 ->join('estudiantes', 'asignaciones.id_estudiante', '=', 'estudiantes.id_estudiante')
                 ->selectRaw('DATE(asignaciones.fecha_asignacion) as fecha, COUNT(*) as total_estudiantes')
-                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->groupBy('fecha')
                 ->orderBy('fecha', 'asc')
                 ->get();
@@ -578,7 +579,7 @@ public function asignaciones()
             $proyectosPorFecha = DB::table('asignaciones')
                 ->join('proyectos', 'asignaciones.id_proyecto', '=', 'proyectos.id_proyecto')
                 ->selectRaw('DATE(asignaciones.fecha_asignacion) as fecha, COUNT(*) as total_proyectos')
-                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->groupBy('fecha')
                 ->orderBy('fecha', 'asc')
                 ->get();
@@ -644,13 +645,13 @@ public function asignaciones()
             $proyecto->save();
 
             return redirect()->route('solicitudes_coordinador')
-                            ->with('success', $mensaje);
+                ->with('success', $mensaje);
         } else {
 
             return redirect()->route('solicitudes_coordinador')
-                         ->with('error', 'El proyecto no fue encontrado.');
+                ->with('error', 'El proyecto no fue encontrado.');
+        }
     }
-}
 
 
 
@@ -817,7 +818,6 @@ public function asignaciones()
             return view('proyecto.detalle-proyecto')
                 ->with('proyecto', $proyecto)
                 ->with('debug', true);
-
         } catch (\Exception $e) {
             \Log::error('Error en mostrarDetalle: ' . $e->getMessage());
             return back()->with('error', 'Proyecto no encontrado');
@@ -856,7 +856,6 @@ public function asignaciones()
         ]);
 
         return redirect()->route('proyecto-disponible')->with('success', 'Proyecto actualizado con éxito');
-
     }
 
 
@@ -905,3 +904,4 @@ public function asignaciones()
 }
 
 }
+
