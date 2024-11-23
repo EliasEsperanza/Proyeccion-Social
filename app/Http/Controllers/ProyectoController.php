@@ -75,7 +75,7 @@ public function asignaciones()
             $proyecto->descripcion_proyecto = strip_tags($request->descripcion);
             $proyecto->lugar = $request->lugar;
             $proyecto->estado = 9; //estado solicitud
-            $proyecto->horas_requeridas = 0;//a revisar 
+            $proyecto->horas_requeridas = 0;//horas en 0 
             $proyecto->periodo = now()->format('Y-m');
             $proyecto->coordinador = auth()->id();  
             $proyecto->seccion_id = $request->id_seccion; 
@@ -133,7 +133,7 @@ public function asignaciones()
             $proyecto->estado = 1;
             $proyecto->periodo = now()->format('Y-m');
             $proyecto->coordinador = auth()->id();
-            $proyecto->seccion_id = $validatedData['id_seccion']; // Asegúrate de que este campo se guarde
+            $proyecto->seccion_id = $validatedData['id_seccion'];
             $proyecto->fecha_inicio = now();
             $proyecto->fecha_fin = now()->addMonths(3);
 
@@ -183,10 +183,12 @@ public function asignaciones()
             'tutorr.seccionesTutoreadas',
             'estadoo'
         ])
+
             ->whereHas('estadoo', function ($query) {
                 $query->where('nombre_estado', '=', 'Disponible');
             })
             ->get();
+            
         $estados = Estado::all();
         $estudiantes = Estudiante::all();
         $secciones = Seccion::all();
@@ -194,9 +196,12 @@ public function asignaciones()
         ->whereHas('seccionesTutoreadas')
         ->with('seccionesTutoreadas')
         ->get();
+
         if (!$proyectos) {
             return redirect()->route('gestionProyectos.gestionProyectos')->with('error', 'Proyecto no encontrado');
         }
+       // dd($proyectos);
+
         return view("gestionProyectos.gestionProyectos", compact('proyectos', 'estados', 'estudiantes', 'tutores', 'secciones'));
     }
 
@@ -290,6 +295,8 @@ public function asignaciones()
     }
     public function actualizar(Request $request, $id)
     {
+        dd($request->all());
+
         $validatedData = $request->validate([
             'nombre_proyecto' => 'required|string|max:255',
             'idTutor' => 'required|string|exists:users,id_usuario',
