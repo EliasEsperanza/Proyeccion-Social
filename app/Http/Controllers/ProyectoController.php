@@ -296,7 +296,7 @@ public function asignaciones()
     }
     public function actualizar(Request $request, $id)
     {
-        dd($request->all());
+        //dd($request->all());
 
         $validatedData = $request->validate([
             'nombre_proyecto' => 'required|string|max:255',
