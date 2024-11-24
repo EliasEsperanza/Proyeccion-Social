@@ -31,7 +31,27 @@
     <div class="container">
         <h1 class="mb-4">Gestión de Proyectos</h1>
 
-        <!-- Sección de Estudiantes -->
+        
+
+        <div class="card w-100">
+            <div class="card-body">
+                <form action="" method="POST" id="actualizarProyecto">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Sección o Departamento</label>
+                        <div class="input-group mb-3">
+                            <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id">
+                                <option selected disabled>Seleccionar departamento</option>
+                                @foreach($secciones as $seccion)
+                                <option value="{{$seccion->id_seccion}}">
+                                    {{$seccion->nombre_seccion}}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Estudiantes -->
         <div class="mb-3">
             <label class="form-label">Estudiantes</label>
 
@@ -60,24 +80,6 @@
             <ul id="estudiantesList">
             </ul>
         </div>
-
-        <div class="card w-100">
-            <div class="card-body">
-                <form action="" method="POST" id="actualizarProyecto">
-                    @csrf
-                    <div class="mb-3">
-                        <label class="form-label">Sección o Departamento</label>
-                        <div class="input-group mb-3">
-                            <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id">
-                                <option selected disabled>Seleccionar departamento</option>
-                                @foreach($secciones as $seccion)
-                                <option value="{{$seccion->id_seccion}}">
-                                    {{$seccion->nombre_seccion}}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
 
                     <div class="mb-3">
                         <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
@@ -154,6 +156,7 @@
             // Obtener referencias a los elementos
             const proyectoSelect = document.getElementById("nombre_proyecto");
             const form = document.getElementById("actualizarProyecto");
+            const estudiantesInput = document.getElementById("estudiantesSeleccionados");
 
             // Escuchar cambios en el select de proyectos
             proyectoSelect.addEventListener("change", function() {
@@ -162,6 +165,13 @@
                 if (selectedProyectoId) {
                     // Asignar la URL dinámica al atributo action del formulario
                     form.action = `/proyectos/${selectedProyectoId}/gestionActualizar`;
+                }
+            });
+            form.addEventListener("submit", function(event) {
+                // Validar lista de estudiantes
+                if (!estudiantesInput.value) {
+                    event.preventDefault();
+                    alert("Por favor, agregue estudiantes al proyecto.");
                 }
             });
         });
