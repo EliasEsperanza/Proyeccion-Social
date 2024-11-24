@@ -1,10 +1,13 @@
+// Variables globales para mantener el estado del chat
 let selectedChatId = null;
 let currentUserId = null;
 
+// Inicializar conexión WebSocket
 const socket = io("wss://chat-ues-production.up.railway.app", {
     transports: ["websocket"],
 });
 
+// Cuando el DOM está listo, obtener el usuario actual
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         const response = await fetch('/curret-user');
@@ -17,32 +20,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
+// Eventos de conexión WebSocket
 socket.on("connect", () => console.log("Conexión establecida con WebSocket."));
 socket.on("disconnect", () => console.log("Conexión cerrada."));
 socket.on("connect_error", (error) =>
     console.error("Error en la conexión de WebSocket:", error)
 );
 
-// Evento para recibir mensajes en tiempo real
+// Escuchar nuevos mensajes en tiempo real
 socket.on("server:nuevoMensaje", (message) => {
     console.log("Mensaje recibido:", message);
     console.log("Chat actual:", selectedChatId);
-    // Verificar si el mensaje pertenece a la conversación actual
+    
+    // Convertir todos los IDs a string para comparación
+    const sender = String(message.sender);
+    const chatId = String(message.chatId);
+    const currentUserIdStr = String(currentUserId);
+    const selectedChatIdStr = String(selectedChatId);
+
+    // Verificar si estamos en la conversación correcta
     if (
-        selectedChatId && 
-        ((message.senderId == selectedChatId && message.receiverId == currentUserId) ||
-        (message.senderId == currentUserId && message.receiverId == selectedChatId))
+        (sender === selectedChatIdStr && chatId === currentUserIdStr) || // Soy receptor
+        (sender === currentUserIdStr && chatId === selectedChatIdStr)    // Soy emisor
     ) {
-        renderMessage(message);
+        renderMessage({
+            sender: sender,
+            chatId: chatId,
+            text: message.text,
+            time: message.time || new Date().toLocaleTimeString()
+        });
     }
 });
 
+// Cargar lista de usuarios disponibles para chat
 function loadUsers() {
     fetch("/usuarios2")
         .then((response) => response.json())
         .then((users) => {
             const chatList = document.getElementById("chatList");
             chatList.innerHTML = "";
+            // Filtrar para no mostrar al usuario actual
             users
                 .filter(user => user.id_usuario != currentUserId)
                 .forEach((user) => {
@@ -60,7 +77,8 @@ function loadUsers() {
         .catch((error) => console.error("Error al cargar los usuarios:", error));
 }
 
-function selectChat(chatId, chatName, chatRole) {
+// Seleccionar un chat y cargar sus mensajes
+function selectChat(chatId, chatName, chatRole, senderChat) {
     selectedChatId = chatId;
     document.getElementById("chatName").textContent = chatName;
     document.getElementById("chatRole").textContent = chatRole;
@@ -68,13 +86,19 @@ function selectChat(chatId, chatName, chatRole) {
     const messageContainer = document.getElementById("messageContainer");
     messageContainer.innerHTML = '<p class="text-center text-muted">Cargando mensajes...</p>';
 
+
+    /*Aqui cambia lo que deba del sockets para hacer lo que te dije en los mensaje hopes  */
+    // Solicitar mensajes históricos al servidor
     socket.emit("client:requestMessages", { chatId });
 
-    // Removemos los listeners anteriores para evitar duplicados
+    // Evitar duplicación de listeners
     socket.off("server:chatMessages");
     socket.on("server:chatMessages", handleChatMessages);
+    
+
 }
 
+// Manejar los mensajes históricos recibidos del servidor
 function handleChatMessages(messages) {
     if (!selectedChatId) return;
     
@@ -82,25 +106,53 @@ function handleChatMessages(messages) {
     messageContainer.innerHTML = "";
     
     messages.forEach(message => {
-        // Mostrar mensajes solo si pertenecen a la conversación actual
-        if ((message.senderId == currentUserId && message.receiverId == selectedChatId) ||
-            (message.senderId == selectedChatId && message.receiverId == currentUserId)) {
+        // Asegurarse de que el mensaje tenga sender y chatId
+        const sender = String(message.sender || message.id_emisor);
+        const chatId = String(message.chatId || message.id_receptor);
+        const currentUserIdStr = String(currentUserId);
+        const selectedChatIdStr = String(selectedChatId);
+/*        console.log(renderMessage({
+            sender: sender,
+            chatId: chatId,
+            text: message.text,
+            time: message.time
+        }))
+*/
+        // Verificar mensajes tanto como emisor o receptor
+        if ((sender === currentUserIdStr && chatId === selectedChatIdStr) /*||
+            (sender === selectedChatIdStr && chatId === currentUserIdStr)*/) {
             console.log("Renderizando mensaje histórico:", message);
-            renderMessage(message);
+            renderMessage({
+                sender: sender,
+                chatId: chatId,
+                text: message.text,
+                time: message.time
+            });
+        }
+        else{
+            console.log("Renderizando mensaje histórico:", message);
+            renderMessage({
+                sender: chatId,
+                chatId: sender,
+                text: message.text,
+                time: message.time
+            });
         }
     });
 }
 
+// Renderizar un mensaje individual en el contenedor
 function renderMessage(message) {
     const messageContainer = document.getElementById("messageContainer");
-    const isOwnMessage = message.senderId == currentUserId;
+    // Determinar si el mensaje es propio comparando el sender con el usuario actual
+    const isOwnMessage = message.sender === String(currentUserId);
     
-    console.log("Renderizando mensaje - senderId:", message.senderId, "currentUserId:", currentUserId, "isOwnMessage:", isOwnMessage);
+    console.log("Renderizando mensaje - sender:", message.sender, "currentUserId:", currentUserId, "isOwnMessage:", isOwnMessage);
     
     const messageClass = isOwnMessage ? "sent" : "received";
     const messageStyle = isOwnMessage 
-        ? 'margin-left: auto; background-color: #DCF8C6; margin-right: 10px;' 
-        : 'margin-right: auto; background-color: #E8E8E8; margin-left: 10px;';
+        ? 'margin-left: auto; margin-right: 10px;' 
+        : 'margin-right: auto; background-color: #3766fa; margin-left: 10px;';
     
     messageContainer.innerHTML += `
         <div class="message ${messageClass}" style="${messageStyle}">
@@ -111,6 +163,7 @@ function renderMessage(message) {
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
+// Enviar un nuevo mensaje
 function sendMessage(event) {
     if (event.key === "Enter" || event.type === "click") {
         const input = document.getElementById("messageInput");
@@ -118,54 +171,19 @@ function sendMessage(event) {
 
         if (message !== "" && selectedChatId !== null) {
             const data = {
-                chatId: selectedChatId,
+                chatId: String(selectedChatId),  // ID del destinatario
+                sender: String(currentUserId),   // ID del emisor (usuario actual)
                 text: message,
-                senderId: currentUserId,
-                receiverId: selectedChatId,
-                time: new Date().toLocaleTimeString(),
+                time: new Date().toLocaleTimeString()
             };
 
             console.log("Enviando mensaje al servidor:", data);
             socket.emit("client:nuevoMensaje", data);
             
-            // Renderizar inmediatamente solo los mensajes que envío
-            renderMessage(data);
+            // Mostrar el mensaje enviado inmediatamente
+            //renderMessage(data);
             
             input.value = "";
         }
     }
 }
-
-const style = document.createElement('style');
-style.textContent = `
-    .message {
-        max-width: 70%;
-        padding: 10px;
-        border-radius: 10px;
-        margin-bottom: 10px;
-        word-wrap: break-word;
-        color: #000000; /* Color negro para el texto */
-    }
-    
-    .sent {
-        margin-left: auto;
-        background-color: #DCF8C6;
-        margin-right: 10px;
-        text-align: right;
-    }
-    
-    .received {
-        margin-right: auto;
-        background-color: #E8E8E8;
-        margin-left: 10px;
-        text-align: left;
-    }
-
-    .message small {
-        display: block;
-        font-size: 0.8em;
-        margin-top: 5px;
-        color: #666666; /* Color gris oscuro para la hora */
-    }
-`;
-document.head.appendChild(style);
