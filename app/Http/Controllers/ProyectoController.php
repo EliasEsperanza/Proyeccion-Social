@@ -72,7 +72,7 @@ class ProyectoController extends Controller
     {
 
         $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
-        dd($request);
+      
         $validatedData = $request->validate([
             'nombre_proyecto' => 'required|string|max:255',
             'descripcion' => 'required|string',
@@ -82,7 +82,7 @@ class ProyectoController extends Controller
             'id_seccion' => 'required|integer|exists:secciones,id_seccion',
             'estudiantes' => 'required|string',
         ]);
-
+        dd($validatedData['id_seccion']);
         try {
 
             $proyecto = Proyecto::create([
@@ -99,6 +99,10 @@ class ProyectoController extends Controller
             ]);
 
             if (is_array($estudiantesSeleccionados)) {
+                 $estudianteNotificacion=Estudiante::find($estudiantesSeleccionados[0]);
+                $idCoordinador=$estudianteNotificacion->seccion->id_coordinador;
+              
+                app(NotificacionController::class)->enviarNotificacion($idCoordinador,'Se ha solicitado la aprobacion del proyecto '.$validatedData['nombre_proyecto']);
                 foreach ($estudiantesSeleccionados as $idEstudiante) {
                     $estudiante = Estudiante::find($idEstudiante);
 
