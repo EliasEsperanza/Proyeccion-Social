@@ -20,6 +20,7 @@ use App\Exports\ProyectosExport;
 use Illuminate\Container\Attributes\DB as AttributesDB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\NotificacionController;
 
 class ProyectoController extends Controller
 {
@@ -120,14 +121,17 @@ class ProyectoController extends Controller
 
         try {
             $estudiantesSeleccionados = json_decode($request->input('estudiantesSeleccionados'), true);
-
+            $proyecto = Proyecto::find($request->input('id_proyecto'));
             if (is_array($estudiantesSeleccionados)) {
+                $estudianteNotificacion=Estudiante::find($estudiantesSeleccionados[0]);
+                $idCoordinador=$estudianteNotificacion->seccion->id_coordinador;
+             
+                app(NotificacionController::class)->enviarNotificacion($idCoordinador,'Hay una nueva aplicacion al proyecto '.$proyecto->nombre_proyecto);
                 foreach ($estudiantesSeleccionados as $idEstudiante) {
                     $estudiante = Estudiante::find($idEstudiante);
-
+                    
                     if ($estudiante) {
                         // Asignar id estudiante en tabla pivote Estudiante_Proyecto
-                        $proyecto = Proyecto::find($request->input('id_proyecto'));
                         $proyecto->estudiantes()->attach($estudiante->id_estudiante);
                         //update a id 9 para estado solicitud 
                         $proyecto->update(['estado' => 9]);

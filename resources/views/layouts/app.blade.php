@@ -37,7 +37,11 @@
                         <button class="mark-all-read">Marcar todo como leído</button>
                     </div>
                     <div class="notification-list">
-                        <!-- Las notificaciones se cargarán aquí dinámicamente -->
+                        @foreach($notificaciones as $noti)
+                            <div>
+                                <p>{{$noti->mensaje}}</p>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
