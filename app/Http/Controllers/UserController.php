@@ -285,7 +285,7 @@ class UserController extends Controller
             } elseif ($request->rol === 'coordinador') {
                 \DB::table('secciones')
                     ->where('id_seccion', $idSeccion)
-                    ->update(['id_coordinador' => $user->id]);
+                    ->update(['id_coordinador' => $user->id_usuario]);
             }
         }
 
