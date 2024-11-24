@@ -21,6 +21,7 @@ use App\Models\Solicitud;
 use Illuminate\Container\Attributes\DB as AttributesDB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\NotificacionController;
 
 class ProyectoController extends Controller
 {
@@ -72,7 +73,7 @@ class ProyectoController extends Controller
     {
 
         $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
-        dd($request);
+      
         $validatedData = $request->validate([
             'nombre_proyecto' => 'required|string|max:255',
             'descripcion' => 'required|string',
@@ -82,7 +83,7 @@ class ProyectoController extends Controller
             'id_seccion' => 'required|integer|exists:secciones,id_seccion',
             'estudiantes' => 'required|string',
         ]);
-
+        
         try {
 
             $proyecto = Proyecto::create([
@@ -99,6 +100,10 @@ class ProyectoController extends Controller
             ]);
 
             if (is_array($estudiantesSeleccionados)) {
+                 $estudianteNotificacion=Estudiante::find($estudiantesSeleccionados[0]);
+                $idCoordinador=$estudianteNotificacion->seccion->id_coordinador;
+              
+                app(NotificacionController::class)->enviarNotificacion($idCoordinador,'Se ha solicitado la aprobacion del proyecto '.$validatedData['nombre_proyecto']);
                 foreach ($estudiantesSeleccionados as $idEstudiante) {
                     $estudiante = Estudiante::find($idEstudiante);
 
@@ -121,14 +126,17 @@ class ProyectoController extends Controller
 
         try {
             $estudiantesSeleccionados = json_decode($request->input('estudiantesSeleccionados'), true);
-
+            $proyecto = Proyecto::find($request->input('id_proyecto'));
             if (is_array($estudiantesSeleccionados)) {
+                $estudianteNotificacion=Estudiante::find($estudiantesSeleccionados[0]);
+                $idCoordinador=$estudianteNotificacion->seccion->id_coordinador;
+             
+                app(NotificacionController::class)->enviarNotificacion($idCoordinador,'Hay una nueva aplicacion al proyecto '.$proyecto->nombre_proyecto);
                 foreach ($estudiantesSeleccionados as $idEstudiante) {
                     $estudiante = Estudiante::find($idEstudiante);
-
+                    
                     if ($estudiante) {
                         // Asignar id estudiante en tabla pivote Estudiante_Proyecto
-                        $proyecto = Proyecto::find($request->input('id_proyecto'));
                         $proyecto->estudiantes()->attach($estudiante->id_estudiante);
                         //update a id 9 para estado solicitud 
                         $proyecto->update(['estado' => 9]);
@@ -668,11 +676,26 @@ class ProyectoController extends Controller
     //aceptar solucitud
     public function aceptarSolicitud($id_proyecto)
     {
+        $proyecto=Proyecto::find($id_proyecto);
+        $estudiantes=$proyecto->estudiantes;
+        foreach($estudiantes as $estu){
+            $id=$estu->usuario->id_usuario;
+           
+            app(NotificacionController::class)->enviarNotificacion($id,'Has sido aprobado en el proyecto '.$proyecto->nombre_proyecto);
+
+        }
         return $this->actualizarEstadoSolicitud($id_proyecto, 1, 'El proyecto ha sido aceptado exitosamente.');
     }
 
     public function rechazarSolicitud($id_proyecto)
     {
+        $proyecto=Proyecto::find($id_proyecto);
+        $estudiantes=$proyecto->estudiantes;
+        foreach($estudiantes as $estu){
+            $id=$estu->usuario->id_usuario;
+            app(NotificacionController::class)->enviarNotificacion($id,'Has sido rechazado en el proyecto '.$proyecto->nombre_proyecto);
+
+        }
         return $this->actualizarEstadoSolicitud($id_proyecto, 7, 'El proyecto ha sido rechazado exitosamente.');
     }
 
@@ -794,7 +817,8 @@ class ProyectoController extends Controller
                     ->get(['id_proyecto', 'nombre_proyecto', 'descripcion_proyecto', 'horas_requeridas', 'estado']);
 
                 // Retornar la vista con los proyectos filtrados
-                return view('estudiantes.dashboard', compact('proyectos'));
+                $notificaciones= app(NotificacionController::class)->getNotifiaciones(Auth::user()->id_usuario);
+                return view('estudiantes.dashboard', compact('proyectos','notificaciones'));
             }
 
             // Si no hay sección asignada, redirigir con error
