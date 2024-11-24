@@ -152,6 +152,8 @@
 </div>
 
 @endsection
+
 @section('scripts')
+
 <script src="{{ asset('js/actpassperfil.js') }}"></script>
 @endsection

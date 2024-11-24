@@ -110,5 +110,9 @@
 <script src="{{ asset('js/mensaje.js') }}"></script>
 <script src="{{ asset('js/showPassword.js') }}"></script>
 <script src="{{ asset('js/busqueda.js') }}"></script>
+
+<!--Yield para scripts en otros blades -->
+@yield('scripts') 
+
 </body>
 </html>
