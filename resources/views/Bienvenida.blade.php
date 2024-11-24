@@ -31,7 +31,7 @@
             </a>
         </div>
         <div class="image-bienvenida">
-            <img src="{{ asset('img/logoUes.png') }}" alt="">
+            <img src="{{ asset('img/Escudo_de_la_Universidad_de_El_Salvador.svg') }}" alt="">
         </div>
     </section>
 
