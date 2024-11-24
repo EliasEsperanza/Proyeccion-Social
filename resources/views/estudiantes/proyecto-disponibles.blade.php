@@ -8,18 +8,18 @@
 
 @section('content')
 @if (session()->has('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 @endif
 
 
 <div class="container py-5">
     <div class="card shadow tarjeta-detalle mx-auto" style="max-width: 800px;">
         <div class="card-body p-4">
-        <form action="{{ route('store_solicitud_alumno') }}" method="POST" id="actualizarProyecto">
-        @csrf
+            <form action="{{ route('store_solicitud_alumno') }}" method="POST" id="actualizarProyecto">
+                @csrf
 
                 <h2 class="titulo-proyecto mb-4 text-center">{{$proyecto->id_proyecto}} {{$proyecto->nombre_proyecto }}</h2>
                 <p class="descripcion mb-3">

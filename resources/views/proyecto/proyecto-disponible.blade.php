@@ -155,12 +155,14 @@
                             <a href="/proyecto/${project.id_proyecto}/editar_proyecto" class="btn btn-light btn-sm p-2 px-3">
                                 <i class="bi bi-pencil text-warning"></i>
                             </a>
-                            <form action="/proyecto/${project.id_proyecto}/eliminar" method="POST" style="display:inline;">
+                            
+                            <form action="/proyecto/${project.id_proyecto}/delete" method="POST" style="display:inline;">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="btn btn-light btn-sm p-2 px-3">
-                                    <i class="bi bi-trash text-danger"></i>
+                                    <i class="bi bi-trash text-danger">${project.id_proyecto}</i>
                                 </button>
                             </form>
+
                         </div>
                     </td>
                 </tr>
