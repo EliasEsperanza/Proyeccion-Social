@@ -83,7 +83,7 @@ class ProyectoController extends Controller
             'id_seccion' => 'required|integer|exists:secciones,id_seccion',
             'estudiantes' => 'required|string',
         ]);
-        dd($validatedData['id_seccion']);
+        
         try {
 
             $proyecto = Proyecto::create([
