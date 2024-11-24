@@ -152,7 +152,7 @@
                             <a href="/proyecto/${project.id_proyecto}/detalle" class="btn btn-light btn-sm p-2 px-3">
                                 <i class="bi bi-eye text-muted"></i>
                             </a>
-                            <a href="/proyecto/${project.id_proyecto}/editar" class="btn btn-light btn-sm p-2 px-3">
+                            <a href="/proyecto/${project.id_proyecto}/editar_proyecto" class="btn btn-light btn-sm p-2 px-3">
                                 <i class="bi bi-pencil text-warning"></i>
                             </a>
                             <form action="/proyecto/${project.id_proyecto}/eliminar" method="POST" style="display:inline;">
