@@ -55,7 +55,7 @@
 
       <!-- Buttons -->
       <div class="d-flex justify-content-between p-3">
-        <button class="btn-actualizar btn">Actualizar Horas</button>
+      <a class="btn-actualizar btn" href="{{ route('estudiante.actualizarHorasView') }}">Actualizar horas</a>
         <a href="{{ route('detallesmio') }}" class="btn-detalles btn">Ver Detalles</a>
       </div>
     </div>

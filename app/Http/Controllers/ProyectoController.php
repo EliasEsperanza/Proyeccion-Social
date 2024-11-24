@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Departamento;
 use App\Models\Asignacion;
 use App\Exports\ProyectosExport;
+use App\Models\Solicitud;
 use Illuminate\Container\Attributes\DB as AttributesDB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -967,5 +968,95 @@ class ProyectoController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Proyecto no encontrado'], 404);
         }
+    }
+    public function solicitudes_proyectos(string $id)
+    {
+        $id = (int)$id;
+
+        $solicitudes = Solicitud::where('id_proyecto', $id)->get();
+        $proyecto = Proyecto::find($id);
+        foreach ($solicitudes as $solicitud) {
+            $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+            $solicitud->nombre = User::find($estudiante->id_usuario)->name;
+            //nombre del usuario asociado al id de estudiante
+        }
+
+        $estados = Estado::all();
+
+        return view('proyecto.proyecto-solicitudes', compact('solicitudes', 'proyecto', 'estados'));
+    }
+
+    public function revisarSolicitud(Request $request, $id)
+    {
+        $user = auth()->user();
+
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $user->id_usuario)->first();
+        $proyecto = Proyecto::find($proyectoEstudiante->id_proyecto);
+        $horas = Estudiante::where('id_estudiante', $user->id_usuario)->first();
+
+
+        return view('estudiantes.actualizar-horas')->with([
+            'proyecto' => $proyecto,
+            'horas' => $horas,
+        ]);
+    }
+
+    public function mostrarSolicitud(string $id, string $solicitudId)
+    {
+
+        $solicitud = Solicitud::find($solicitudId);
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        $usuario = User::find($estudiante->id_usuario);
+        $rutaDocs = 'storage/documentos/';
+
+        if (!$solicitud) {
+            return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
+        }
+
+        return view('proyecto.proyecto-solicitudes-revision', compact('solicitud', 'proyecto', 'usuario', 'estudiante', 'rutaDocs'));
+    }
+
+    public function aprobarSolicitud(string $id, string $solicitudId)
+    {
+        $solicitud = Solicitud::find($solicitudId);
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        $usuario = User::find($estudiante->id_usuario);
+
+        if (!$solicitud) {
+            return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
+        }
+
+        $estudiante->horas_sociales_completadas += $solicitud->valor;
+
+        $solicitud->estado = 10;
+
+        $estudiante->save();
+        $solicitud->save();
+
+        return redirect()->route('solicitudesProyectos', [
+            'id' => $proyecto->id_proyecto
+        ])->with('success', 'Solicitud aprobada correctamente');
+    }
+
+    public function denegarSolicitud(string $id, string $solicitudId)
+    {
+        $solicitud = Solicitud::find($solicitudId);
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        $usuario = User::find($estudiante->id_usuario);
+
+        if (!$solicitud) {
+            return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
+        }
+
+        $solicitud->estado = 7;
+
+        $solicitud->save();
+
+        return redirect()->route('solicitudesProyectos', [
+            'id' => $proyecto->id_proyecto
+        ])->with('success', 'Solicitud rechazada correctamente');
     }
 }
