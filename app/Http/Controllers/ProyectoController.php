@@ -71,9 +71,7 @@ class ProyectoController extends Controller
 
     public function store_solicitud(Request $request)
     {
-
         $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
-      
         $validatedData = $request->validate([
             'nombre_proyecto' => 'required|string|max:255',
             'descripcion' => 'required|string',
@@ -334,6 +332,9 @@ class ProyectoController extends Controller
         }
 
         $proyecto = Proyecto::findOrFail($id);
+
+        //limpiar lista de usuarios
+        $proyecto->estudiantes()->detach();
 
         foreach ($estudiantesSeleccionados as $estudiante) {
             $estudiante2 = Estudiante::find($estudiante);
@@ -959,11 +960,17 @@ class ProyectoController extends Controller
     public function obtenerDetallesProyectoFU($id)
     {
         try {
-            $proyecto = Proyecto::findOrFail($id);
+            $proyecto = Proyecto::with(['estudiantes.usuario'])->findOrFail($id);
             return response()->json([
                 'ubicacion' => $proyecto->lugar,
                 'fecha_inicio' => $proyecto->fecha_inicio,
                 'fecha_fin' => $proyecto->fecha_fin,
+                'estudiantes' => $proyecto->estudiantes->map(function ($estudiante) {
+                    return [
+                        'id_estudiante' => $estudiante->id_estudiante,
+                        'name' => $estudiante->usuario->name ?? 'Sin nombre',
+                    ];
+                }),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Proyecto no encontrado'], 404);
