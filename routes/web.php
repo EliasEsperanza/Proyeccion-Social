@@ -403,5 +403,13 @@ Route::get('/descargar/{filename}', function ($filename) {
 })->name('descargar');
 
 Route::get('/obtener-tutores-por-seccion/{id}', [ProyectoController::class, 'GetTutoresPorSeccion']);
+Route::get('/hrs', [EstudianteController::class, 'actualizarHorasView'])->name('estudiante.actualizarHorasView');
+Route::post('/hrs', [EstudianteController::class, 'actualizarHoras'])->name('estudiante.actualizarHoras');
+Route::get('/proyecto/{id}/solicitudes/{solicitud}', [ProyectoController::class, 'mostrarSolicitud'])->name('RevisionSolicitud');
+Route::get('/proyecto/{id}/solicitudes', [ProyectoController::class, 'solicitudes_proyectos'])->name('solicitudesProyectos');
+route::post('/proyecto/{id}/solicitudes/{solicitud}/aprove', [ProyectoController::class, 'aprobarSolicitud'])->name('aprobarSolicitud');
+route::post('/proyecto/{id}/solicitudes/{solicitud}/deny', [ProyectoController::class, 'denegarSolicitud'])->name('denegarSolicitud');
+
+
 Route::get('/curret-user', [AuthController::class, 'Identificador']);
 ?>
