@@ -24,6 +24,7 @@ class UserController extends Controller
         $user = Auth::user();
 
         if ($user->hasRole('Tutor')) {
+            // Lógica para tutores
             $query = DB::table('users')
                 ->join('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
                 ->join('asignaciones', 'estudiantes.id_estudiante', '=', 'asignaciones.id_estudiante')
@@ -36,8 +37,7 @@ class UserController extends Controller
                 )
                 ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->distinct();
-
-
+    
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('users.name', 'LIKE', "%{$search}%")
@@ -47,7 +47,7 @@ class UserController extends Controller
         } else if ($user->hasRole('Coordinador')) {
             // Lógica para coordinadores
             $departamento = $user->getDepartamentoCoordinador();
-
+    
             if ($departamento) {
                 $query = DB::table('users')
                     ->leftJoin('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
@@ -69,7 +69,7 @@ class UserController extends Controller
                         $query->where('secciones.id_seccion', '=', $departamento)
                             ->orWhere('tutor_seccion.id_seccion', '=', $departamento);
                     });
-
+    
                 if ($search) {
                     $query->where(function ($q) use ($search) {
                         $q->where('users.name', 'LIKE', "%{$search}%")
@@ -123,7 +123,6 @@ class UserController extends Controller
 
         return view('usuarios.listaUsuario', compact('users'));
     }
-
 
 
     public function buscar(Request $request)

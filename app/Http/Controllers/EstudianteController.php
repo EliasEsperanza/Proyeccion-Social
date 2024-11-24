@@ -174,10 +174,11 @@ class EstudianteController extends Controller
     {
         $user = Auth::user();
 
-        // Inicializar la consulta de estudiantes
-        $query = Estudiante::query();
-
         if ($user->hasRole('Coordinador')) {
+
+            // Inicializar la consulta de estudiantes
+            $query = Estudiante::query();
+            
             // Obtener la sección del coordinador
             $seccion = DB::table('secciones')
                 ->where('id_coordinador', $user->id_usuario)
@@ -186,18 +187,18 @@ class EstudianteController extends Controller
 
             // Filtrar estudiantes por la sección del coordinador
             $query->where('id_seccion', $seccion);
+            $totalEstudiantes = $query->count();
+        } else if ($user->hasRole('Tutor')) {
+            // Obtener estudiantes asignados al tutor
+            $totalEstudiantes = Asignacion::where('id_tutor', $user->id_usuario)
+                ->distinct('id_estudiante') // Asegúrate de no contar estudiantes duplicados
+                ->count('id_estudiante');
+        } else {
+            // Total general de estudiantes
+            $totalEstudiantes = Estudiante::count();
         }
 
-        if ($user->hasRole('Tutor')) {
-            // Obtener las secciones tutoreadas por el tutor
-            $seccionesTutoreadas = $user->seccionesTutoreadas()->pluck('id_seccion');
-
-            // Filtrar estudiantes por las secciones tutoreadas
-            $query->whereIn('id_seccion', $seccionesTutoreadas);
-        }
-
-        // Contar los estudiantes filtrados
-        return $query->count();
+        return $totalEstudiantes;
     }
 
 
