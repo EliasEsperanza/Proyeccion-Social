@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Estado;
 use App\Models\Proyecto;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('Bienvenida');
@@ -410,4 +411,5 @@ route::post('/proyecto/{id}/solicitudes/{solicitud}/aprove', [ProyectoController
 route::post('/proyecto/{id}/solicitudes/{solicitud}/deny', [ProyectoController::class, 'denegarSolicitud'])->name('denegarSolicitud');
 
 
+Route::get('/curret-user', [AuthController::class, 'Identificador']);
 ?>

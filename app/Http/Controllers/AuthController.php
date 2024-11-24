@@ -59,4 +59,12 @@ class AuthController extends Controller
     {
         return response()->json(['token' => Auth::refresh()]);
     }
+    public function Identificador()
+    {
+        $user = Auth::User();
+        if (!$user) {
+            return response()->json(['error' => 'No autenticado'], 401);
+        }
+        return response()->json(['id_usuario' => $user]);
+    }
 }
