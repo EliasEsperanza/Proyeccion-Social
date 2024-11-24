@@ -168,13 +168,63 @@
     </script>
 
 <script>
+
+    const estudianteSelect = document.getElementById('idEstudiante');
+    const addStudentBtn = document.getElementById('addStudentBtn');
+    const studentList = document.getElementById('studentList');
+    const hiddenInput = document.getElementById('estudiantesSeleccionados');
+    // Mapa para almacenar estudiantes seleccionados (ID y nombre)
+    const selectedStudents = new Map();
+
+    // Evento: Agregar estudiantes seleccionados a la lista
+    addStudentBtn.addEventListener('click', function () {
+    const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
+    const studentId = selectedOption.value;
+    const studentName = selectedOption.textContent;
+
+    // Evitar duplicados
+    if (!selectedStudents.has(studentId)) {
+        selectedStudents.set(studentId, studentName);
+        updateStudentList();
+    }
+    });
+
+    // Función: Actualizar la lista visual y el campo oculto
+    function updateStudentList() {
+        // Limpiar la lista visual
+        studentList.innerHTML = "";
+        console.log(selectedStudents);
+        // Iterar sobre los estudiantes seleccionados y renderizar en la lista
+        selectedStudents.forEach((name, id) => {
+            const listItem = document.createElement('li');
+            listItem.className = 'd-flex justify-content-between align-items-center mb-2';
+
+            listItem.innerHTML = `
+                ${name}
+                <button class="btn btn-danger btn-sm" data-id="${id}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `;
+
+            studentList.appendChild(listItem);
+        });
+
+        // Actualizar el valor del campo oculto con los IDs seleccionados
+        hiddenInput.value = JSON.stringify([...selectedStudents.keys()]);
+
+        // Añadir eventos de eliminación a los botones
+        studentList.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function () {
+                const studentId = button.getAttribute('data-id');
+                selectedStudents.delete(studentId);
+                updateStudentList();
+            });
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const seccionSelect = document.getElementById('seccion_id');
         const proyectoSelect = document.getElementById('nombre_proyecto');
-        const estudianteSelect = document.getElementById('idEstudiante');
-        const addStudentBtn = document.getElementById('addStudentBtn');
-        const studentList = document.getElementById('studentList');
-        const hiddenInput = document.getElementById('estudiantesSeleccionados');
         const idTutor = document.getElementById('idTutor');
 
         // Inicialmente, deshabilitar selectores dependientes
@@ -183,8 +233,6 @@
         idTutor.disabled = true;
         addStudentBtn.disabled = true;
 
-        // Mapa para almacenar estudiantes seleccionados (ID y nombre)
-        const selectedStudents = new Map();
 
         // Evento: Habilitar selectores al seleccionar una sección
         seccionSelect.addEventListener('change', function () {
@@ -212,52 +260,6 @@
                 })
                 .catch(error => console.error('Error al cargar proyectos:', error));
         });
-
-        // Evento: Agregar estudiantes seleccionados a la lista
-        addStudentBtn.addEventListener('click', function () {
-            const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
-            const studentId = selectedOption.value;
-            const studentName = selectedOption.textContent;
-
-            // Evitar duplicados
-            if (!selectedStudents.has(studentId)) {
-                selectedStudents.set(studentId, studentName);
-                updateStudentList();
-            }
-        });
-
-        // Función: Actualizar la lista visual y el campo oculto
-        function updateStudentList() {
-            // Limpiar la lista visual
-            studentList.innerHTML = "";
-
-            // Iterar sobre los estudiantes seleccionados y renderizar en la lista
-            selectedStudents.forEach((name, id) => {
-                const listItem = document.createElement('li');
-                listItem.className = 'd-flex justify-content-between align-items-center mb-2';
-
-                listItem.innerHTML = `
-                    ${name}
-                    <button class="btn btn-danger btn-sm" data-id="${id}">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                `;
-
-                studentList.appendChild(listItem);
-            });
-
-            // Actualizar el valor del campo oculto con los IDs seleccionados
-            hiddenInput.value = JSON.stringify([...selectedStudents.keys()]);
-
-            // Añadir eventos de eliminación a los botones
-            studentList.querySelectorAll('button').forEach(button => {
-                button.addEventListener('click', function () {
-                    const studentId = button.getAttribute('data-id');
-                    selectedStudents.delete(studentId);
-                    updateStudentList();
-                });
-            });
-        }
     });
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -282,6 +284,14 @@
                     ubicacionInput.value = data.ubicacion || '';
                     fechaInicioInput.value = data.fecha_inicio || '';
                     fechaFinInput.value = data.fecha_fin || '';
+                    // Verificar si hay estudiantes y procesarlos
+                    if (data.estudiantes != null) {
+                        data.estudiantes.forEach(estudiante => {
+                            const id = String(estudiante.id_estudiante); // Convertir a número
+                            selectedStudents.set(id, estudiante.name);
+                            updateStudentList();
+                        });
+                    }
                 })
                 .catch(error => console.error('Error al obtener los detalles del proyecto:', error));
         }
