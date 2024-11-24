@@ -94,6 +94,29 @@ class ProyectosEstudiantesController extends Controller
         $proyectos_estudiantes->delete();
         return redirect()->route('proyectos_estudiantes.index')->with('success', 'Elminacion de asignacion de estudiante a proyecto exitosa');;
     }
+    public function Rechazar_solicitus_destroy(string $id_proyectoEstudiante)
+    {
+            // Buscar registros relacionados al proyecto
+            $proyectos_estudiantes = ProyectosEstudiantes::where('id_proyecto', $id_proyectoEstudiante)->get();
+
+            // Verificar si existen registros relacionados
+            if ($proyectos_estudiantes->isEmpty()) {
+                return redirect()->back()->with('error', 'No se encontraron registros relacionados a eliminar.');
+            }
+
+            // Eliminar registros relacionados
+            ProyectosEstudiantes::where('id_proyecto', $id_proyectoEstudiante)->delete();
+
+            // Buscar y eliminar el proyecto principal
+            $proyecto = Proyecto::find($id_proyectoEstudiante);
+            if (!$proyecto) {
+                return redirect()->back()->with('error', 'El proyecto principal no se encontró.');
+            }
+            $proyecto->delete();
+            return redirect()->back()->with('success', 'Registros eliminados correctamente.');
+    }
+
+
 
     public function Detalles_proyecto()
     {
@@ -139,12 +162,10 @@ class ProyectosEstudiantesController extends Controller
         return view('estudiantes.proyectomio', compact('proyectoEstudiante', 'porcentaje'));
     }
 
-    public function Solicitud_Proyecto_Student()
+    /*public function Solicitud_Proyecto_Student()
     {
-        // Obtener el ID del usuario autenticado
         $estudianteId = auth()->user()->id_usuario;
 
-        // Obtener el ID de la sección del estudiante autenticado
         $estudiante = Estudiante::where('id_usuario', $estudianteId)->first();
         
         if ($estudiante) {
@@ -160,7 +181,38 @@ class ProyectosEstudiantesController extends Controller
             
             return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
         }  
-    }
+    }*/
+    public function Solicitud_Proyecto_Student()
+{
+    $estudianteId = auth()->user()->id_usuario;
+
+    // Obtener el estudiante autenticado
+    $estudiante = Estudiante::where('id_usuario', $estudianteId)->first();
+    
+    if ($estudiante) {
+        // Verificar si el estudiante ya tiene un proyecto asignado
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)->first();
+
+        if ($proyectoEstudiante) {
+            // Verificar si el estado del proyecto es 9
+            if ($proyectoEstudiante->estado == 7) {
+                return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
+            } else {
+                return redirect()->back()->with('warning', 'No se puede enviar el proyecto, ya que no cumple con los requisitos.');
+            }
+        }
+
+        // Si no tiene un proyecto asignado
+        $seccion_id = $estudiante->id_seccion;
+        $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
+        
+        return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
+    }  
+
+    // Si no se encuentra el estudiante
+    return redirect()->back()->with('error', 'No se encontró al estudiante.');
+}
+
 
 
     public function Procesos()
@@ -172,4 +224,6 @@ class ProyectosEstudiantesController extends Controller
     {
         return view('estudiantes.docs_tramites');
     }
+
+
 }

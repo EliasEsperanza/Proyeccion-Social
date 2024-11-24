@@ -11,8 +11,7 @@
     <h1 class="mb-2"><strong>Solicitud de Proyecto</strong></h1>
     @if (session('error'))
             <p class="alert alert-danger">{{ session('error') }}</p>
-        @endif
-    <h3>Sección = {{$proyectoEstudiante->id_seccion}}</h3>
+    @endif
     <div class="card shadow-sm">
         <div class="card-body">
             <form id="formProyecto" method="POST" action="{{ route('proyectos.store_solicitud') }}">

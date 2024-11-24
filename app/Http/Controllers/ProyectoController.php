@@ -690,12 +690,13 @@ class ProyectoController extends Controller
 
     public function rechazarSolicitud($id_proyecto)
     {
-        $proyecto=Proyecto::find($id_proyecto);
-        $estudiantes=$proyecto->estudiantes;
-        foreach($estudiantes as $estu){
-            $id=$estu->usuario->id_usuario;
-            app(NotificacionController::class)->enviarNotificacion($id,'Has sido rechazado en el proyecto '.$proyecto->nombre_proyecto);
-
+        $objProyecto_Estudiante = new ProyectosEstudiantesController();
+        $proyecto = Proyecto::find($id_proyecto);
+        $estudiantes = $proyecto->estudiantes;
+        foreach ($estudiantes as $estu) {
+            $id = $estu->usuario->id_usuario;
+            $objProyecto_Estudiante->Rechazar_solicitus_destroy($id_proyecto);
+            app(NotificacionController::class)->enviarNotificacion($id, 'Has sido rechazado en el proyecto ' . $proyecto->nombre_proyecto);
         }
         return $this->actualizarEstadoSolicitud($id_proyecto, 7, 'El proyecto ha sido rechazado exitosamente.');
     }

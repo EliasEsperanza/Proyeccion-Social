@@ -126,7 +126,7 @@ Route::get('/proyecto-disponible',[ProyectoController::class, 'retornar_proyecto
 // Ruta para la página del gestor de TI
 Route::get('/verDetallesSolicitud/{id_proyecto}', [ProyectoController::class, 'detallesSolicitud'])->name('detallesSolicitud');
 Route::post('/proyecto/aceptar/{id_proyecto}', [ProyectoController::class, 'aceptarSolicitud'])->name('proyectos.aceptar');
-Route::post('/proyecto/rechazar/{id_proyecto}', [ProyectoController::class, 'rechazarSolicitud'])->name('proyectos.rechazar');
+Route::post('/proyecto/rechazar/{id_proyecto}', [ProyectosEstudiantesController::class, 'Rechazar_solicitus_destroy'])->name('proyectos.rechazar');
 
 // Ruta para la solicitud de proyecto
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])
