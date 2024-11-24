@@ -1,10 +1,10 @@
 body {
     position: relative !important; 
     background: 
-    url(../images/minerva.png) no-repeat 30% 50% ,
-    url(../images/FondoBienvenida.png) no-repeat 100% top, 
-    url(../images/FondoBienvenida2.png) no-repeat 0% bottom !important;  
-    background-size: contain, 30% !important;
+    url(../img/minerva.png) no-repeat 30% 50% ,
+    url(../img/FondoBienvenida.png) no-repeat 100% top, 
+    url(../img/FondoBienvenida2.png) no-repeat 0% bottom !important;  
+    background-size: 50%, 30%,30% !important;
 }
 
 .login-card {
@@ -19,7 +19,15 @@ body {
 button:focus {
     outline: none; 
     box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.5); 
+    background-color: #660000 !important; 
+    border-color: #440000 !important; 
 } 
+button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.5) !important;
+    background-color: #660000 !important;
+    border-color: #440000 !important;
+}
 button:active {
     background-color: #660000; 
     border-color: #440000; 
