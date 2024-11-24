@@ -20,9 +20,9 @@ class UserController extends Controller
         $perPage = $request->input('per_page', 10);
         $search = $request->input('search');
         $role = $request->input('role');
-    
+
         $user = Auth::user();
-    
+
         if ($user->hasRole('Tutor')) {
             // Lógica para tutores
             $query = DB::table('users')
@@ -78,35 +78,52 @@ class UserController extends Controller
                 }
             }
         } else {
-            // Lógica para otros roles (administradores, etc.)
-            $query = DB::table('users')
-                ->select(
-                    'users.*',
-                    \DB::raw("'administrador' as user_role"),
-                    \DB::raw("NULL as seccion")
-                );
-    
+            $estudiantes = User::estudiantesPorSeccion()
+                ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'estudiante' as user_role"))
+                ->toBase();
+
+            $tutores = User::tutoresPorSeccion()
+                ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'tutor' as user_role"))
+                ->toBase();
+
+            $coordinadores = User::coordinadoresPorSeccion()
+                ->select('users.*', 'secciones.nombre_seccion as seccion', \DB::raw("'coordinador' as user_role"))
+                ->toBase();
+
+            $administradores = User::administradoresPorSeccion()
+                ->select('users.*', \DB::raw("NULL as seccion"), \DB::raw("'administrador' as user_role"))
+                ->toBase();
+
+            $query = User::query()->fromSub(
+                $administradores
+                    ->unionAll($coordinadores)
+                    ->unionAll($tutores)
+                    ->unionAll($estudiantes),
+                'users_ordenados'
+            );
+
             if ($search) {
                 $query->where(function ($q) use ($search) {
-                    $q->where('users.name', 'LIKE', "%{$search}%")
-                        ->orWhere('users.email', 'LIKE', "%{$search}%");
+                    $q->where('name', 'LIKE', "%{$search}%")
+                        ->orWhere('email', 'LIKE', "%{$search}%")
+                        ->orWhere('seccion', 'LIKE', "%{$search}%");
                 });
             }
-        }
-    
-        if (isset($query)) {
+
             if ($role) {
                 $query->where('user_role', '=', $role);
+
+                if ($role !== 'administrador') {
+                    $query->whereNotNull('seccion');
+                }
             }
-    
-            $users = $query->paginate($perPage);
-        } else {
-            $users = collect()->paginate($perPage); // Si no hay query definida, devolvemos una paginación vacía.
         }
-    
+
+        $users = $query->paginate($perPage);
+
         return view('usuarios.listaUsuario', compact('users'));
     }
-    
+
 
     public function buscar(Request $request)
     {
