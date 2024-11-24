@@ -14,6 +14,17 @@
 
 <body class="bg-light">
 
+<div id="preloader" class="loader" style="display: none;">
+        <div class="face face1">
+            <div class="circle">
+            </div>
+        </div>
+        <div class="face face2">
+            <div class="circle">
+            </div>
+        </div>
+    </div>
+
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="card p-4 shadow login-card border-0">
             <div class="card-body">
