@@ -675,11 +675,26 @@ class ProyectoController extends Controller
     //aceptar solucitud
     public function aceptarSolicitud($id_proyecto)
     {
+        $proyecto=Proyecto::find($id_proyecto);
+        $estudiantes=$proyecto->estudiantes;
+        foreach($estudiantes as $estu){
+            $id=$estu->usuario->id_usuario;
+           
+            app(NotificacionController::class)->enviarNotificacion($id,'Has sido aprobado en el proyecto '.$proyecto->nombre_proyecto);
+
+        }
         return $this->actualizarEstadoSolicitud($id_proyecto, 1, 'El proyecto ha sido aceptado exitosamente.');
     }
 
     public function rechazarSolicitud($id_proyecto)
     {
+        $proyecto=Proyecto::find($id_proyecto);
+        $estudiantes=$proyecto->estudiantes;
+        foreach($estudiantes as $estu){
+            $id=$estu->usuario->id_usuario;
+            app(NotificacionController::class)->enviarNotificacion($id,'Has sido rechazado en el proyecto '.$proyecto->nombre_proyecto);
+
+        }
         return $this->actualizarEstadoSolicitud($id_proyecto, 7, 'El proyecto ha sido rechazado exitosamente.');
     }
 
@@ -801,7 +816,8 @@ class ProyectoController extends Controller
                     ->get(['id_proyecto', 'nombre_proyecto', 'descripcion_proyecto', 'horas_requeridas', 'estado']);
 
                 // Retornar la vista con los proyectos filtrados
-                return view('estudiantes.dashboard', compact('proyectos'));
+                $notificaciones= app(NotificacionController::class)->getNotifiaciones(Auth::user()->id_usuario);
+                return view('estudiantes.dashboard', compact('proyectos','notificaciones'));
             }
 
             // Si no hay sección asignada, redirigir con error

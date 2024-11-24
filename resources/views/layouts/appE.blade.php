@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboardStyle.css') }}">
     <link rel="stylesheet" href="{{ asset('css/mensaje.css') }}">
+    <link rel="stylesheet" href="{{ asset(path: 'css/notificacion.css')}}">
     @yield('styles')
 </head>
 <body>
@@ -28,9 +29,25 @@
         </form>
 
         <!-- Notificaciones -->
-        <div class="position-relative me-3 topbar-notification">
+        <div class="position-relative me-3 topbar-notification" id="notification-bell">
             <i class="bi bi-bell" style="font-size: 1.5rem; color: #800000;"></i>
             <span class="badge">4</span>
+             <!-- Dropdown de notificaciones -->
+             <div class="notification-dropdown">
+                <div class="notification-header">
+                    <h6 class="m-0">Notificaciones</h6>
+                    <button class="mark-all-read">Marcar todo como leído</button>
+                </div>
+                <div class="notification-list">
+                    @isset($notificaciones)
+                        @foreach($notificaciones as $noti)
+                            <div>
+                                <p>{{$noti->mensaje}}</p>
+                            </div>
+                        @endforeach
+                    @endisset
+                </div>
+             </div>
         </div>
 
         <!-- Ícono del perfil -->
@@ -110,6 +127,7 @@
 <script src="{{ asset('js/mensaje.js') }}"></script>
 <script src="{{ asset('js/showPassword.js') }}"></script>
 <script src="{{ asset('js/busqueda.js') }}"></script>
+<script src="{{ asset('js/notificacion.js') }}"></script>
 
 <!--Yield para scripts en otros blades -->
 @yield('scripts') 
