@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(auth()->user()->getRoleNames()->first() === 'Estudiante' ? 'layouts.appE' : 'layouts.app')
 
 @section('title', 'Mensajes')
 
@@ -44,6 +44,5 @@
       </div>
     </div>
 </div>
-
 
 @endsection

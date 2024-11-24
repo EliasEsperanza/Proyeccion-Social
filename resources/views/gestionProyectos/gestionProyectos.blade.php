@@ -1,4 +1,4 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
 @section('title', 'Gestión de Proyectos')
 
@@ -11,41 +11,41 @@
 @section('content')
 
 @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
 @endif
 
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
-<div class="container ">  
-    
+<div class="container ">
+
     <div class="container">
         <h1 class="mb-4">Gestión de Proyectos</h1>
 
         <!-- Sección de Estudiantes -->
         <div class="mb-3">
             <label class="form-label">Estudiantes</label>
-            
+
             <!-- Formulario para agregar estudiantes -->
             <form action="" method="POST" class="d-flex mb-3" id="agregarEstudiantes">
                 @csrf
 
             </form>
             <div class="d-flex">
-                <select class="form-select" id="idEstudiante" name="idEstudiante">
+                <select class="form-select" id="idEstudiante" name="idEstudiante" disabled>
                     @foreach ($estudiantes as $estudiante)
-                        <option value="{{ $estudiante->id_estudiante }}">
-                            {{ $estudiante->usuario->name }}
-                        </option>
+                    <option value="{{ $estudiante->id_estudiante }}">
+                        {{ $estudiante->usuario->name }}
+                    </option>
                     @endforeach
                 </select>
                 <button type="button" class="btn btn-light btn-sm p-2 px-3" id="addStudentBtn">
@@ -60,174 +60,234 @@
             <ul id="estudiantesList">
             </ul>
         </div>
-    
+
         <div class="card w-100">
             <div class="card-body">
-            <form action="" method="POST" id="actualizarProyecto">
+                <form action="" method="POST" id="actualizarProyecto">
                     @csrf
-            <div class="mb-3">
-                <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
-                <select class="form-select" id="nombre_proyecto" name="nombre_proyecto">
-                    <option selected disabled>Seleccione un proyecto</option>
-                    @foreach($proyectos as $proyecto)
-                    <option value="{{$proyecto->id_proyecto}}">{{$proyecto->nombre_proyecto}}</option>
-                    @endforeach
-                </select>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Sección o Departamento</label>
-                <div class="input-group mb-3">
-                <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id">
-                    <option selected disabled>Seleccionar departamento</option>
-                @foreach($secciones as $seccion)
-                    <option value="{{$seccion->id_seccion}}">
-                        {{$seccion->nombre_seccion}}
-                    </option>
-                @endforeach
-                </select>
-                </div>
-            </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sección o Departamento</label>
+                        <div class="input-group mb-3">
+                            <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id">
+                                <option selected disabled>Seleccionar departamento</option>
+                                @foreach($secciones as $seccion)
+                                <option value="{{$seccion->id_seccion}}">
+                                    {{$seccion->nombre_seccion}}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
-            <!-- Campo oculto para almacenar estudiantes seleccionados -->
-            <input type="hidden" id="estudiantesSeleccionados" name="estudiantes">
-
-            <ul id="listaEstudiantes" class="list-unstyled"></ul>
-
-            <div class="mb-3">
-                <label for="tutor" class="form-label">Tutor</label>
-                <select class="form-control" id="idTutor" name="idTutor">
-                    <option selected disabled>Seleccione un tutor</option>
-                    @foreach($tutores as $tutor)
-                        <option value="{{$tutor->id_usuario}}">{{$tutor->name}}</option>
-                    @endforeach
-                </select>
-            </div>
+                    <div class="mb-3">
+                        <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
+                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto" disabled>
+                            <option selected disabled>Seleccione un proyecto</option>
+                            @foreach($proyectos as $proyecto)
+                            <option value="{{$proyecto->id_proyecto}}">{{$proyecto->nombre_proyecto}}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
 
-            <div class="mb-3">
-                <label for="ubicacion" class="form-label">Ubicación</label>
-                <input type="text" class="form-control" id="lugar" name="lugar">
-            </div>
+                    <!-- Campo oculto para almacenar estudiantes seleccionados -->
+                    <input type="hidden" id="estudiantesSeleccionados" name="estudiantes">
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" >
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="fechaFin" class="form-label">Fecha de Finalización</label>
-                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" >
-                </div>
-            </div>
+                    <ul id="listaEstudiantes" class="list-unstyled"></ul>
 
-            <div class="mb-3">
-                    <label for="estado" class="form-label">Estado</label>
-                    <select class="form-select" id="estado" name="estado">
-                        @foreach ($estados as $estado)
+                    <div class="mb-3">
+                        <label for="tutor" class="form-label">Tutor</label>
+                        <select class="form-control" id="idTutor" name="idTutor" disabled>
+                            <option selected disabled>Seleccione un tutor</option>
+                            @foreach($tutores as $tutor)
+                            <option value="{{$tutor->id_usuario}}">{{$tutor->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ubicacion" class="form-label">Ubicación</label>
+                        <input type="text" class="form-control" id="lugar" name="lugar" readonly>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
+                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="fechaFin" class="form-label">Fecha de Finalización</label>
+                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" readonly>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select class="form-select" id="estado" name="estado">
+                            @foreach ($estados as $estado)
                             <option value="{{ $estado->id_estado }}">
                                 {{ $estado->nombre_estado }}
                             </option>
-                        @endforeach
-                    </select>
-            </div>
+                            @endforeach
+                        </select>
+                    </div>
 
-            <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Asignar Proyecto</button>
-        </form> 
+                    <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Asignar Proyecto</button>
+                </form>
 
             </div>
         </div>
     </div>
-    
-<div id="tutores-data" data-tutores='@json($tutores)'></div>
-<div id="estudiantes-data" data-estudiantes='@json($estudiantes)'></div>
-<script src="{{ asset('js/filtrarTutor.js') }}"></script>
-<script src="{{ asset('js/filtrarEstudiantes.js') }}"></script>
-<script src="{{ asset('js/gestionProyecto.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Obtener referencias a los elementos
-        const proyectoSelect = document.getElementById("nombre_proyecto");
-        const form = document.getElementById("actualizarProyecto");
 
-        // Escuchar cambios en el select de proyectos
-        proyectoSelect.addEventListener("change", function () {
-            const selectedProyectoId = proyectoSelect.value; // Obtener el ID del proyecto seleccionado
+    <div id="tutores-data" data-tutores='@json($tutores)'></div>
+    <div id="proyectos-data" data-proyectos='@json($proyectos)'></div>
+    <div id="estudiantes-data" data-estudiantes='@json($estudiantes)'></div>
 
-            if (selectedProyectoId) {
-                // Asignar la URL dinámica al atributo action del formulario
-                form.action = `/proyectos/${selectedProyectoId}/gestionActualizar`;
-            }
-        });
-    });
-</script>
+    <script src="{{ asset('js/filtrarTutor.js') }}"></script>
+    <script src="{{ asset('js/filtrarEstudiantes.js') }}"></script>
+    <script src="{{ asset('js/gestionProyecto.js') }}"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const selectEstudiante = document.getElementById("idEstudiante");
-    const selectProyecto = document.getElementById("nombre_proyecto");
-    const addButton = document.getElementById("addStudentBtn");
-    const studentList = document.getElementById("studentList");
+    <script>
+        //enviar form
+        document.addEventListener("DOMContentLoaded", function() {
+            // Obtener referencias a los elementos
+            const proyectoSelect = document.getElementById("nombre_proyecto");
+            const form = document.getElementById("actualizarProyecto");
 
-    // Lista para almacenar estudiantes seleccionados
-    const selectedStudents = new Map();
+            // Escuchar cambios en el select de proyectos
+            proyectoSelect.addEventListener("change", function() {
+                const selectedProyectoId = proyectoSelect.value; // Obtener el ID del proyecto seleccionado
 
-    // Evento para añadir estudiante a la lista
-    addButton.addEventListener("click", () => {
-        const proyectoSeleccionado = selectProyecto.value;
-
-        // Verificar si hay un proyecto seleccionado
-        if (!proyectoSeleccionado || proyectoSeleccionado === "Seleccione un proyecto") {
-            alert("Por favor, seleccione un proyecto antes de añadir estudiantes.");
-            return;
-        }
-
-        const studentId = selectEstudiante.value;
-        const studentName = selectEstudiante.options[selectEstudiante.selectedIndex].text;
-
-        // Verificar si ya está en la lista
-        if (selectedStudents.has(studentId)) {
-            alert("Este estudiante ya está en la lista.");
-            return;
-        }
-
-        // Añadir a la lista interna
-        selectedStudents.set(studentId, studentName);
-
-        // Actualizar la lista visual
-        updateStudentList();
-    });
-
-    // Función para actualizar la lista de estudiantes visualmente
-    function updateStudentList() {
-        // Limpiar el listado actual
-        studentList.innerHTML = "";
-
-        // Iterar sobre los estudiantes seleccionados y mostrarlos
-        selectedStudents.forEach((name, id) => {
-            const listItem = document.createElement("li");
-            listItem.className = "d-flex justify-content-between align-items-center mb-2";
-
-            listItem.innerHTML = `
-                ${name}
-                <button class="btn btn-danger btn-sm" data-id="${id}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            `;
-
-            studentList.appendChild(listItem);
-        });
-
-        // Añadir eventos de eliminación a los botones
-        studentList.querySelectorAll("button").forEach(button => {
-            button.addEventListener("click", () => {
-                const studentId = button.getAttribute("data-id");
-                selectedStudents.delete(studentId);
-                updateStudentList();
+                if (selectedProyectoId) {
+                    // Asignar la URL dinámica al atributo action del formulario
+                    form.action = `/proyectos/${selectedProyectoId}/gestionActualizar`;
+                }
             });
         });
-    }
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const seccionSelect = document.getElementById('seccion_id');
+        const proyectoSelect = document.getElementById('nombre_proyecto');
+        const estudianteSelect = document.getElementById('idEstudiante');
+        const addStudentBtn = document.getElementById('addStudentBtn');
+        const studentList = document.getElementById('studentList');
+        const hiddenInput = document.getElementById('estudiantesSeleccionados');
+        const idTutor = document.getElementById('idTutor');
+
+        // Inicialmente, deshabilitar selectores dependientes
+        proyectoSelect.disabled = true;
+        estudianteSelect.disabled = true;
+        idTutor.disabled = true;
+        addStudentBtn.disabled = true;
+
+        // Mapa para almacenar estudiantes seleccionados (ID y nombre)
+        const selectedStudents = new Map();
+
+        // Evento: Habilitar selectores al seleccionar una sección
+        seccionSelect.addEventListener('change', function () {
+            const seccionId = this.value;
+
+            // Habilitar selectores dependientes
+            proyectoSelect.disabled = false;
+            estudianteSelect.disabled = false;
+            idTutor.disabled = false;
+            addStudentBtn.disabled = false;
+
+            // Limpiar opciones del select de proyectos
+            proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
+
+            // Cargar proyectos por sección
+            fetch(`/proyectos-por-seccion/${seccionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(proyecto => {
+                        const option = document.createElement('option');
+                        option.value = proyecto.id_proyecto;
+                        option.textContent = proyecto.nombre_proyecto;
+                        proyectoSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error al cargar proyectos:', error));
+        });
+
+        // Evento: Agregar estudiantes seleccionados a la lista
+        addStudentBtn.addEventListener('click', function () {
+            const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
+            const studentId = selectedOption.value;
+            const studentName = selectedOption.textContent;
+
+            // Evitar duplicados
+            if (!selectedStudents.has(studentId)) {
+                selectedStudents.set(studentId, studentName);
+                updateStudentList();
+            }
+        });
+
+        // Función: Actualizar la lista visual y el campo oculto
+        function updateStudentList() {
+            // Limpiar la lista visual
+            studentList.innerHTML = "";
+
+            // Iterar sobre los estudiantes seleccionados y renderizar en la lista
+            selectedStudents.forEach((name, id) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'd-flex justify-content-between align-items-center mb-2';
+
+                listItem.innerHTML = `
+                    ${name}
+                    <button class="btn btn-danger btn-sm" data-id="${id}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+
+                studentList.appendChild(listItem);
+            });
+
+            // Actualizar el valor del campo oculto con los IDs seleccionados
+            hiddenInput.value = JSON.stringify([...selectedStudents.keys()]);
+
+            // Añadir eventos de eliminación a los botones
+            studentList.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const studentId = button.getAttribute('data-id');
+                    selectedStudents.delete(studentId);
+                    updateStudentList();
+                });
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const proyectoSelect = document.getElementById('nombre_proyecto');
+    const ubicacionInput = document.getElementById('lugar');
+    const fechaInicioInput = document.getElementById('fecha_inicio');
+    const fechaFinInput = document.getElementById('fecha_fin');
+
+    proyectoSelect.addEventListener('change', function () {
+        const proyectoId = this.value;
+
+        if (proyectoId) {
+            fetch(`/proyectos/${proyectoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Rellenar los campos con los datos del proyecto
+                    ubicacionInput.value = data.ubicacion || '';
+                    fechaInicioInput.value = data.fecha_inicio || '';
+                    fechaFinInput.value = data.fecha_fin || '';
+                })
+                .catch(error => console.error('Error al obtener los detalles del proyecto:', error));
+        }
+    });
 });
+
 </script>
 
-@endsection
+    @endsection

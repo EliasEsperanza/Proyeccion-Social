@@ -97,40 +97,44 @@ class ProyectosEstudiantesController extends Controller
 
     public function Detalles_proyecto()
     {
-        $estudianteId = auth()->user()->id_estudiante;
+        $userId = auth()->user()->id_usuario;
+        $estudiante = Estudiante::where('id_usuario', $userId)->first();
 
-        // prueba CON ID 3
-        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', 2)
-            ->with('proyecto')
-            ->get()->first();
-
-
-        if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
-            return view('estudiantes.detallesmio')->withErrors('No tienes un proyecto asignado actualmente.');
+        if (!$estudiante) {
+            return 'Estudiante no encontrado';
         }
 
-        $porcentaje = ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100;
-        //dd($proyectoEstudiante->horas_sociales_completadas);
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
+            ->with('proyecto')
+            ->first();
 
+        if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
+            return 'No posee proyecto asignado';
+        }
+
+        $porcentaje = ($proyectoEstudiante->proyecto->horas_requeridas > 0) ? ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100 : 0;
         return view('estudiantes.detallesmio', compact('proyectoEstudiante', 'porcentaje'));
     }
 
     //retorna vista solicitud de proyecto
     public function Mi_proyecto()
     {
-        $estudianteId = auth()->user()->id_estudiante;
+        $userId = auth()->user()->id_usuario;
+        $estudiante = Estudiante::where('id_usuario', $userId)->first();
 
-        // prueba CON ID 3 
-        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', 2)
-            ->with('proyecto')
-            ->get()->first();
-
-        if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
-            return view('estudiantes.detallesmio')->withErrors('No tienes un proyecto asignado actualmente.');
+        if (!$estudiante) {
+            return redirect()->back()->with('warning', 'Estudiante no encontrado.');
         }
 
-        $porcentaje = ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100;
-        //dd($proyectoEstudiante->horas_sociales_completadas);
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
+            ->with('proyecto')
+            ->first();
+
+        if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
+            return redirect()->back()->with('warning', 'No posee proyecto asignado.');
+        }
+
+        $porcentaje = ($proyectoEstudiante->proyecto->horas_requeridas > 0) ? ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100 : 0;
 
         return view('estudiantes.proyectomio', compact('proyectoEstudiante', 'porcentaje'));
     }
@@ -146,17 +150,17 @@ class ProyectosEstudiantesController extends Controller
         if ($estudiante) {
             $tieneProyecto = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
                 ->exists();
-
-            if ($tieneProyecto) {
-                return "tiene proyecto";
-            }
+                if ($tieneProyecto) {
+                    return redirect()->back()->with('warning', 'Este estudiante ya tiene un proyecto asignado.');
+                }
+                
 
             $seccion_id = $estudiante->id_seccion;
             $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
             
             return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
-        }
-}
+        }  
+    }
 
 
     public function Procesos()

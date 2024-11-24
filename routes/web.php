@@ -25,11 +25,16 @@ use App\Models\Proyecto;
 use Illuminate\Support\Facades\Storage;
 
 Route::get('/', function () {
+    return view('Bienvenida');
+})->name('welcome');
+
+Route::get('/login', function () {
     return view('login.login');
 })->name('login');
 
 Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
 Route::get('/proyectos-solicitudes', [ProyectoController::class, 'solicitudes_coordinador'])->name('solicitudes_coordinador');
+Route::get('/proyectos/{id}', [ProyectoController::class, 'obtenerDetallesProyectoFU']);
 
 
 Route::get('/prys', function () {
@@ -118,9 +123,9 @@ Route::get('/proyecto-disponible',[ProyectoController::class, 'retornar_proyecto
 
 
 // Ruta para la página del gestor de TI
-Route::get('/gestor-de-ti/{nombre_proyecto}', [ProyectoController::class, 'gestorDeTI'])->name('gestor_de_TI');
-Route::post('/proyecto/aceptar/{nombre_proyecto}', [ProyectoController::class, 'aceptarSolicitud'])->name('proyectos.aceptar');
-Route::post('/proyecto/rechazar/{nombre_proyecto}', [ProyectoController::class, 'rechazarSolicitud'])->name('proyectos.rechazar');
+Route::get('/verDetallesSolicitud/{id_proyecto}', [ProyectoController::class, 'detallesSolicitud'])->name('detallesSolicitud');
+Route::post('/proyecto/aceptar/{id_proyecto}', [ProyectoController::class, 'aceptarSolicitud'])->name('proyectos.aceptar');
+Route::post('/proyecto/rechazar/{id_proyecto}', [ProyectoController::class, 'rechazarSolicitud'])->name('proyectos.rechazar');
 
 // Ruta para la solicitud de proyecto
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])
@@ -138,7 +143,8 @@ Route::post('/proyectos/{proyecto}/asignar-estudiantes', [ProyectoController::cl
 Route::post('/proyectos/{proyecto}/asignar-estudiantes-gestion', [ProyectoController::class, 'asignarEstudianteGestion'])->name('proyectos.asignarEstudianteGestion');
 Route::delete('/proyectos/{proyecto}/eliminar-estudiante/{estudiante}', [ProyectoController::class, 'eliminarEstudiante'])->name('proyectos.eliminarEstudiante');
 Route::put('/proyectos/{proyecto}/actualizar', [ProyectoController::class, 'actualizar'])->name('proyectos.actualizar');
-Route::post('/proyectos/asignar', [ProyectoController::class, 'asignarProyecto'])->name('proyectos.asignar');Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
+Route::post('/proyectos/asignar', [ProyectoController::class, 'asignarProyecto'])->name('proyectos.asignar');
+Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
 
 Route::get('/proyectos/{proyecto}/estudiantes', function ($proyectoId) {
     $proyecto = Proyecto::with('estudiantes.usuario')->findOrFail($proyectoId);
@@ -231,11 +237,11 @@ Route::controller(EstudianteController::class)
         Route::get('/', 'index')->name('index');          
         Route::get('/create', 'create')->name('create');          
         Route::post('/', 'store')->name('store'); 
-
         Route::get('/{id}', 'show')->name('show');        
         Route::put('/{id}', 'update')->name('update');    
         Route::delete('/{id}', 'destroy')->name('destroy'); 
     });
+    Route::get('/obtenerNombreEstudiante/{id}', [EstudianteController::class,'obtenerNombreEstudiante'])->name('obtenerNombreEstudiante');
 
 // Rutas del controlador Proyecto
 // Route::controller(ProyectoController::class)
@@ -253,6 +259,8 @@ Route::post('/proyectos', [ProyectoController::class, 'store'])->name('proyectos
 
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'create'])->name('solicitud_proyecto.create');
 Route::post('/store_solicitud', [ProyectoController::class, 'store_solicitud'])->name('proyectos.store_solicitud');
+Route::post('/store_solicitud_alumno', [ProyectoController::class, 'store_solicitud_alumno'])->name('store_solicitud_alumno');
+
 
 // Rutas de recuperación y reseteo de contraseña
 Route::get('/recuperarpassword', function () {
@@ -375,8 +383,8 @@ Route::controller(ProyectosDocumentosController::class)
         return view('estudiantes.solicitud-proyecto');
     });
 
-    //Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
-    //Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
+    Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
+    Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
 
     Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
     Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
@@ -394,4 +402,12 @@ Route::get('/descargar/{filename}', function ($filename) {
 })->name('descargar');
 
 Route::get('/obtener-tutores-por-seccion/{id}', [ProyectoController::class, 'GetTutoresPorSeccion']);
+Route::get('/hrs', [EstudianteController::class, 'actualizarHorasView'])->name('estudiante.actualizarHorasView');
+Route::post('/hrs', [EstudianteController::class, 'actualizarHoras'])->name('estudiante.actualizarHoras');
+Route::get('/proyecto/{id}/solicitudes/{solicitud}', [ProyectoController::class, 'mostrarSolicitud'])->name('RevisionSolicitud');
+Route::get('/proyecto/{id}/solicitudes', [ProyectoController::class, 'solicitudes_proyectos'])->name('solicitudesProyectos');
+route::post('/proyecto/{id}/solicitudes/{solicitud}/aprove', [ProyectoController::class, 'aprobarSolicitud'])->name('aprobarSolicitud');
+route::post('/proyecto/{id}/solicitudes/{solicitud}/deny', [ProyectoController::class, 'denegarSolicitud'])->name('denegarSolicitud');
+
+
 ?>

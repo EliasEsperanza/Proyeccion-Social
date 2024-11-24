@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Departamento;
 use App\Models\Asignacion;
 use App\Exports\ProyectosExport;
+use App\Models\Solicitud;
 use Illuminate\Container\Attributes\DB as AttributesDB;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -24,52 +26,131 @@ class ProyectoController extends Controller
 {
     public function index()
     {
-        $ListProyecto = Proyecto::with([
-            'seccion.departamento',
-            'estudiantes',
-            'coordinadorr',
-            'tutorr.seccionesTutoreadas',
-            'estadoo'
-        ])
-            ->whereHas('estadoo', function ($query) {
-                $query->where('nombre_estado', '!=', 'Disponible');
-            })
-            ->get();
+        $user = Auth::user(); // Usuario autenticado
+
+        if ($user->hasRole('Tutor')) {
+            // Filtrar proyectos asignados al tutor autenticado mediante la tabla asignaciones
+            $ListProyecto = Proyecto::with([
+                'seccion.departamento',
+                'estudiantes',
+                'coordinadorr',
+                'tutorr.seccionesTutoreadas',
+                'estadoo'
+            ])
+                ->whereHas('asignaciones', function ($query) use ($user) {
+                    $query->where('id_tutor', $user->id_usuario);
+                })
+                ->whereHas('estadoo', function ($query) {
+                    $query->where('nombre_estado', '!=', 'Disponible');
+                })
+                ->get();
+        } else {
+            // Mostrar todos los proyectos para roles diferentes a tutor
+            $ListProyecto = Proyecto::with([
+                'seccion.departamento',
+                'estudiantes',
+                'coordinadorr',
+                'tutorr.seccionesTutoreadas',
+                'estadoo'
+            ])
+                ->whereHas('estadoo', function ($query) {
+                    $query->where('nombre_estado', '!=', 'Disponible');
+                })
+                ->get();
+        }
 
         return view("proyecto.proyecto-general", compact("ListProyecto"));
     }
 
-    public function store_solicitud(Request $request)
+    public function asignaciones()
     {
-      
-        try {
-            $proyecto = new Proyecto();
-            $proyecto->nombre_proyecto = $request->nombre_proyecto;
-            $proyecto->descripcion_proyecto = strip_tags($request->descripcion);
-            $proyecto->lugar = $request->lugar;
-            $proyecto->estado = 9; //estado solicitud
-            $proyecto->horas_requeridas = 0;//a revisar 
-            $proyecto->periodo = now()->format('Y-m');
-            $proyecto->coordinador = auth()->id();  
-            $proyecto->seccion_id = $request->id_seccion; 
-            $proyecto->fecha_inicio = $request->fecha_inicio;
-            $proyecto->fecha_fin = $request->fecha_fin;
-    
-            $proyecto->save();
-    
-            return redirect()->back()->with('success', 'Proyecto creado exitosamente');
-        } catch (\Exception $e) {
-            \Log::error('Error al crear proyecto: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
-        }
-    }
-    public function solicitudes_coordinador()
-    {
-        $proyectos = Proyecto::where('estado', 9)
-                            ->get();
-        return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
+        return $this->hasMany(Asignacion::class, 'id_proyecto', 'id_proyecto');
     }
 
+
+    public function store_solicitud(Request $request)
+    {
+
+        $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
+        dd($request);
+        $validatedData = $request->validate([
+            'nombre_proyecto' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'lugar' => 'required|string|max:255',
+            'fecha_inicio' => 'required|date|before_or_equal:fecha_fin',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            'id_seccion' => 'required|integer|exists:secciones,id_seccion',
+            'estudiantes' => 'required|string',
+        ]);
+
+        try {
+
+            $proyecto = Proyecto::create([
+                'nombre_proyecto' => $validatedData['nombre_proyecto'],
+                'descripcion_proyecto' => strip_tags($validatedData['descripcion']),
+                'lugar' => $validatedData['lugar'],
+                'estado' => 9, // Estado inicial de solicitud
+                'horas_requeridas' => 0, // Inicialmente en 0
+                'periodo' => now()->format('Y-m'),
+                'coordinador' => auth()->id(),
+                'seccion_id' => $validatedData['id_seccion'],
+                'fecha_inicio' => $validatedData['fecha_inicio'],
+                'fecha_fin' => $validatedData['fecha_fin'],
+            ]);
+
+            if (is_array($estudiantesSeleccionados)) {
+                foreach ($estudiantesSeleccionados as $idEstudiante) {
+                    $estudiante = Estudiante::find($idEstudiante);
+
+                    if ($estudiante) {
+                        $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', 'Proyecto creado exitosamente.');
+        } catch (\Exception $e) {
+            \Log::error('Error al crear el proyecto: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
+        }
+    }
+
+    //agregar id de estudiantes a un proyecto en fase de solicitud
+    public function store_solicitud_alumno(Request $request)
+    {
+
+        try {
+            $estudiantesSeleccionados = json_decode($request->input('estudiantesSeleccionados'), true);
+
+            if (is_array($estudiantesSeleccionados)) {
+                foreach ($estudiantesSeleccionados as $idEstudiante) {
+                    $estudiante = Estudiante::find($idEstudiante);
+
+                    if ($estudiante) {
+                        // Asignar id estudiante en tabla pivote Estudiante_Proyecto
+                        $proyecto = Proyecto::find($request->input('id_proyecto'));
+                        $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+                        //update a id 9 para estado solicitud 
+                        $proyecto->update(['estado' => 9]);
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success', 'Proyecto creado exitosamente.');
+        } catch (\Exception $e) {
+            \Log::error('Error al crear el proyecto: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
+        }
+    }
+
+    public function solicitudes_coordinador()
+    {
+        $proyectos = Proyecto::with('estudiantes.usuario')
+
+            ->where('estado', 9)
+            ->get();
+        return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
+    }
 
     public function retornar_proyectos()
     {
@@ -106,7 +187,7 @@ class ProyectoController extends Controller
             $proyecto->estado = 1;
             $proyecto->periodo = now()->format('Y-m');
             $proyecto->coordinador = auth()->id();
-            $proyecto->seccion_id = $validatedData['id_seccion']; // Asegúrate de que este campo se guarde
+            $proyecto->seccion_id = $validatedData['id_seccion'];
             $proyecto->fecha_inicio = now();
             $proyecto->fecha_fin = now()->addMonths(3);
 
@@ -115,7 +196,6 @@ class ProyectoController extends Controller
             return redirect()
                 ->back()
                 ->with('success', 'Proyecto creado exitosamente');
-
         } catch (\Exception $e) {
             \Log::error('Error al crear proyecto: ' . $e->getMessage());
             return redirect()
@@ -124,7 +204,6 @@ class ProyectoController extends Controller
                 ->with('error', 'Error al crear el proyecto. Por favor intente nuevamente.');
         }
     }
-
 
     public function show(string $id)
     {
@@ -138,10 +217,10 @@ class ProyectoController extends Controller
         $estados = Estado::all();
         $estudiantes = Estudiante::all();
         $secciones = Seccion::all();
-        $tutores = User::role('tutor') 
-        ->whereHas('seccionesTutoreadas')
-        ->with('seccionesTutoreadas')
-        ->get();
+        $tutores = User::role('tutor')
+            ->whereHas('seccionesTutoreadas')
+            ->with('seccionesTutoreadas')
+            ->get();
         if (!$proyecto) {
             return redirect()->route('proyectos.index')->with('error', 'Proyecto no encontrado');
         }
@@ -156,20 +235,25 @@ class ProyectoController extends Controller
             'tutorr.seccionesTutoreadas',
             'estadoo'
         ])
+
             ->whereHas('estadoo', function ($query) {
                 $query->where('nombre_estado', '=', 'Disponible');
             })
             ->get();
+
         $estados = Estado::all();
         $estudiantes = Estudiante::all();
         $secciones = Seccion::all();
-        $tutores = User::role('tutor') 
-        ->whereHas('seccionesTutoreadas')
-        ->with('seccionesTutoreadas')
-        ->get();
+        $tutores = User::role('tutor')
+            ->whereHas('seccionesTutoreadas')
+            ->with('seccionesTutoreadas')
+            ->get();
+
         if (!$proyectos) {
             return redirect()->route('gestionProyectos.gestionProyectos')->with('error', 'Proyecto no encontrado');
         }
+        // dd($proyectos);
+
         return view("gestionProyectos.gestionProyectos", compact('proyectos', 'estados', 'estudiantes', 'tutores', 'secciones'));
     }
 
@@ -224,8 +308,10 @@ class ProyectoController extends Controller
     }
     public function gestionActualizar(Request $request, $id)
     {
+        // dd($request);
+        $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
         $validatedData = $request->validate([
-            'idTutor' => 'required|string|exists:users,id_usuario',
+            'idTutor' => 'nullable|string|exists:users,id_usuario',
             'lugar' => 'nullable|string|max:255',
             'fecha_inicio' => 'nullable|date',
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
@@ -240,6 +326,12 @@ class ProyectoController extends Controller
         }
 
         $proyecto = Proyecto::findOrFail($id);
+
+        foreach ($estudiantesSeleccionados as $estudiante) {
+            $estudiante2 = Estudiante::find($estudiante);
+            $proyecto->estudiantes()->attach($estudiante2->id_estudiante);
+        };
+
         $proyecto->update([
             'tutor' => $tutor->id_usuario ?? null,
             'lugar' => $validatedData['lugar'],
@@ -263,6 +355,8 @@ class ProyectoController extends Controller
     }
     public function actualizar(Request $request, $id)
     {
+        // dd($request->all());
+
         $validatedData = $request->validate([
             'nombre_proyecto' => 'required|string|max:255',
             'idTutor' => 'required|string|exists:users,id_usuario',
@@ -452,14 +546,25 @@ class ProyectoController extends Controller
 
     public function totalProyectosAsignados()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
 
-        if ($user->hasRole('Tutor')) {
+        //hacemos el filtro para el rol coordinador
+        if ($user->hasRole('Coordinador')) {
+            $seccion = DB::table('secciones') //buscamos en la tabla secciones de la base de datos para tener acceso al id_coordinador y el id_seccion para tener el valor del departamento o seccion del coordinador
+                ->where('id_coordinador', $user->id_usuario)
+                ->pluck('id_seccion')
+                ->first();
+
+            //luego abrimos una query del modelo proyecto para tener acceso a seccion_id que es el id que almacena el valor del depa o seccion del coordinador
+            $query = Proyecto::query();
+            $query->where('seccion_id', $seccion); //comparamos con el depa del coordinador y procedemos a almacenar el count
+            $totalProyectosAsignados = $query->count();
+        } elseif ($user->hasRole('Tutor')) {
             $totalProyectosAsignados = Asignacion::where('id_tutor', $user->id_usuario)
-                ->distinct('id_proyecto') 
-                ->count('id_proyecto'); 
+                ->distinct('id_proyecto')
+                ->count('id_proyecto');
         } else {
-            $totalProyectosAsignados = \App\Models\Proyecto::count();
+            $totalProyectosAsignados = \App\Models\Proyecto::count();;
         }
 
         return $totalProyectosAsignados;
@@ -467,7 +572,7 @@ class ProyectoController extends Controller
 
     public function obtenerDatosGrafico()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         if ($user->hasRole('Tutor')) {
             $datos = DB::table('asignaciones')
@@ -477,10 +582,10 @@ class ProyectoController extends Controller
                     COUNT(CASE WHEN proyectos.estado IN (5, 7) THEN 1 END) as completados,
                     COUNT(CASE WHEN proyectos.estado IN (1, 8, 9) THEN 1 END) as en_revision
                 ")
-                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->first();
         } else {
-           
+
             $datos = DB::table('proyectos')
                 ->selectRaw("
                     COUNT(CASE WHEN estado IN (2, 3, 4) THEN 1 END) as en_progreso,
@@ -498,13 +603,13 @@ class ProyectoController extends Controller
 
     public function obtenerEstudiantesYProyectosPorFecha()
     {
-        $user = Auth::user(); 
+        $user = Auth::user();
 
         if ($user->hasRole('Tutor')) {
             $estudiantesPorFecha = DB::table('asignaciones')
                 ->join('estudiantes', 'asignaciones.id_estudiante', '=', 'estudiantes.id_estudiante')
                 ->selectRaw('DATE(asignaciones.fecha_asignacion) as fecha, COUNT(*) as total_estudiantes')
-                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->groupBy('fecha')
                 ->orderBy('fecha', 'asc')
                 ->get();
@@ -512,7 +617,7 @@ class ProyectoController extends Controller
             $proyectosPorFecha = DB::table('asignaciones')
                 ->join('proyectos', 'asignaciones.id_proyecto', '=', 'proyectos.id_proyecto')
                 ->selectRaw('DATE(asignaciones.fecha_asignacion) as fecha, COUNT(*) as total_proyectos')
-                ->where('asignaciones.id_tutor', $user->id_usuario) 
+                ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->groupBy('fecha')
                 ->orderBy('fecha', 'asc')
                 ->get();
@@ -550,41 +655,43 @@ class ProyectoController extends Controller
 
 
     //retorna vista gertor de TI
-    public function gestorDeTI($nombre_proyecto)
+    public function detallesSolicitud($id_proyecto)
     {
+
+        $proyectos = Proyecto::with('estudiantes.usuario')->get();
         // Buscar el proyecto por su nombre
-        $proyecto = Proyecto::where('nombre_proyecto', $nombre_proyecto)->firstOrFail();
+        $proyecto = Proyecto::where('id_proyecto', $id_proyecto)->with('estudiantes.usuario')->firstOrFail();
 
         // Pasar el proyecto a la vista
-        return view('proyecto.gestor-de-TI', compact('proyecto'));
+        return view('proyecto.VerdetallesSolicitud', compact('proyecto'));
     }
     //aceptar solucitud
-    public function aceptarSolicitud($nombre_proyecto)
+    public function aceptarSolicitud($id_proyecto)
     {
-        return $this->actualizarEstadoSolicitud($nombre_proyecto, 1, 'El proyecto ha sido aceptado exitosamente.');
+        return $this->actualizarEstadoSolicitud($id_proyecto, 1, 'El proyecto ha sido aceptado exitosamente.');
     }
 
-    public function rechazarSolicitud($nombre_proyecto)
+    public function rechazarSolicitud($id_proyecto)
     {
-        return $this->actualizarEstadoSolicitud($nombre_proyecto, 7, 'El proyecto ha sido rechazado exitosamente.');
+        return $this->actualizarEstadoSolicitud($id_proyecto, 7, 'El proyecto ha sido rechazado exitosamente.');
     }
 
-    private function actualizarEstadoSolicitud($nombre_proyecto, $nuevoEstado, $mensaje)
+    private function actualizarEstadoSolicitud($id_proyecto, $nuevoEstado, $mensaje)
     {
-        $proyecto = Proyecto::where('nombre_proyecto', $nombre_proyecto)->first();
+        $proyecto = Proyecto::where('id_proyecto', $id_proyecto)->first();
 
         if ($proyecto) {
             $proyecto->estado = $nuevoEstado;
             $proyecto->save();
 
             return redirect()->route('solicitudes_coordinador')
-                            ->with('success', $mensaje);
+                ->with('success', $mensaje);
         } else {
 
             return redirect()->route('solicitudes_coordinador')
-                         ->with('error', 'El proyecto no fue encontrado.');
+                ->with('error', 'El proyecto no fue encontrado.');
+        }
     }
-}
 
 
 
@@ -720,8 +827,10 @@ class ProyectoController extends Controller
                     ->first();
 
                 if ($proyecto) {
+                    $estudiantes = Estudiante::where('id_seccion', $userSeccion)->get();
+
                     // Si el proyecto pertenece a la sección, mostrarlo
-                    return view('estudiantes.proyecto-disponibles', compact('proyecto'));
+                    return view('estudiantes.proyecto-disponibles', compact('proyecto', 'estudiantes'));
                 }
 
                 // Si el proyecto no pertenece a la sección, redirigir con error
@@ -738,6 +847,7 @@ class ProyectoController extends Controller
     public function mostrarDetalle($id)
     {
         try {
+
             // Primero debug del ID recibido
             \Log::info('ID recibido: ' . $id);
 
@@ -751,7 +861,6 @@ class ProyectoController extends Controller
             return view('proyecto.detalle-proyecto')
                 ->with('proyecto', $proyecto)
                 ->with('debug', true);
-
         } catch (\Exception $e) {
             \Log::error('Error en mostrarDetalle: ' . $e->getMessage());
             return back()->with('error', 'Proyecto no encontrado');
@@ -790,7 +899,6 @@ class ProyectoController extends Controller
         ]);
 
         return redirect()->route('proyecto-disponible')->with('success', 'Proyecto actualizado con éxito');
-
     }
 
 
@@ -822,5 +930,109 @@ class ProyectoController extends Controller
             ->where('seccion_tutor.id_seccion', $id)
             ->get();
         return response()->json($tutoresSeccion);
+    }
+
+    public function obtenerDetallesProyectoFU($id)
+    {
+        try {
+            $proyecto = Proyecto::findOrFail($id);
+            return response()->json([
+                'ubicacion' => $proyecto->lugar,
+                'fecha_inicio' => $proyecto->fecha_inicio,
+                'fecha_fin' => $proyecto->fecha_fin,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Proyecto no encontrado'], 404);
+        }
+    }
+    public function solicitudes_proyectos(string $id)
+    {
+        $id = (int)$id;
+
+        $solicitudes = Solicitud::where('id_proyecto', $id)->get();
+        $proyecto = Proyecto::find($id);
+        foreach ($solicitudes as $solicitud) {
+            $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+            $solicitud->nombre = User::find($estudiante->id_usuario)->name;
+            //nombre del usuario asociado al id de estudiante
+        }
+
+        $estados = Estado::all();
+
+        return view('proyecto.proyecto-solicitudes', compact('solicitudes', 'proyecto', 'estados'));
+    }
+
+    public function revisarSolicitud(Request $request, $id)
+    {
+        $user = auth()->user();
+
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $user->id_usuario)->first();
+        $proyecto = Proyecto::find($proyectoEstudiante->id_proyecto);
+        $horas = Estudiante::where('id_estudiante', $user->id_usuario)->first();
+
+
+        return view('estudiantes.actualizar-horas')->with([
+            'proyecto' => $proyecto,
+            'horas' => $horas,
+        ]);
+    }
+
+    public function mostrarSolicitud(string $id, string $solicitudId)
+    {
+
+        $solicitud = Solicitud::find($solicitudId);
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        $usuario = User::find($estudiante->id_usuario);
+        $rutaDocs = 'storage/documentos/';
+
+        if (!$solicitud) {
+            return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
+        }
+
+        return view('proyecto.proyecto-solicitudes-revision', compact('solicitud', 'proyecto', 'usuario', 'estudiante', 'rutaDocs'));
+    }
+
+    public function aprobarSolicitud(string $id, string $solicitudId)
+    {
+        $solicitud = Solicitud::find($solicitudId);
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        $usuario = User::find($estudiante->id_usuario);
+
+        if (!$solicitud) {
+            return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
+        }
+
+        $estudiante->horas_sociales_completadas += $solicitud->valor;
+
+        $solicitud->estado = 10;
+
+        $estudiante->save();
+        $solicitud->save();
+
+        return redirect()->route('solicitudesProyectos', [
+            'id' => $proyecto->id_proyecto
+        ])->with('success', 'Solicitud aprobada correctamente');
+    }
+
+    public function denegarSolicitud(string $id, string $solicitudId)
+    {
+        $solicitud = Solicitud::find($solicitudId);
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        $usuario = User::find($estudiante->id_usuario);
+
+        if (!$solicitud) {
+            return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
+        }
+
+        $solicitud->estado = 7;
+
+        $solicitud->save();
+
+        return redirect()->route('solicitudesProyectos', [
+            'id' => $proyecto->id_proyecto
+        ])->with('success', 'Solicitud rechazada correctamente');
     }
 }

@@ -20,32 +20,38 @@
       <!-- Progress bar -->
       <div class="my-4">
         @php
-            $porcentaje = optional($proyectoEstudiante)->porcentaje_completado ?? 0;
+        $porcentaje = optional($proyectoEstudiante)->porcentaje_completado ?? 0;
         @endphp
         <div class="d-flex justify-content-between ">
           <p class="card-text">Progreso del Proyecto</p>
-          <p>Completadas {{ $proyectoEstudiante->horas_sociales_completadas ?? 0 }}  de {{ $proyectoEstudiante->proyecto->horas_requeridas }} horas</p>
+          <p>Completadas {{ $proyectoEstudiante->horas_sociales_completadas ?? 0 }} de {{ $proyectoEstudiante->proyecto->horas_requeridas }} horas</p>
         </div>
 
         <div class="progress" style="height: 20px;">
-            <div 
-                class="progress-bar" 
-                role="progressbar"
-                style="width: {{ $porcentaje }}%;"
-                aria-valuenow="{{ $porcentaje }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
-            >
-                {{ $porcentaje }}%
-            </div>
+          <div
+            class="progress-bar"
+            role="progressbar"
+            style="width: {{ $porcentaje }}%;"
+            aria-valuenow="{{ $porcentaje }}"
+            aria-valuemin="0"
+            aria-valuemax="100">
+            {{ $porcentaje }}%
+          </div>
         </div>
         <h3>{{$porcentaje}} % </h3>
       </div>
 
       <!-- Project details -->
       <div class="mr-4">
-        <p class="card-text"><i class="bi bi-calendar"></i>Inicio: {{ $proyectoEstudiante->proyecto->fecha_inicio }}</p>
-        <p class="card-text"><i class="bi bi-calendar-event"></i>Fin: {{ $proyectoEstudiante->proyecto->fecha_fin }}</p>
+        <p class="card-text">
+          <i class="bi bi-calendar"></i>
+          Inicio: {{ \Carbon\Carbon::parse($proyectoEstudiante->proyecto->fecha_inicio)->translatedFormat('d F Y') }}
+        </p>
+        <p class="card-text">
+          <i class="bi bi-calendar-event"></i>
+          Fin: {{ \Carbon\Carbon::parse($proyectoEstudiante->proyecto->fecha_fin)->translatedFormat('d F Y') }}
+        </p>
+
         <p class="card-text"><i class="bi bi-geo-alt-fill"></i></i>{{ $proyectoEstudiante->proyecto->lugar }}</p>
         <p class="card-text"><i class="bi bi-person-fill"></i></i>Tutor: {{ $proyectoEstudiante->proyecto->tutorr->name }}</p>
         <button class="btn-verde btn m-3">{{ $proyectoEstudiante->proyecto->estadoos->nombre_estado }}</button>

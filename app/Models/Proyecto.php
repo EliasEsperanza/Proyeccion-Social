@@ -30,7 +30,6 @@ class Proyecto extends Model
         'seccion_id'
     ];
 
-
     protected $with = ['estadoo', 'coordinadorr'];
 
     private static $rules = [
@@ -41,29 +40,39 @@ class Proyecto extends Model
         'periodo' => 'required|string|max:255',
         'lugar' => 'required|string|max:255',
         'coordinador' => 'required|exists:users,id_usuario',
-        'tutor' => 'nullable|exists:users,id_usuario', 
+        'tutor' => 'nullable|exists:users,id_usuario',
         'fecha_inicio' => 'required|date',
         'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
     ];
-// En el modelo Seccion.php
-public function seccion()
-{
-    return $this->belongsTo(Seccion::class, 'seccion_id', 'id_seccion');
-}
-public function departamento()
-{
-    return $this->belongsTo(Departamento::class, 'id_departamento');
-}
+    // En el modelo Seccion.php
+
+    public function asignaciones()
+    {
+        return $this->hasMany(Asignacion::class, 'id_proyecto', 'id_proyecto');
+    }
+
+    public function seccion()
+    {
+        return $this->belongsTo(Seccion::class, 'seccion_id', 'id_seccion');
+    }
+    public function departamento()
+    {
+        return $this->belongsTo(Departamento::class, 'id_departamento');
+    }
     //Relaciones a tabla estado y usuario
     public function estadoo()
     {
-        return $this->belongsTo(Estado::class,'estado','id_estado', 'estado', 'id_estado');
+        return $this->belongsTo(Estado::class, 'estado', 'id_estado', 'estado', 'id_estado');
+    }
+    public function estudiantes()
+    {
+        return $this->belongsToMany(Estudiante::class, 'proyectos_estudiantes', 'id_proyecto', 'id_estudiante');
     }
 
     public function estadoos()
-{
-    return $this->belongsTo(Estado::class, 'estado', 'id_estado');
-}
+    {
+        return $this->belongsTo(Estado::class, 'estado', 'id_estado');
+    }
     public function coordinadorr()
     {
         return $this->belongsTo(User::class, 'coordinador', 'id_usuario');
@@ -71,10 +80,9 @@ public function departamento()
 
     public function tutorr()
     {
-        return $this->belongsTo(User::class,'tutor','id_usuario');
-
+        return $this->belongsTo(User::class, 'tutor', 'id_usuario');
     }
-  public function scopePorCoordinador(Builder $query, $coordinadorId)
+    public function scopePorCoordinador(Builder $query, $coordinadorId)
     {
         return $query->where('coordinador', $coordinadorId);
     }
@@ -120,7 +128,7 @@ public function departamento()
                 'tutor' => 'exists:users,id_usuario'
             ])->validate();
         }
-        
+
         $this->update(['tutor' => $tutorId]);
         return $this->fresh();
     }
@@ -163,10 +171,6 @@ public function departamento()
         }
 
         return $validator->validated();
-    }
-    public function estudiantes()
-    {
-        return $this->belongsToMany(Estudiante::class, 'proyectos_estudiantes', 'id_proyecto', 'id_estudiante');
     }
 
     public function estaActivo(): bool
