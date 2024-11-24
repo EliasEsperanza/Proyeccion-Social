@@ -74,10 +74,18 @@
                         <td>{{ $proyecto->estadoo->nombre_estado }}</td>
                         <td>{{ $proyecto->seccion->nombre_seccion }}</td>
                         <td>
-                            <a href="{{ route('proyecto.proyecto-editar', ['id' => $proyecto->id_proyecto]) }}" class="btn btn-light btn-sm p-2 px-3">
-                                <i class="bi bi-pencil text-warning"></i>
-                            </a>
-                        </td>
+
+                                    <!--Boton de solicitudes-->
+                                    <a href="{{ route('solicitudesProyectos', ['id' => $proyecto->id_proyecto]) }}"
+                                        class="btn btn-light btn-sm p-2 px-3 mb-2">
+                                        <i class="bi bi-info"></i>
+                                    </a>
+                                    <!-- Botón de edición -->
+                                    <a href="{{ route('proyecto.proyecto-editar', ['id' => $proyecto->id_proyecto]) }}"
+                                        class="btn btn-light btn-sm p-2 px-3">
+                                        <i class="bi bi-pencil text-warning"></i>
+                                    </a>
+                                </td>
                     </tr>
                 @empty
                     <tr>
