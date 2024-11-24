@@ -10,6 +10,12 @@
 
 @section('content')
 <h1 style=" margin-left: 30px;">Solicitudes de proyectos</h1>
+@if (session()->has('error'))
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" style="gap: 15px; margin-left: 60px;">
     @foreach($proyectos as $proyecto)

@@ -9,7 +9,6 @@
 @endsection
 
 @section('content')
-
 <div class="container mt-2">
   <h1 class="card-title mb-4 text-rigth">Mi proyecto de horas sociales</h1>
   <div class="card shadow-m">
