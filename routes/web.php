@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Estado;
 use App\Models\Proyecto;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('Bienvenida');
@@ -402,4 +403,5 @@ Route::get('/descargar/{filename}', function ($filename) {
 })->name('descargar');
 
 Route::get('/obtener-tutores-por-seccion/{id}', [ProyectoController::class, 'GetTutoresPorSeccion']);
+Route::get('/curret-user', [AuthController::class, 'Identificador']);
 ?>

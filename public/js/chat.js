@@ -1,11 +1,22 @@
 let selectedChatId = null;
+let currentUserId = null;
 
-// Conexión al servidor WebSocket con socket.io
 const socket = io("wss://chat-ues-production.up.railway.app", {
     transports: ["websocket"],
 });
 
-// Manejo de eventos de WebSocket
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const response = await fetch('/curret-user');
+        const user = await response.json();
+        currentUserId = user.id_usuario.id_usuario;
+        loadUsers();
+        console.log("Usuario actual:", currentUserId);
+    } catch (error) {
+        console.error("Error al obtener usuario actual:", error);
+    }
+});
+
 socket.on("connect", () => console.log("Conexión establecida con WebSocket."));
 socket.on("disconnect", () => console.log("Conexión cerrada."));
 socket.on("connect_error", (error) =>
@@ -14,59 +25,85 @@ socket.on("connect_error", (error) =>
 
 // Evento para recibir mensajes en tiempo real
 socket.on("server:nuevoMensaje", (message) => {
-    if (message.chatId === selectedChatId) {
+    console.log("Mensaje recibido:", message);
+    console.log("Chat actual:", selectedChatId);
+    // Verificar si el mensaje pertenece a la conversación actual
+    if (
+        selectedChatId && 
+        ((message.senderId == selectedChatId && message.receiverId == currentUserId) ||
+        (message.senderId == currentUserId && message.receiverId == selectedChatId))
+    ) {
         renderMessage(message);
     }
 });
 
-// Cargar la lista de chats al iniciar
-document.addEventListener("DOMContentLoaded", () => {
+function loadUsers() {
     fetch("/usuarios2")
         .then((response) => response.json())
         .then((users) => {
             const chatList = document.getElementById("chatList");
             chatList.innerHTML = "";
-            users.forEach((user) => {
-                chatList.innerHTML += `
-                    <div class="chat-item rounded-3" 
-                         onclick="selectChat('${user.id_usuario}', '${user.name}', '${user.role || "Sin Rol"}')">
-                        <img src="https://via.placeholder.com/40" alt="User">
-                        <div>
-                            <strong>${user.name}</strong><br>
+            users
+                .filter(user => user.id_usuario != currentUserId)
+                .forEach((user) => {
+                    chatList.innerHTML += `
+                        <div class="chat-item rounded-3" 
+                             onclick="selectChat('${user.id_usuario}', '${user.name}', '${user.role || "Sin Rol"}')">
+                            <img src="https://via.placeholder.com/40" alt="User">
+                            <div>
+                                <strong>${user.name}</strong><br>
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
         })
         .catch((error) => console.error("Error al cargar los usuarios:", error));
-});
-// Función para seleccionar un chat y cargar mensajes
+}
+
 function selectChat(chatId, chatName, chatRole) {
     selectedChatId = chatId;
-
     document.getElementById("chatName").textContent = chatName;
     document.getElementById("chatRole").textContent = chatRole;
 
     const messageContainer = document.getElementById("messageContainer");
     messageContainer.innerHTML = '<p class="text-center text-muted">Cargando mensajes...</p>';
 
-    // Solicitar mensajes al servidor vía WebSocket
     socket.emit("client:requestMessages", { chatId });
 
-    socket.on("server:chatMessages", (messages) => {
-        if (selectedChatId === chatId) {
-            messageContainer.innerHTML = "";
-            messages.forEach(renderMessage);
+    // Removemos los listeners anteriores para evitar duplicados
+    socket.off("server:chatMessages");
+    socket.on("server:chatMessages", handleChatMessages);
+}
+
+function handleChatMessages(messages) {
+    if (!selectedChatId) return;
+    
+    const messageContainer = document.getElementById("messageContainer");
+    messageContainer.innerHTML = "";
+    
+    messages.forEach(message => {
+        // Mostrar mensajes solo si pertenecen a la conversación actual
+        if ((message.senderId == currentUserId && message.receiverId == selectedChatId) ||
+            (message.senderId == selectedChatId && message.receiverId == currentUserId)) {
+            console.log("Renderizando mensaje histórico:", message);
+            renderMessage(message);
         }
     });
 }
 
-// Renderizar un mensaje en la interfaz
 function renderMessage(message) {
     const messageContainer = document.getElementById("messageContainer");
-    const messageClass = message.sender === "me" ? "sent" : "received";
+    const isOwnMessage = message.senderId == currentUserId;
+    
+    console.log("Renderizando mensaje - senderId:", message.senderId, "currentUserId:", currentUserId, "isOwnMessage:", isOwnMessage);
+    
+    const messageClass = isOwnMessage ? "sent" : "received";
+    const messageStyle = isOwnMessage 
+        ? 'margin-left: auto; background-color: #DCF8C6; margin-right: 10px;' 
+        : 'margin-right: auto; background-color: #E8E8E8; margin-left: 10px;';
+    
     messageContainer.innerHTML += `
-        <div class="message ${messageClass}">
+        <div class="message ${messageClass}" style="${messageStyle}">
             ${message.text}
             <small class="text-muted">${message.time}</small>
         </div>
@@ -74,7 +111,6 @@ function renderMessage(message) {
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
-// Enviar un mensaje desde el cliente
 function sendMessage(event) {
     if (event.key === "Enter" || event.type === "click") {
         const input = document.getElementById("messageInput");
@@ -84,18 +120,52 @@ function sendMessage(event) {
             const data = {
                 chatId: selectedChatId,
                 text: message,
-                sender: "me", // Esto puede ser el usuario autenticado.
+                senderId: currentUserId,
+                receiverId: selectedChatId,
                 time: new Date().toLocaleTimeString(),
             };
 
             console.log("Enviando mensaje al servidor:", data);
-
-            // Emitir el mensaje al servidor, pero no lo renderices aún
             socket.emit("client:nuevoMensaje", data);
-
-            // Limpiar el campo de entrada
+            
+            // Renderizar inmediatamente solo los mensajes que envío
+            renderMessage(data);
+            
             input.value = "";
         }
     }
 }
 
+const style = document.createElement('style');
+style.textContent = `
+    .message {
+        max-width: 70%;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        word-wrap: break-word;
+        color: #000000; /* Color negro para el texto */
+    }
+    
+    .sent {
+        margin-left: auto;
+        background-color: #DCF8C6;
+        margin-right: 10px;
+        text-align: right;
+    }
+    
+    .received {
+        margin-right: auto;
+        background-color: #E8E8E8;
+        margin-left: 10px;
+        text-align: left;
+    }
+
+    .message small {
+        display: block;
+        font-size: 0.8em;
+        margin-top: 5px;
+        color: #666666; /* Color gris oscuro para la hora */
+    }
+`;
+document.head.appendChild(style);
