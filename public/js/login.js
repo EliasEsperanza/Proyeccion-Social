@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.querySelector('#contrasena');
     const showPasswordBtn = document.querySelector('#botonMostrarContrasena');
     const passwordIcon = document.querySelector('#iconoMostrarContrasena');
+    const preloader = document.getElementById('preloader');
+
 
     // Toggle de contraseña
     showPasswordBtn.addEventListener('click', function() {
@@ -123,7 +125,10 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault(); // Solo prevenir el envío si hay errores
         }
     });
+    
+
     document.addEventListener('hidden.bs.toast', function(event) {
         event.target.remove();
     });
+    
 });
