@@ -215,6 +215,7 @@ class EstudianteController extends Controller
     public function estudiantesPorSeccion($idSeccion)
     {
         $estudiantes = Estudiante::with('usuario')
+            ->whereDoesntHave('proyecto')
             ->where('id_seccion', $idSeccion)
             ->get();
 
