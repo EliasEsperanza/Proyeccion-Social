@@ -85,27 +85,25 @@
     </p>
     <ul class="lista-documentos">
         <li class="item-documento">
-            <a href="documentos/formato_nota_institucion.pdf" download="Formato_Nota_Institucion.pdf" class="enlace-documento">
+            <a href="documentos/formato_nota_institucion.docx" download="Formato_Nota_Institucion.docx" class="enlace-documento">
                 <span class="icono-documento">&#128196;</span>
                 <span class="texto-documento text-start">FORMATO NOTA DE LA INSTITUCIÓN</span>
             </a>
         </li>
         <li class="item-documento">
-            <a href="documentos/formato_inscripcion.pdf" download="Formato_Inscripcion.pdf" class="enlace-documento">
+            <a href="documentos/formato_inscripcion.docx" download="Formato_Inscripcion.docx" class="enlace-documento">
                 <span class="icono-documento">&#128196;</span>
                 <span class="texto-documento text-start">FORMATO PARA LA INSCRIPCIÓN</span>
             </a>
         </li>
         <li class="item-documento">
-            <a href="documentos/formato_presentacion_memoria.pdf" download="Formato_Presentacion_Memoria.pdf" class="enlace-documento">
+            <a href="documentos/formato_presentacion_memoria.docx" download="Formato_Presentacion_Memoria.docx" class="enlace-documento">
                 <span class="icono-documento">&#128196;</span>
                 <span class="texto-documento text-start">FORMATO PARA PRESENTACIÓN DE MEMORIA</span>
             </a>
         </li>
     </ul>
-    <a href="#" class="ver-mas-documentos">VER MÁS</a>
-    </div>
-</div>
+    <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a></div>
 
 <script src="{{ asset('js/estudianteprincipal.js') }}"></script>
 @endsection
