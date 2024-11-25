@@ -53,7 +53,7 @@
         </p>
 
         <p class="card-text"><i class="bi bi-geo-alt-fill"></i></i>{{ $proyectoEstudiante->proyecto->lugar }}</p>
-        <p class="card-text"><i class="bi bi-person-fill"></i></i>Tutor: {{ $proyectoEstudiante->proyecto->tutorr->name }}</p>
+        <p class="card-text"><i class="bi bi-person-fill"></i>Tutor: {{ $proyectoEstudiante->proyecto->tutorr ? $proyectoEstudiante->proyecto->tutorr->name : 'sin asignar' }}</p>
         <button class="btn-verde btn m-3">{{ $proyectoEstudiante->proyecto->estadoos->nombre_estado }}</button>
       </div>
     </div>
