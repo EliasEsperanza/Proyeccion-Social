@@ -51,6 +51,7 @@
     justify-content: center;
     margin-right: 1rem; /* Espacio entre el círculo y el texto */
     flex-shrink: 0; /* Evita que el círculo cambie de tamaño */
+    transform: translate(12px, 15px); 
 }
 
 @media (max-width: 576px) {
@@ -180,6 +181,7 @@
 
 
 .tarjeta-proyecto {
+    position: relative;
     flex-shrink: 0;
     min-width: 200px;
     max-width: 250px;
@@ -241,11 +243,14 @@
 }
 
 .estado-disponible {
+    position: absolute;
     background-color: #64d84d;
     color: white;
     padding: 0.3rem 0.8rem;
     border-radius: 20px;
     font-size: 0.9rem;
+    font-weight: bold;
+    z-index: 10;
 }
 
 .estado-no-disponible {
@@ -255,7 +260,11 @@
     border-radius: 20px;
     font-size: 0.9rem;
 }
-
+.ver-mas{
+    text-align: left;
+    display: block;
+    margin-bottom: 2rem;
+}
 
 .ver-mas,
 .ver-mas-documentos {
