@@ -69,7 +69,6 @@ body{
     flex-grow: 1;
     transition: all 0.3s ease;
 }
-
 .navbar .form-control {
     max-width: 350px;
     background-color: #f8f9fa;
