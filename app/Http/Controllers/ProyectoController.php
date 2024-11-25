@@ -42,7 +42,8 @@ class ProyectoController extends Controller
                     $query->where('id_tutor', $user->id_usuario);
                 })
                 ->whereHas('estadoo', function ($query) {
-                    $query->where('nombre_estado', '!=', 'Disponible');
+                    $query->where('nombre_estado', '!=', 'Disponible')
+                    ->where('nombre_estado', '!=', 'Solicitud');
                 })
                 ->get();
         } else {
@@ -55,7 +56,8 @@ class ProyectoController extends Controller
                 'estadoo'
             ])
                 ->whereHas('estadoo', function ($query) {
-                    $query->where('nombre_estado', '!=', 'Disponible');
+                    $query->where('nombre_estado', '!=', 'Disponible')
+                    ->where('nombre_estado', '!=', 'Solicitud');
                 })
                 ->get();
         }
