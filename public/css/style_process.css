@@ -1,143 +1,76 @@
+.titulo-documentos {
+    font-size: 2.rem;
+    font-weight: bold;
+    color: #333;
+}
 
-    .process-card {
-        background: #fff;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+.descripcion-documentos {
+    font-size: 1rem;
+    color: #666;
+}
 
-    .step-number {
-        background: #8B0000;
-        color: white;
-        width: 40px;          
-        height: 40px;         
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        font-weight: bold;
-        font-size: 20px;
-    }
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+    max-width: 100%;
+}
 
-    .download-btn {
-        display: inline-flex;
-        align-items: center;
-        padding: 8px 16px;
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        color: #212529;
-        text-decoration: none;
-        margin-top: 15px;
-    }
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
 
-    .download-btn:hover {
-        background: #e9ecef;
-    }
+.titulo-documento {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+}
 
-    .step-title {
-        color: #8B0000;
-        font-weight: bold;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-    }
+.descripcion-corta {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
 
-    .step-description {
-        color: #6c757d;
-        font-size: 0.9rem;
-        margin-bottom: 15px;
-    }
+.btn-descargar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background-color: transparent;
+    color: #800000;
+    border: 2px solid #800000;
+    font-size: 0.9rem;
+    padding: 10px 0;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
 
-    .step-list {
-        list-style: none;
-        padding-left: 0;
-    }
+.btn-descargar:hover {
+    background-color: #800000;
+    color: #fff;
+    border-color: #800000;
+}
 
-    .step-list li {
-        margin-bottom: 8px;
-        padding-left: 20px;
-        position: relative;
-    }
+.ultimo-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
 
-    .step-list li:before {
-        content: "•";
-        position: absolute;
-        left: 0;
-        color: #8B0000;
-    }
-    p.step-description {
-        font-size: 1.0rem;
-        font-weight: bold;
-        font-family: 'Poppins', sans-serif;
-        color: grey;
-    }
+.ultimo-card .card {
+    width: 100%;
+    max-width: 50%;
+}
 
-    .main-container {
-        padding: 20px;
+@media (max-width: 770px) {
+    .ultimo-card .card {
+        max-width: 100%;
     }
-
-    .main-title {
-        font-size: 28px;
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 8px;
-    }
-
-    .subtitle {
-        font-size: 16px;
-        color: #666;
-        margin-bottom: 30px;
-    }
-
-    .documents-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
-    }
-
-    .document-card {
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .document-title {
-        font-size: 16px;
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 8px;
-    }
-
-    .document-description {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 15px;
-    }
-
-    .download-button {
-        width: 100%;
-        padding: 8px;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        color: #333;
-        text-decoration: none;
-        transition: all 0.2s ease;
-    }
-
-    .download-button:hover {
-        background: #f5f5f5;
-    }
-
-    .download-icon {
-        font-size: 20px;
-    }
+}

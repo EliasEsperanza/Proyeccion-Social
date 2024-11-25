@@ -157,7 +157,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col ultimo-card">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h5 class="titulo-documento">Manual de Proyección Social</h5>
