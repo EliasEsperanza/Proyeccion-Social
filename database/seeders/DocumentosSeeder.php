@@ -60,14 +60,10 @@ class DocumentosSeeder extends Seeder
                 Storage::disk('public')->put($destinationPath, file_get_contents($sourcePath));
                 
                 // Crear URL pública del archivo almacenado
-                $url = Storage::url($destinationPath);
-
-                // Seleccionar un id_proyecto aleatorio
-                $id_proyecto = $proyectos->random()->id_proyecto;
+                $url = Storage::url($destinationPath);            
 
                 // Insertar el registro en la base de datos
                 DB::table('documentos')->insert([
-                    'id_proyecto' => $id_proyecto,
                     'tipo_documento' => pathinfo($file, PATHINFO_EXTENSION),
                     'ruta_archivo' => $url,
                     'fecha_subida' => Carbon::now(),
@@ -75,7 +71,7 @@ class DocumentosSeeder extends Seeder
                     //'updated_at' => Carbon::now(),
                 ]);
 
-                $this->command->info("Archivo '{$file}' copiado a storage/app/public/{$destinationPath} y URL guardada en la base de datos con id_proyecto {$id_proyecto}.");
+                $this->command->info("Archivo '{$file}' copiado a storage/app/public/{$destinationPath}");
             } else {
                 $this->command->warn("El archivo '{$file}' no existe en la carpeta storage/app/public/documents.");
             }
