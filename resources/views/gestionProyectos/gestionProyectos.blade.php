@@ -106,7 +106,10 @@
                         <label for="ubicacion" class="form-label">Ubicación</label>
                         <input type="text" class="form-control" id="lugar" name="lugar" readonly>
                     </div>
-                    
+                    <div class="mb-3">
+                        <label for="horas" class="form-label">Horas Requeridas</label>
+                        <input type="text" class="form-control" id="horas" name="horas" >
+                    </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
@@ -128,8 +131,8 @@
                             </option>
                             @endforeach
                         </select>
+                        
                     </div>
-
                     <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Asignar Proyecto</button>
                 </form>
 
