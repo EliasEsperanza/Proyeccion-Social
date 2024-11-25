@@ -224,3 +224,101 @@
         transform: translateY(0);
     }
 }
+
+@media (max-width: 768px) {
+    .w-50 {
+        width: 100% !important; 
+    }
+
+    .w-40 {
+        width: 100% !important; 
+    }
+
+    .form-control-plaintext {
+        font-size: 14px; 
+    }
+
+    .btn-custom {
+        width: 100%; 
+        font-size: 14px; 
+        padding: 10px; 
+    }
+
+    .card-body {
+        padding: 1rem !important; 
+    }
+
+    label {
+        font-size: 14px;
+    }
+
+    .form-text {
+        font-size: 12px; 
+    }
+
+    .alert {
+        font-size: 14px; 
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0.5rem; 
+    }
+
+    .mb-3 {
+        margin-bottom: 1rem !important; 
+    }
+
+    .btn-custom {
+        font-size: 12px; 
+        padding: 8px; 
+    }
+
+    .icono-candado {
+        font-size: 1rem; 
+    }
+
+    .card-title {
+        font-size: 1.4rem; 
+        text-align: center; 
+    }
+
+    .input-group-text {
+        font-size: 12px; 
+    }
+
+    .form-text {
+        font-size: 11px; 
+    }
+}
+
+.card {
+    margin-bottom: 1rem; 
+    border-radius: 0.5rem; 
+}
+
+.btn-custom {
+    background-color: #660000;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-custom:hover {
+    background-color: #8b0000;
+    transform: scale(1.05);
+}
+
+.btn-custom:active {
+    transform: scale(0.98);
+}
+
+.btn-custom:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.4);
+}
