@@ -29,8 +29,9 @@ body{
     background-color: #fff;
     color: #ffffff;
     transition: all 0.3s ease;
-    position: sticky;
-    top: 70px;
+    position: fixed;
+    overflow-y: auto;
+    z-index: 1000;
 }
 
 #barra-lateral.oculto {
@@ -68,6 +69,7 @@ body{
 #contenido-principal {
     flex-grow: 1;
     transition: all 0.3s ease;
+    margin-left: 250px;
 }
 .navbar .form-control {
     max-width: 350px;

@@ -16,7 +16,13 @@
     background-color: #fff;
     max-width: 100%;
 }
-
+.card-reducido {
+    max-width: 80%; 
+    margin: 0 auto; 
+}
+.contenedor-con-margen {
+    margin-bottom: 4rem;
+}
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
