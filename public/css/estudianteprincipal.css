@@ -352,3 +352,568 @@
         padding: 10px;
     }
 }
+.card-med {
+    max-width: 1150px; 
+    margin: auto;     
+    width: 100%;     
+}
+.tarjeta-proyecto .card-text {
+    display: -webkit-box; /* Necesario para truncar texto */
+    -webkit-box-orient: vertical; /* Define la orientación del contenido */
+    overflow: hidden; /* Oculta el texto desbordado */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos al final */
+    line-clamp: 3; /* Define el número de líneas visibles */
+    -webkit-line-clamp: 3; /* Compatible con navegadores WebKit */
+    max-height: calc(1.5em * 3); /* Controla la altura basada en las líneas */
+    font-size: 1rem; /* Tamaño del texto */
+    line-height: 1.5em; /* Altura de línea */
+}
+
+.titulo-proceso,
+.titulo-proyectos,
+.titulo-documentos {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.descripcion-proceso {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+@media (max-width: 576px) {
+    .titulo-proceso,
+    .titulo-proyectos,
+    .titulo-documentos {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+}
+.circulo-paso {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+    line-height: 2rem;
+    text-align: center;
+    border-radius: 50%;
+    color: #800000;
+    background-color: #d1d5db;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem; /* Espacio entre el círculo y el texto */
+    flex-shrink: 0; /* Evita que el círculo cambie de tamaño */
+}
+
+@media (max-width: 576px) {
+    .circulo-paso {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+    }
+}
+.contenedor-carrusel {
+    height: 400px;
+    margin: 2rem 0;
+    text-align: center;
+}
+.carrusel {
+    display: flex;
+    overflow-x: auto;
+    gap: 2rem;
+    width: auto;
+    margin: auto;
+    padding: 0 1rem;
+    scrollbar-width: thin;
+    transition: transform 0.3s ease-in-out;
+    
+}
+.carrusel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Estilos para vista en moviles */
+@media (max-width: 768px) {
+    .carrusel {
+        gap: 1rem;
+        padding: 0 0.5rem; 
+        scrollbar-width: none; 
+    }
+
+    .carrusel::-webkit-scrollbar {
+        display: none; 
+    }
+}
+
+/* Tamaño diferente para vista de PC */
+@media (min-width: 992px) {
+    .tarjeta-proyecto {
+        min-width: 250px;
+        max-width: 440px;
+    }
+    
+}
+.list-group-item {
+    display: flex;
+    align-items: flex-start; /* Alinea los números con el texto al inicio */
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #ddd; /* Mantén la línea entre los elementos */
+    position: relative;
+    gap: 1.5rem; /* Mayor espacio entre los números y el texto */
+}
+
+.list-group-item:last-child {
+    border-bottom: none; /* Elimina la línea del último elemento */
+}
+
+.circulo-paso {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1rem;
+    line-height: 2.2rem;
+    text-align: center;
+    border-radius: 50%;
+    color: #fff;
+    background-color: #800000;
+    font-weight: bold;
+    flex-shrink: 0; /* Evita que cambie de tamaño */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Agrega un ligero efecto de sombra */
+    margin-top: 0.2rem; /* Alinea mejor con el texto */
+}
+
+.list-group-item p {
+    margin: 0; /* Elimina márgenes adicionales del texto */
+    line-height: 1.5; /* Mejora la legibilidad del texto */
+    font-size: 1rem; /* Ajusta el tamaño del texto */
+    color: #333; /* Color más oscuro para mejor contraste */
+}
+
+.list-group-item:hover {
+    background-color: #f9f9f9; /* Resalta el elemento al pasar el cursor */
+    transition: background-color 0.3s ease;
+}
+
+/* Mejoras para vista móvil */
+@media (max-width: 576px) {
+    .list-group-item {
+        flex-direction: row; /* Mantiene los números y el texto en una fila */
+        align-items: center; /* Centra los elementos en pantallas pequeñas */
+        gap: 1rem; /* Espaciado más compacto */
+    }
+
+    .circulo-paso {
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.9rem;
+        line-height: 1.8rem;
+        margin-top: 0; /* Ajusta el alineado en móviles */
+    }
+
+    .list-group-item p {
+        font-size: 0.9rem; /* Reduce ligeramente el tamaño del texto */
+    }
+}
+
+/* Ajustes para pantallas más grandes */
+@media (min-width: 992px) {
+    .list-group-item {
+        gap: 2rem; /* Mayor separación en pantallas grandes */
+    }
+
+    .circulo-paso {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.1rem;
+        line-height: 2.5rem;
+    }
+}
+
+
+
+.tarjeta-proyecto {
+    flex-shrink: 0;
+    min-width: 200px;
+    max-width: 250px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    background-color: #fff;
+    text-align: left;
+    transition: transform 0.2s, box-shadow 0.3s ease-in-out;
+}
+
+.carru{
+    overflow-x: hidden;
+    overflow-y: hidden; 
+    width: 950px;
+    height: 300px;
+}
+
+.tarjeta-proyecto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para vista en moviles */
+@media (max-width: 768px) {
+    .carrusel {
+        gap: 1rem;
+        padding: 0 0.5rem; 
+        scrollbar-width: none; 
+    }
+
+    .carrusel::-webkit-scrollbar {
+        display: none; 
+    }
+}
+
+/* Tamaño diferente para vista de PC */
+@media (min-width: 992px) {
+    .tarjeta-proyecto {
+        min-width: 250px;
+        max-width: 440px;
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .card-med {
+        max-width: 90%;
+    }
+}
+
+
+.estado-boton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.estado-disponible {
+    background-color: #64d84d;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.estado-no-disponible {
+    background-color: #dd3d38;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+
+.ver-mas,
+.ver-mas-documentos {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #6c757d;
+    text-decoration: none;
+    display: block;
+}
+
+.ver-mas:hover,
+.ver-mas-documentos:hover {
+    text-decoration: underline;
+}
+
+.boton-carrusel {
+    width: 50px; 
+    height: 50px; 
+    background-color: #f5f5f5; 
+    border: 2px solid #ddd; 
+    border-radius: 50%; 
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    cursor: pointer; 
+    transition: background-color 0.3s, box-shadow 0.3s; 
+}
+.boton-carrusel:hover {
+    background-color: #e0e0e0; 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.boton-carrusel i{
+    font-size: 1.5rem; 
+    color: #333; 
+}
+@media (max-width: 576px) {
+    .boton-carrusel {
+        display: none;
+    }
+}
+
+.contenedor-documentos {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    margin: auto;
+}
+.titulo-documentos {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+.descripcion-documentos {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+.lista-documentos {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+}
+
+.item-documento {
+    flex: 1 1 auto;
+    max-width: auto;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+.item-documento:hover {
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.enlace-documento {
+    display:flex;
+    align-items: center; 
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.icono-documento {
+    font-size: 1.2rem;
+    color: #007bff;
+    margin-right: 1rem;
+}
+.texto-documento {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000;
+    flex: 1;
+}
+.ver-mas-documentos {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #6c757d;
+    text-decoration: none;
+    display: block;
+    text-align: right;
+    margin-top: 1rem;
+    margin-right: 0;
+    padding-right: 1rem;
+}
+.ver-mas-documentos:hover {
+    text-decoration: underline;
+}
+
+.titulo-proyectos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 60px;
+    margin-left: 60px;
+    }
+    .ver-mas {
+    color: #333;
+    font-size: 0.875rem;
+    font-weight: 500;
+    }    
+@media (max-width: 576px) {
+    body {
+        font-size: 0.85rem;
+    }
+
+    .tarjeta-proceso,
+    .contenedor-carrusel,
+    .contenedor-documentos {
+        margin: 10px auto;
+        padding: 10px;
+    }
+}
+@media (min-width: 768px) {
+    body {
+        font-size: 1rem;
+    }
+}
+@media (min-width: 992px) {
+    .tarjeta-proceso,
+    .contenedor-carrusel,
+    .contenedor-documentos {
+        max-width: auto;
+        margin: auto;
+    }
+}
+@media (max-width: 576px) {
+    body {
+        font-size: 0.85rem;
+    }
+    .tarjeta-proceso,
+    .contenedor-carrusel,
+    .contenedor-documentos {
+        margin: 10px auto;
+        padding: 10px;
+    }
+}
+/* Ajustes para pantallas móviles */
+@media (max-width: 768px) {
+    .contenedor-carrusel {
+        overflow-x: hidden; /* Oculta contenido que desborda horizontalmente */
+        margin: 0 auto; /* Centra el carrusel */
+        padding: 0 10px; /* Ajusta el padding para móviles */
+    }
+
+    .carrusel {
+        display: flex;
+        flex-direction: row; /* Mantiene las tarjetas en fila horizontal */
+        gap: 0.5rem; /* Reduce el espacio entre tarjetas */
+        overflow-x: auto; /* Activa el scroll horizontal */
+        overflow-y: hidden; /* Oculta el scroll vertical */
+        scroll-snap-type: x mandatory; /* Activa el ajuste automático al deslizar */
+        padding: 0.5rem 0; /* Ajusta el padding superior e inferior */
+    }
+
+    .carrusel::-webkit-scrollbar {
+        display: none; /* Oculta la barra de desplazamiento en navegadores WebKit */
+    }
+
+    .tarjeta-proyecto {
+        flex: 0 0 auto; /* Asegura que las tarjetas no se redimensionen */
+        scroll-snap-align: center; /* Centra las tarjetas al hacer scroll */
+        width: 80%; /* Ocupa la mayor parte del ancho disponible */
+        max-width: none; /* Elimina restricciones de ancho */
+        margin: 0 auto; /* Centra las tarjetas dentro del carrusel */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+    }
+
+    .boton-carrusel {
+        display: none; /* Oculta los botones del carrusel en pantallas pequeñas */
+    }
+
+    .estado-boton {
+        flex-direction: column; /* Alinea los elementos verticalmente */
+        align-items: center;
+        gap: 0.5rem; /* Espaciado vertical entre elementos */
+    }
+
+    .ver-mas {
+        font-size: 0.9rem; /* Reduce ligeramente el tamaño del texto */
+        text-align: center; /* Centra el texto de "Ver más" */
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas (teléfonos pequeños) */
+@media (max-width: 576px) {
+    .contenedor-carrusel {
+        padding: 0 5px; /* Ajusta el padding en dispositivos muy pequeños */
+    }
+
+    .tarjeta-proyecto {
+        width: 80%; /* Asegura que las tarjetas ocupen casi todo el ancho disponible */
+        margin: 0 auto; /* Centra las tarjetas */
+    }
+
+    .estado-boton {
+        gap: 0.3rem; /* Reduce el espacio vertical entre elementos */
+    }
+}
+
+/* Nueva posición y estilo para la etiqueta */
+.estado-disponible,
+.estado-no-disponible {
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 0 0 8px 8px; /* Redondea solo las esquinas inferiores */
+    color: white;
+    position: absolute;
+    top: 0; /* Fija la etiqueta en la parte superior */
+    right: 0; /* Alinea la etiqueta a la derecha */
+    z-index: 2; /* Asegura que esté por encima del contenido */
+    background-color: #64d84d; /* Verde para disponible */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    font-weight: bold;
+}
+
+/* Específico para el estado no disponible */
+.estado-no-disponible {
+    background-color: #dd3d38; /* Rojo */
+}
+@media (max-width: 576px) {
+    .tarjeta-proyecto {
+        width: 85%; /* Ajusta el ancho de la tarjeta */
+        height: 100%;
+        margin: 0 auto; /* Centra la tarjeta */
+        padding: 1rem; /* Asegura espacio interno uniforme */
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative; /* Necesario para posicionar elementos absolutos dentro */
+        overflow: hidden; /* Evita desbordamientos */
+    }
+
+    /* Etiqueta "Disponible" */
+    .estado-disponible,
+    .estado-no-disponible {
+        font-size: 0.8rem; /* Tamaño de texto ajustado */
+        border-radius: 12px; /* Bordes redondeados */
+        color: white; /* Texto blanco */
+        text-transform: uppercase; /* Texto en mayúsculas */
+        font-weight: bold; /* Resalta el texto */
+        position: absolute; /* Fija la etiqueta dentro de la tarjeta */
+        top: 0.5rem; /* Posición desde la parte superior */
+        left: 50%; /* Centra la etiqueta horizontalmente */
+        transform: translateX(-20%); /* Centra visualmente */
+        z-index: 10; /* Asegura que se muestre por encima del contenido */
+    }
+
+    .estado-disponible {
+        background-color: #64d84d; /* Color verde para "Disponible" */
+    }
+
+    .estado-no-disponible {
+        background-color: #dd3d38; /* Color rojo para "No Disponible" */
+    }
+
+    /* Ajuste del contenido debajo de la etiqueta */
+    .tarjeta-proyecto h3 {
+        margin-top: 1rem; /* Asegura espacio debajo de la etiqueta */
+        font-size: 1.2rem;
+    }
+
+    .tarjeta-proyecto p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+    }
+
+    .ver-mas {
+        font-size: 0.9rem;
+        text-decoration: none;
+        font-weight: bold;
+        display: block;
+        text-align: left;
+    }
+}
