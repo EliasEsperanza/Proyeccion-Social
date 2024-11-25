@@ -38,9 +38,9 @@ Route::get('/proyectos-solicitudes', [ProyectoController::class, 'solicitudes_co
 Route::get('/proyectos/{id}', [ProyectoController::class, 'obtenerDetallesProyectoFU']);
 
 
-Route::get('/prys', function () {
+Route::get('/documentos-horas-sociales', function () {
     return view('estudiantes.documentos-sociales');
-})->name('documentos');
+})->name('documentos_horas_sociales');
 
 Route::get('/hrs', function () {
     return view('estudiantes.actualizar-horas');

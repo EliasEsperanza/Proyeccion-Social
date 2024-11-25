@@ -54,12 +54,7 @@
                     <!-- Sección de Estudiantes -->
         <div class="mb-3">
             <label class="form-label">Estudiantes</label>
-
-            <!-- Formulario para agregar estudiantes -->
-            <form action="" method="POST" class="d-flex mb-3" id="agregarEstudiantes">
-                @csrf
-
-            </form>
+            
             <div class="d-flex">
                 <select class="form-select" id="idEstudiante" name="idEstudiante" disabled>
                     @foreach ($estudiantes as $estudiante)

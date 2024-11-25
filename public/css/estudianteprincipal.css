@@ -3,24 +3,30 @@
     margin: auto;     
     width: 100%;     
 }
-
-.tarjeta-proceso {
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    border: none;
+.tarjeta-proyecto .card-text {
+    display: -webkit-box; /* Necesario para truncar texto */
+    -webkit-box-orient: vertical; /* Define la orientación del contenido */
+    overflow: hidden; /* Oculta el texto desbordado */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos al final */
+    line-clamp: 3; /* Define el número de líneas visibles */
+    -webkit-line-clamp: 3; /* Compatible con navegadores WebKit */
+    max-height: calc(1.5em * 3); /* Controla la altura basada en las líneas */
+    font-size: 1rem; /* Tamaño del texto */
+    line-height: 1.5em; /* Altura de línea */
 }
-.titulo-proceso {
+
+.titulo-proceso,
+.titulo-proyectos,
+.titulo-documentos {
     font-size: 1.75rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
-    text-align: left;
 }
+
 .descripcion-proceso {
     font-size: 1rem;
     color: #6c757d;
     margin-bottom: 1rem;
-    text-align: left;
 }
 @media (max-width: 576px) {
     .titulo-proceso,
@@ -31,10 +37,10 @@
     }
 }
 .circulo-paso {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1.2rem;
-    line-height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+    line-height: 2rem;
     text-align: center;
     border-radius: 50%;
     color: #800000;
@@ -43,8 +49,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 1rem;
-    flex-shrink: 0;
+    margin-right: 1rem; /* Espacio entre el círculo y el texto */
+    flex-shrink: 0; /* Evita que el círculo cambie de tamaño */
 }
 
 @media (max-width: 576px) {
@@ -95,6 +101,80 @@
         max-width: 440px;
     }
     
+}
+.list-group-item {
+    display: flex;
+    align-items: flex-start; /* Alinea los números con el texto al inicio */
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #ddd; /* Mantén la línea entre los elementos */
+    position: relative;
+    gap: 1.5rem; /* Mayor espacio entre los números y el texto */
+}
+
+.list-group-item:last-child {
+    border-bottom: none; /* Elimina la línea del último elemento */
+}
+
+.circulo-paso {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1rem;
+    line-height: 2.2rem;
+    text-align: center;
+    border-radius: 50%;
+    color: #fff;
+    background-color: #800000;
+    font-weight: bold;
+    flex-shrink: 0; /* Evita que cambie de tamaño */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Agrega un ligero efecto de sombra */
+    margin-top: 0.2rem; /* Alinea mejor con el texto */
+}
+
+.list-group-item p {
+    margin: 0; /* Elimina márgenes adicionales del texto */
+    line-height: 1.5; /* Mejora la legibilidad del texto */
+    font-size: 1rem; /* Ajusta el tamaño del texto */
+    color: #333; /* Color más oscuro para mejor contraste */
+}
+
+.list-group-item:hover {
+    background-color: #f9f9f9; /* Resalta el elemento al pasar el cursor */
+    transition: background-color 0.3s ease;
+}
+
+/* Mejoras para vista móvil */
+@media (max-width: 576px) {
+    .list-group-item {
+        flex-direction: row; /* Mantiene los números y el texto en una fila */
+        align-items: center; /* Centra los elementos en pantallas pequeñas */
+        gap: 1rem; /* Espaciado más compacto */
+    }
+
+    .circulo-paso {
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.9rem;
+        line-height: 1.8rem;
+        margin-top: 0; /* Ajusta el alineado en móviles */
+    }
+
+    .list-group-item p {
+        font-size: 0.9rem; /* Reduce ligeramente el tamaño del texto */
+    }
+}
+
+/* Ajustes para pantallas más grandes */
+@media (min-width: 992px) {
+    .list-group-item {
+        gap: 2rem; /* Mayor separación en pantallas grandes */
+    }
+
+    .circulo-paso {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.1rem;
+        line-height: 2.5rem;
+    }
 }
 
 
@@ -245,15 +325,7 @@
     padding: 0;
     margin: 0 0 1.5rem;
 }
-.list-group-item {
-    display: flex;
-    align-items: center;
-    font-size: 1rem;
-    font-weight: 500;
-    border: none; 
-    padding: 1rem 0;
-    border-bottom: 1px solid #e0e0e0;
-}
+
 .item-documento {
     flex: 1 1 auto;
     max-width: auto;
@@ -350,5 +422,144 @@
     .contenedor-documentos {
         margin: 10px auto;
         padding: 10px;
+    }
+}
+/* Ajustes para pantallas móviles */
+@media (max-width: 768px) {
+    .contenedor-carrusel {
+        overflow-x: hidden;
+        margin: 0 auto; 
+        padding: 0 10px; 
+    }
+
+    .carrusel {
+        display: flex;
+        flex-direction: row; 
+        gap: 0.5rem; 
+        overflow-x: auto; 
+        overflow-y: hidden; 
+        scroll-snap-type: x mandatory;
+        padding: 0.5rem 0;
+    }
+
+    .carrusel::-webkit-scrollbar {
+        display: none; 
+    }
+
+    .tarjeta-proyecto {
+        flex: 0 0 auto; 
+        scroll-snap-align: center; 
+        width: 80%; 
+        max-width: none; 
+        margin: 0 auto; 
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    }
+
+    .boton-carrusel {
+        display: none; 
+    }
+
+    .estado-boton {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem; 
+    }
+
+    .ver-mas {
+        font-size: 0.9rem;
+        text-align: center; 
+    }
+}
+
+
+@media (max-width: 576px) {
+    .contenedor-carrusel {
+        padding: 0 5px; 
+    }
+
+    .tarjeta-proyecto {
+        width: 80%; 
+        margin: 0 auto; 
+    }
+
+    .estado-boton {
+        gap: 0.3rem; 
+    }
+}
+
+
+.estado-disponible,
+.estado-no-disponible {
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 0 0 8px 8px; 
+    color: white;
+    position: absolute;
+    top: 0; 
+    right: 0; 
+    z-index: 2; 
+    background-color: #64d84d; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+
+.estado-no-disponible {
+    background-color: #dd3d38; 
+}
+@media (max-width: 576px) {
+    .tarjeta-proyecto {
+        width: 85%; 
+        height: 100%;
+        margin: 0 auto; 
+        padding: 1rem; 
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+ 
+    .estado-disponible,
+    .estado-no-disponible {
+        font-size: 0.8rem;
+        border-radius: 12px; 
+        color: white; 
+        text-transform: uppercase; 
+        font-weight: bold; 
+        position: absolute; 
+        top: 0.5rem; 
+        left: 50%; 
+        transform: translateX(-20%); 
+        z-index: 10; 
+    }
+
+    .estado-disponible {
+        background-color: #64d84d;
+    }
+
+    .estado-no-disponible {
+        background-color: #dd3d38; 
+    }
+
+ 
+    .tarjeta-proyecto h3 {
+        margin-top: 1rem; 
+        font-size: 1.2rem;
+    }
+
+    .tarjeta-proyecto p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+    }
+
+    .ver-mas {
+        font-size: 0.9rem;
+        text-decoration: none;
+        font-weight: bold;
+        display: block;
+        text-align: left;
     }
 }
