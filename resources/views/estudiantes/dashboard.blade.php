@@ -48,7 +48,6 @@
 
 <div class="contenedor-carrusel ">
     <h2 class="titulo-proyectos mb-4">Proyectos disponibles 
-        <a class="ver-mas" href="{{ route('proyecto__disponible_list') }}" onclick="establecerActivo(this)">Ver más</a>
     </h2>
     <div class="d-flex align-items-center justify-content-center ">
         <button class="btn boton-carrusel" id="btnIzquierda">
