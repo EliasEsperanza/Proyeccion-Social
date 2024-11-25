@@ -57,3 +57,21 @@
     color: #fff;
     border-color: #800000;
 }
+
+.ultimo-card {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    width: 100%;
+}
+
+.ultimo-card .card {
+    width: 100%; 
+    max-width: 50%; 
+}
+
+@media (max-width:770px) {
+    .ultimo-card .card {
+        max-width: 100%; 
+    }
+}
