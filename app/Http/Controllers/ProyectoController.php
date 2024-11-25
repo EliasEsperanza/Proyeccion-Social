@@ -70,53 +70,64 @@ class ProyectoController extends Controller
 
 
     public function store_solicitud(Request $request)
-    {
-        $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
-        $validatedData = $request->validate([
-            'nombre_proyecto' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'lugar' => 'required|string|max:255',
-            'fecha_inicio' => 'required|date|before_or_equal:fecha_fin',
-            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
-            'id_seccion' => 'required|integer|exists:secciones,id_seccion',
-            'estudiantes' => 'required|string',
+{
+    $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
+    
+    $validatedData = $request->validate([
+        'nombre_proyecto' => 'required|string|max:255',
+        'descripcion' => 'required|string',
+        'lugar' => 'required|string|max:255',
+        'fecha_inicio' => 'required|date|before_or_equal:fecha_fin',
+        'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+        'id_seccion' => 'required|integer|exists:secciones,id_seccion',
+        'estudiantes' => 'required|string',
+    ]);
+
+    try {
+        // Crear el proyecto
+        $proyecto = Proyecto::create([
+            'nombre_proyecto' => $validatedData['nombre_proyecto'],
+            'descripcion_proyecto' => strip_tags($validatedData['descripcion']),
+            'lugar' => $validatedData['lugar'],
+            'estado' => 9, // Estado inicial de solicitud
+            'horas_requeridas' => 0, // Inicialmente en 0
+            'periodo' => now()->format('Y-m'),
+            'coordinador' => auth()->id(),
+            'seccion_id' => $validatedData['id_seccion'],
+            'fecha_inicio' => $validatedData['fecha_inicio'],
+            'fecha_fin' => $validatedData['fecha_fin'],
         ]);
-        
-        try {
 
-            $proyecto = Proyecto::create([
-                'nombre_proyecto' => $validatedData['nombre_proyecto'],
-                'descripcion_proyecto' => strip_tags($validatedData['descripcion']),
-                'lugar' => $validatedData['lugar'],
-                'estado' => 9, // Estado inicial de solicitud
-                'horas_requeridas' => 0, // Inicialmente en 0
-                'periodo' => now()->format('Y-m'),
-                'coordinador' => auth()->id(),
-                'seccion_id' => $validatedData['id_seccion'],
-                'fecha_inicio' => $validatedData['fecha_inicio'],
-                'fecha_fin' => $validatedData['fecha_fin'],
-            ]);
+        // Asociar estudiantes al proyecto
+        if (is_array($estudiantesSeleccionados)) {
+            $estudianteNotificacion = Estudiante::find($estudiantesSeleccionados[0]);
+            $idCoordinador = $estudianteNotificacion->seccion->id_coordinador;
 
-            if (is_array($estudiantesSeleccionados)) {
-                 $estudianteNotificacion=Estudiante::find($estudiantesSeleccionados[0]);
-                $idCoordinador=$estudianteNotificacion->seccion->id_coordinador;
-              
-                app(NotificacionController::class)->enviarNotificacion($idCoordinador,'Se ha solicitado la aprobacion del proyecto '.$validatedData['nombre_proyecto']);
-                foreach ($estudiantesSeleccionados as $idEstudiante) {
-                    $estudiante = Estudiante::find($idEstudiante);
+            app(NotificacionController::class)->enviarNotificacion(
+                $idCoordinador,
+                'Se ha solicitado la aprobación del proyecto ' . $validatedData['nombre_proyecto']
+            );
 
-                    if ($estudiante) {
-                        $proyecto->estudiantes()->attach($estudiante->id_estudiante);
-                    }
+            foreach ($estudiantesSeleccionados as $idEstudiante) {
+                $estudiante = Estudiante::find($idEstudiante);
+
+                if ($estudiante) {
+                    $proyecto->estudiantes()->attach($estudiante->id_estudiante);
                 }
             }
-
-            return redirect()->back()->with('success', 'Proyecto creado exitosamente.');
-        } catch (\Exception $e) {
-            \Log::error('Error al crear el proyecto: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
         }
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('estudiantes.dashboard')->with('success', 'Proyecto creado exitosamente.');
+
+    } catch (\Exception $e) {
+        \Log::error('Error al crear el proyecto: ' . $e->getMessage());
+
+        // Redirigir con mensaje de error
+        return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
     }
+}
+
 
     //agregar id de estudiantes a un proyecto en fase de solicitud
     public function store_solicitud_alumno(Request $request)
