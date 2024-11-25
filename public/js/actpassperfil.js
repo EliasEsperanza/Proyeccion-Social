@@ -123,8 +123,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const form = document.querySelector('form');
     
         function validarNombre(nombre) {
-            if (nombre.length > 28) {
-                return 'El nombre no puede tener más de 28 caracteres';
+            if (nombre.length > 50) {
+                return 'El nombre no puede tener más de 50 caracteres';
             }
     
             if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]*$/.test(nombre)) {
