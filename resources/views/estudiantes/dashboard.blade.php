@@ -99,7 +99,7 @@
             </li>
 
         </ul>
-        <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>
+      <!--  <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>-->
     </div>
 
     <script src="{{ asset('js/estudianteprincipal.js') }}"></script>
