@@ -198,7 +198,7 @@ class ProyectosEstudiantesController extends Controller
             if ($proyectoEstudiante->estado == 7) {
                 return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
             } else {
-                return redirect()->back()->with('warning', 'No se puede enviar el proyecto, ya que no cumple con los requisitos.');
+                return redirect()->back()->with('warning', 'No se puede enviar el proyecto, ya enviaste una solicitud.');
             }
         }
 
