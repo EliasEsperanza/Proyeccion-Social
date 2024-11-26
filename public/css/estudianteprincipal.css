@@ -4,15 +4,15 @@
     width: 100%;     
 }
 .tarjeta-proyecto .card-text {
-    display: -webkit-box; /* Necesario para truncar texto */
-    -webkit-box-orient: vertical; /* Define la orientación del contenido */
-    overflow: hidden; /* Oculta el texto desbordado */
-    text-overflow: ellipsis; /* Agrega puntos suspensivos al final */
-    line-clamp: 3; /* Define el número de líneas visibles */
-    -webkit-line-clamp: 3; /* Compatible con navegadores WebKit */
-    max-height: calc(1.5em * 3); /* Controla la altura basada en las líneas */
-    font-size: 1rem; /* Tamaño del texto */
-    line-height: 1.5em; /* Altura de línea */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    line-clamp: 3; 
+    -webkit-line-clamp: 3; 
+    max-height: calc(1.5em * 3);
+    font-size: 1rem; 
+    line-height: 1.5em !important; 
 }
 
 .titulo-proceso,
@@ -34,7 +34,16 @@
     .titulo-documentos {
         font-size: 1.5rem;
         text-align: center;
+        margin: 0 auto;
     }
+    .card-med {
+        max-width: 90%;
+    }
+
+    .boton-carrusel {
+        display: none;
+    }
+
 }
 .circulo-paso {
     width: 2rem;
@@ -49,8 +58,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 1rem; /* Espacio entre el círculo y el texto */
-    flex-shrink: 0; /* Evita que el círculo cambie de tamaño */
+    margin-right: 1rem; 
+    flex-shrink: 0; 
     transform: translate(12px, 15px); 
 }
 
@@ -69,6 +78,8 @@
 }
 .carrusel {
     display: flex;
+    justify-content: center;
+    align-items: center;
     overflow-x: auto;
     gap: 2rem;
     width: auto;
@@ -76,6 +87,7 @@
     padding: 0 1rem;
     scrollbar-width: thin;
     transition: transform 0.3s ease-in-out;
+    flex-wrap: wrap;
     
 }
 .carrusel::-webkit-scrollbar {
@@ -198,7 +210,7 @@
 .carru{
     overflow-x: hidden;
     overflow-y: hidden; 
-    width: 950px;
+    width: 100%;
     height: 300px;
 }
 
@@ -223,13 +235,7 @@
 }
 
 /* Tamaño diferente para vista de PC */
-@media (min-width: 992px) {
-    .tarjeta-proyecto {
-        min-width: 250px;
-        max-width: 440px;
-    }
-    
-}
+
 
 @media (max-width: 768px) {
     .card-med {
@@ -277,19 +283,58 @@
     margin-bottom: 2rem;
 }
 
-.ver-mas,
-.ver-mas-documentos {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #6c757d;
+.ver-mas {
+    white-space: nowrap;
+    position: absolute;
+    bottom: 0px;
+    left: 15px;
+    padding: 10px 20px;
+    background-color: #d86767; 
+    color: #fff !important; 
+    font-size: 1rem;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     text-decoration: none;
-    display: block;
+   
 }
 
-.ver-mas:hover,
-.ver-mas-documentos:hover {
+.ver-mas:hover {
+    background-color: #e91d53; 
+    transform: translateY(-2px); 
+    filter: blur(0.1px);
+    color: white !important;
     text-decoration: underline;
+    font-weight: bold;
+}
+
+
+.ver-mas-documentos {
+    padding: 10px 10px; 
+    font-size: 1rem; 
+    color: #fff !important; 
+    background-color: #d86767; 
+    border: none; 
+    text-align: center; 
+    text-decoration: none; 
+    transition: all 0.3s ease; 
+    margin-top: 1rem; 
+    white-space: nowrap;
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+  
+}
+.c-b{
+    padding-bottom: 3rem;
+}
+
+.ver-mas-documentos:hover {
+   background-color: #e91d53; 
+    transform: translateY(-2px); 
+    filter: blur(0.1px);
+    color: white !important;
+    text-decoration: underline;
+    font-weight: bold;
 }
 
 .boton-carrusel {
@@ -317,6 +362,13 @@
 @media (max-width: 576px) {
     .boton-carrusel {
         display: none;
+    }
+    .ver-mas-documentos {
+        text-align: center;
+        font-size: 0.875rem; 
+        padding: 8px 8px; 
+        margin-top: 1rem;
+        white-space: nowrap; 
     }
 }
 
@@ -432,6 +484,7 @@
         max-width: auto;
         margin: auto;
     }
+
 }
 @media (max-width: 576px) {
     body {
@@ -583,3 +636,10 @@
         text-align: left;
     }
 }
+@media (max-width: 990px) {
+    .card {
+        width: 100%; 
+        margin-bottom: 20px; 
+    }
+}
+

@@ -61,7 +61,7 @@
                 <h3 class="card-title c-titulo">{{ $proyecto->nombre_proyecto }}</h3>
                 <br>
                 <p class="card-text">Descripción:</p>
-                <p class="card-text">{{ $proyecto->descripcion_proyecto }}</p>
+              <p class="card-text descripcion">{{ \Illuminate\Support\Str::limit($proyecto->descripcion_proyecto, 40, '...') }}</p>
                 <p class="card-text"><strong>Horas requeridas:</strong> {{ $proyecto->horas_requeridas }}</p>
                 <div class="estado-boton">
                     <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
@@ -81,7 +81,7 @@
 
 
 <div class="card mt-5 mx-auto card-med mb-4">
-    <div class="card-body">
+    <div class="card-body c-b">
         <h2 class="titulo-documentos">Documentos</h2>
         <p class="descripcion-documentos text-start">
             Descarga los documentos necesarios para tu proceso
