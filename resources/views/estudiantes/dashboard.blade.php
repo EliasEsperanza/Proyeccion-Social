@@ -47,8 +47,10 @@
 </div>
 
 <div class="contenedor-carrusel ">
-    <h2 class="titulo-proyectos mb-4">Proyectos disponibles
-    </h2>
+    <h2 class="titulo-proyectos mb-4">Proyectos disponibles</h2>
+    @if ($proyectos->isEmpty())
+        <p class="text-muted text-center">No hay proyectos disponibles en este momento.</p>
+    @endif
     <div class="d-flex align-items-center justify-content-center ">
         <button class="btn boton-carrusel" id="btnIzquierda">
             <span class="flecha-carrusel"><i class="bi bi-arrow-left"></i></span>
@@ -102,5 +104,5 @@
       <!--  <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>-->
     </div>
 
-    <script src="{{ asset('js/estudianteprincipal.js') }}"></script>
-    @endsection
+<script src="{{ asset('js/estudianteprincipal.js') }}"></script>
+@endsection
