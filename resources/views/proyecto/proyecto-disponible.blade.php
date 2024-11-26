@@ -143,7 +143,7 @@
                 <tr>
                     <td><input type="checkbox" class="form-check-input" value="${project.id_proyecto}"></td>
                     <td>${project.nombre_proyecto}</td>
-                    <td>${project.descripcion_proyecto}</td>
+                    <td>${project.descripcion_proyecto.length > 100 ? project.descripcion_proyecto.substring(0, 100) + '...' : project.descripcion_proyecto}</td>
                     <td>${project.horas_requeridas}</td>
                     <td>${project.lugar}</td>
                     <td>${project.seccion?.nombre_seccion || 'No asignada'}</td>

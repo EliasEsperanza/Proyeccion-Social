@@ -85,15 +85,14 @@
                 <th>Horas</th>
               </tr>
             </thead>
+
             <tbody>
+              @foreach ($registro as $item)
               <tr>
-                <td>4 de marzo de 2024</td>
-                <td>5</td>
+                <td>{{$item->Fecha_registro}}</td>
+                <td>{{$item->Horas}}</td>
               </tr>
-              <tr>
-                <td>11 de marzo de 2024</td>
-                <td>7</td>
-              </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
