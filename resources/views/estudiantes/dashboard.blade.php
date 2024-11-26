@@ -5,7 +5,7 @@
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/estudianteprincipal.css') }}">
 <link rel="stylesheet" href="{{ asset('css/deshboard-title.css') }}">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 @endsection
 
 @section('content')
@@ -49,7 +49,7 @@
 <div class="contenedor-carrusel ">
     <h2 class="titulo-proyectos mb-4">Proyectos disponibles</h2>
     @if ($proyectos->isEmpty())
-        <p class="text-muted text-center">No hay proyectos disponibles en este momento.</p>
+    <p class="text-muted text-center">No hay proyectos disponibles en este momento.</p>
     @endif
     <div class="d-flex align-items-center justify-content-center ">
         <button class="btn boton-carrusel" id="btnIzquierda">
@@ -66,8 +66,8 @@
                 <div class="estado-boton">
                     <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
                     <span class="badge {{ $proyecto->estado == 1 ? 'estado-disponible' : 'estado-no-disponible' }}">
-                        {{ $proyecto->estado == 1 ? 'Disponible' : 'No Disponible' }}
                         <i class="fa-solid fa-circle-exclamation"></i>
+                        {{ $proyecto->estado == 1 ? 'Disponible' : 'No Disponible' }}
                     </span>
                 </div>
             </div>
@@ -102,8 +102,8 @@
             </li>
 
         </ul>
-       <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>
+        <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>
     </div>
 
-<script src="{{ asset('js/estudianteprincipal.js') }}"></script>
-@endsection
+    <script src="{{ asset('js/estudianteprincipal.js') }}"></script>
+    @endsection

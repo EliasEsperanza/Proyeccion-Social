@@ -65,8 +65,8 @@ function loadUsers() {
                 .forEach((user) => {
                     chatList.innerHTML += `
                         <div class="chat-item rounded-3" 
-                             onclick="selectChat('${user.id_usuario}', '${user.name}', '${user.role || "Sin Rol"}')">
-                             <img src="{{ asset('img/user3.png') }}" alt="User Image">
+                            onclick="selectChat('${user.id_usuario}', '${user.name}', '${user.role || "Sin Rol"}')">
+                            <img src="img/user3.png" alt="User Image">
                             <div>
                                 <strong>${user.name}</strong><br>
                             </div>

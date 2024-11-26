@@ -192,6 +192,7 @@
     background-color: #fff;
     text-align: left;
     transition: transform 0.2s, box-shadow 0.3s ease-in-out;
+    box-shadow: inset 0 -5px 0 #e91d53;
 }
 
 .carru{
@@ -204,6 +205,8 @@
 .tarjeta-proyecto:hover {
     transform: translateY(-5px);
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 -5px 0 #e91d53;
+
 }
 
 /* Estilos para vista en moviles */
@@ -240,7 +243,6 @@
     font-weight:  bold;
     position: relative;
     margin-bottom: 5px;
-    border-bottom: 2px solid #e91d53 !important;
 }
 
 .estado-boton {
@@ -268,6 +270,7 @@
     border-radius: 20px;
     font-size: 0.9rem;
 }
+
 .ver-mas{
     text-align: left;
     display: block;
