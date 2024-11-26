@@ -72,7 +72,11 @@
 
       <!-- Buttons -->
       <div class="d-flex justify-content-between p-3">
+        <!-- muestra boton hasta que el proyecto sea aprobado -->
+        @if ( $proyectoEstudiante->proyecto->estado == 10)
         <a class="btn-actualizar btn" href="{{ route('estudiante.actualizarHorasView') }}">Actualizar horas</a>
+        @endif
+
         <a href="{{ route('detallesmio') }}" class="btn-detalles btn">Ver Detalles</a>
       </div>
     </div>
