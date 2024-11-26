@@ -66,7 +66,7 @@ function loadUsers() {
                     chatList.innerHTML += `
                         <div class="chat-item rounded-3" 
                              onclick="selectChat('${user.id_usuario}', '${user.name}', '${user.role || "Sin Rol"}')">
-                            <img src="https://via.placeholder.com/40" alt="User">
+                             <img src="{{ asset('img/user3.png') }}" alt="User Image">
                             <div>
                                 <strong>${user.name}</strong><br>
                             </div>
@@ -141,27 +141,32 @@ function handleChatMessages(messages) {
     });
 }
 
+
 // Renderizar un mensaje individual en el contenedor
 function renderMessage(message) {
     const messageContainer = document.getElementById("messageContainer");
-    // Determinar si el mensaje es propio comparando el sender con el usuario actual
     const isOwnMessage = message.sender === String(currentUserId);
-    
-    console.log("Renderizando mensaje - sender:", message.sender, "currentUserId:", currentUserId, "isOwnMessage:", isOwnMessage);
-    
+
+    // Determinamos el texto a mostrar
+    const textToShow = message.text;
+
     const messageClass = isOwnMessage ? "sent" : "received";
     const messageStyle = isOwnMessage 
-        ? 'margin-left: auto; margin-right: 10px;' 
-        : 'margin-right: auto; background-color: #3766fa; margin-left: 10px;';
-    
+        ? 'margin-left: auto; margin-right: 10px; width: 40%;' 
+        : 'margin-right: auto; background-color: #3766fa; margin-left: 10px; width: 40%;';  
+
     messageContainer.innerHTML += `
         <div class="message ${messageClass}" style="${messageStyle}">
-            ${message.text}
-            <small class="text-muted">${message.time}</small>
+            ${textToShow}
+             <small class="text-muted" style="color: white;">${message.time}</small>  
         </div>
     `;
+
+    // Asegura que el contenedor se desplace al final para ver los nuevos mensajes
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
+
+
 
 // Enviar un nuevo mensaje
 function sendMessage(event) {
