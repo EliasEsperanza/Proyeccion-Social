@@ -5,8 +5,16 @@ body {
 .logo-bienvenida {
     margin-left: 2.5rem;
     font-size: 2.1rem;
-    color: #800000;
+    background: linear-gradient(to right, #800000, #b85656); 
+    background-clip: text; 
+    -webkit-text-fill-color: transparent; 
     text-decoration: none;
+}
+
+.logo-bienvenida {
+    margin-left: 2.5rem;
+    font-size: 1.5rem;
+
 }
 
 .logo-bienvenida::first-letter {
