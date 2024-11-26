@@ -26,7 +26,7 @@
                         <li>Entregar el formulario al coordinador de la subunidad de Proyección Social.</li>
                     </ul>
                     <a href="{{ route('descargar', ['filename' => 'FORMULARIO N1 HOJA DE INSCRIPCION PARA SERVICIO SOCIAL.docx']) }}" class="btn btn-descargar">
-                        <i class="bi bi-download me-2"></i> Descargar formulario-inscripcion.pdf
+                        <i class="bi bi-download me-2"></i> Descargar formulario-inscripcion.docx
                     </a>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                         <li>Entregar el plan de trabajo al coordinador de la subunidad.</li>
                     </ul>
                     <a href="{{ route('descargar', ['filename' => 'Constancia de aprobación del Plan de Trabajo del Servicio Social.docx']) }}" class="btn btn-descargar">
-                        <i class="bi bi-download me-2"></i> Descargar plan-trabajo.pdf
+                        <i class="bi bi-download me-2"></i> Descargar plan-trabajo.docx
                     </a>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                         <li>Entregar un informe de avance del 50% (Formulario N°3).</li>
                     </ul>
                     <a href="{{ route('descargar', ['filename' => 'Control de Asistencia.docx']) }}" class="btn btn-descargar">
-                        <i class="bi bi-download me-2"></i> Descargar control-asistencia.pdf
+                        <i class="bi bi-download me-2"></i> Descargar control-asistencia.docx
                     </a>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                         <li>Solicitar al tutor la evaluación del trabajo realizado (Formulario N°6).</li>
                     </ul>
                     <a href="{{ route('descargar', ['filename' => 'EJEMPLO DE DOCUMENTACION PARA EL PROYECTO DE SERVICIO SOCIAL.docx']) }}" class="btn btn-descargar">
-                        <i class="bi bi-download me-2"></i> Descargar guia-memoria-labores.pdf
+                        <i class="bi bi-download me-2"></i> Descargar guia-memoria-labores.docx
                     </a>
                 </div>
             </div>
