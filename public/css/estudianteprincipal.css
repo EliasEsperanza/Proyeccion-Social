@@ -234,6 +234,14 @@
     }
 }
 
+.c-titulo{
+    margin-top: 15px;
+    font-size: 24px;
+    font-weight:  bold;
+    position: relative;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #e91d53 !important;
+}
 
 .estado-boton {
     display: flex;

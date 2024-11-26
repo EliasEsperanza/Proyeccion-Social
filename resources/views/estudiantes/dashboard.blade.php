@@ -58,16 +58,17 @@
         <div class="carrusel carru" id="contenedorCarrusel">
             @foreach ($proyectos as $proyecto)
             <div class="tarjeta-proyecto carru">
-                <h3 class="card-title">{{ $proyecto->nombre_proyecto }}</h3>
+                <h3 class="card-title c-titulo">{{ $proyecto->nombre_proyecto }}</h3>
                 <br>
                 <p class="card-text">Descripción:</p>
                 <p class="card-text">{{ $proyecto->descripcion_proyecto }}</p>
                 <p class="card-text"><strong>Horas requeridas:</strong> {{ $proyecto->horas_requeridas }}</p>
                 <div class="estado-boton">
+                    <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
                     <span class="badge {{ $proyecto->estado == 1 ? 'estado-disponible' : 'estado-no-disponible' }}">
                         {{ $proyecto->estado == 1 ? 'Disponible' : 'No Disponible' }}
+                        <i class="fa-solid fa-circle-exclamation"></i>
                     </span>
-                    <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
                 </div>
             </div>
             @endforeach
@@ -101,7 +102,7 @@
             </li>
 
         </ul>
-      <!--  <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>-->
+       <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>
     </div>
 
 <script src="{{ asset('js/estudianteprincipal.js') }}"></script>

@@ -5,6 +5,7 @@
 @section('content')
 <script src="https://cdn.socket.io/4.8.0/socket.io.min.js"></script>
 <script src="{{ asset(path: 'js/chat.js') }}"></script>
+
 <div class="container-fluid">
     <div class="row chat-container">
       
@@ -26,7 +27,7 @@
       <!-- Ventana de chat -->
       <div class="col-12 col-md-9 ventana d-flex flex-column">
         <div id="chatHeader" class="chat-header d-flex align-items-center rounded-top-4">
-            <img src="https://via.placeholder.com/40" id="chatImage" class="rounded-circle me-2" alt="User">
+            <img src="{{ asset('img/user3.png') }}" id="chatImage" class="rounded-circle me-2" alt="User">
             <div>
                 <strong id="chatName">Seleccione un chat</strong><br>
                 <small id="chatRole">---</small>
