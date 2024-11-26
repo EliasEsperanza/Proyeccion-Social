@@ -140,26 +140,33 @@ class ProyectosEstudiantesController extends Controller
     }
 
     //retorna vista solicitud de proyecto
-    public function Mi_proyecto()
-    {
-        $userId = auth()->user()->id_usuario;
-        $estudiante = Estudiante::where('id_usuario', $userId)->first();
+    public function Mi_proyecto() 
+    { 
+        $userId = auth()->user()->id_usuario; 
+        $estudiante = Estudiante::where('id_usuario', $userId)->first(); 
 
-        if (!$estudiante) {
-            return redirect()->back()->with('warning', 'Estudiante no encontrado.');
-        }
+        if (!$estudiante) { 
+            return redirect()->back()->with('warning', 'Estudiante no encontrado.'); 
+        } 
 
-        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
-            ->with('proyecto')
-            ->first();
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante) 
+            ->with('proyecto') 
+            ->first(); 
 
-        if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
-            return redirect()->back()->with('warning', 'No posee proyecto asignado.');
-        }
+        if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) { 
+            return redirect()->back()->with('warning', 'No posee proyecto asignado.'); 
+        } 
 
-        $porcentaje = ($proyectoEstudiante->proyecto->horas_requeridas > 0) ? ($proyectoEstudiante->horas_sociales_completadas / $proyectoEstudiante->proyecto->horas_requeridas) * 100 : 0;
+        // Usar las horas del estudiante
+        $horasCompletadas = $estudiante->horas_sociales_completadas ?? 0;
+        $horasTotales = $proyectoEstudiante->proyecto->horas_requeridas ?? 1;
 
-        return view('estudiantes.proyectomio', compact('proyectoEstudiante', 'porcentaje'));
+        // Calcula el porcentaje
+        $porcentaje = $horasTotales > 0 
+            ? round(($horasCompletadas / $horasTotales) * 100, 2)
+            : 0;
+
+        return view('estudiantes.proyectomio', compact('proyectoEstudiante', 'porcentaje', 'horasCompletadas', 'horasTotales')); 
     }
 
     /*public function Solicitud_Proyecto_Student()

@@ -1,4 +1,4 @@
-@extends('layouts.appE')
+@extends('layouts.app')
 
 @section('title', 'Dashboard - Horas Sociales')
 
