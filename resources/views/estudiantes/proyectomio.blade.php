@@ -19,15 +19,24 @@
       <!-- Progress bar -->
       <div class="my-4">
         @php
-            $porcentaje = optional($proyectoEstudiante)->porcentaje_completado ?? 0;
+
+            $progressClass = 'bg-danger';
+            if ($porcentaje > 25) $progressClass = 'bg-warning';
+            if ($porcentaje > 50) $progressClass = 'bg-info';
+            if ($porcentaje > 75) $progressClass = 'bg-success';
+            
         @endphp
-        <div class="d-flex justify-content-between">
-            <p class="card-text">Progreso del Proyecto</p>
-            <p>Completadas {{ $proyectoEstudiante->horas_sociales_completadas ?? 0 }} de {{ $proyectoEstudiante->proyecto->horas_requeridas }} horas</p>
+        
+        <div class="d-flex justify-content-between mb-2">
+            <p class="card-text fw-bold">Progreso del Proyecto</p>
+            <p class="text-muted">
+                Completadas {{ $horasCompletadas }} de {{ $horasTotales }} horas
+            </p>
         </div>  
-        <div class="progress" style="height: 20px;">
+        
+        <div class="progress" style="height: 25px;">
             <div 
-                class="progress-bar" 
+                class="progress-bar {{ $progressClass }} progress-bar-striped progress-bar-animated" 
                 role="progressbar"
                 style="width: {{ $porcentaje }}%;"
                 aria-valuenow="{{ $porcentaje }}"
@@ -37,6 +46,7 @@
                 {{ $porcentaje }}%
             </div>
         </div>
+        
     </div>
 
       <div class="mr-4">
