@@ -44,9 +44,56 @@
 }
 
 .btn-primary:hover {
-    background-color: #1d6c34; /* Verde oscuro en hover */
+    background-color: #1d6c34; 
     border-color: #1d6c34;  
     color: white;
+}
+.btn-delete:active {
+    transform: scale(0.95);
+    animation: shake 0.4s linear;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-4px); }
+    100% { transform: translateX(0); }
+}
+
+.btn-animated {
+    position: relative;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-animated:active {
+    transform: scale(0.96);
+    animation: button-press 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.btn-animated:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+@keyframes button-press {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.96);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Ajustar la distancia entre botones */
+.button-group {
+    gap: 12px;
 }
 
 /* Botones de acciones en la tabla */
@@ -77,3 +124,18 @@
 .page-numbers li.active a {
     font-weight: bold;
   }
+
+@media (max-width: 500px) {
+    .button-group {
+        display: flex;
+        flex-direction: column; 
+        align-items: center; 
+        gap: 10px; 
+        width: 100%;
+    }
+
+    .button-group .btn {
+        width: 90%; 
+        max-width: 300px; 
+    }
+}

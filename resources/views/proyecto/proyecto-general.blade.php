@@ -70,7 +70,7 @@
                         <td>{{ $proyecto->fecha_inicio }}</td>
                         <td>{{ $proyecto->fecha_fin }}</td>
                         <td>{{ $proyecto->lugar }}</td>
-                        <td>{{ $proyecto->estudiantes->first()->porcentaje_completado }} %</td>
+                      
                         <td>{{ $proyecto->estadoo->nombre_estado }}</td>
                         <td>{{ $proyecto->seccion->nombre_seccion }}</td>
                         <td>
@@ -114,9 +114,15 @@
 
     <div class="d-flex justify-content-end">
         <div class="button-group mt-3 px-4 mb-4">
-            <button type="button" onclick="return submitForm('pdf')" class="btn btn-success me-2">Generar PDF</button>
-            <button type="button" onclick="return submitForm('excel')" class="btn btn-primary">Generar Excel</button>
-            <button type="button" onclick="return submitForm('delete')" class="btn btn-danger">Eliminar Seleccionados</button>
+            <button type="button" onclick="return submitForm('pdf')" class="btn btn-animated btn-success me-2">
+                <i class="fa-solid fa-file-pdf"></i> Generar PDF
+            </button>
+            <button type="button" onclick="return submitForm('excel')" class="btn btn-animated btn-primary">
+                <i class="fa-solid fa-file-excel"></i> Generar Excel
+            </button>
+            <button type="button" onclick="return submitForm('delete')" class="btn btn-delete btn-danger">
+                <i class="fa-solid fa-trash-can"></i> Eliminar Seleccionados
+            </button>
         </div>
     </div>
 </form>
