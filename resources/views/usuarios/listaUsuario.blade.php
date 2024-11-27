@@ -56,7 +56,7 @@
 </style>
 
 <div class="container-fluid mt-1">
-    <h2 class="text-start mb-4">Usuarios</h2>
+    <h2 class="text-start mb-4">Usuario</h2>
     <div class="card shadow-sm p-4" style="border-radius: 12px; overflow: hidden;">
 
         <!-- Formulario de búsqueda -->
