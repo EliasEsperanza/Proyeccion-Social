@@ -76,7 +76,7 @@
                 <li class="nav-item text-muted mt-3">Proyectos</li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('proyectomio') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-folder me-2"></i> Mi proyecto
+                        <i class="bi bi-folder me-2"></i> Mi Proyecto
                     </a>
                 </li>
 
@@ -89,7 +89,7 @@
                 <li class="nav-item text-muted mt-3">Guías</li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('vista_procesos_horas') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-journal me-2"></i> Proceso de inscripción
+                        <i class="bi bi-journal me-2"></i> Proceso de Inscripción
                     </a>
                 </li>
 

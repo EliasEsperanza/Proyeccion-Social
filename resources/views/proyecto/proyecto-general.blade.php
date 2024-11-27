@@ -8,7 +8,7 @@
 @endsection
 
 @section('content')
-<h1>Proyectos</h1>
+<h1>Proyectos en Curso</h1>
 <form id="proyectosForm" action="{{ route('proyectos.generar') }}" method="POST">
     @csrf
     <input type="hidden" name="action" id="actionInput">

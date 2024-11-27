@@ -3,7 +3,7 @@
 @section('title', 'Proyectos Disponibles')
 
 @section('content')
-<h2 class="my-4">Proyectos disponibles</h2>
+<h2 class="my-4">Proyectos Disponibles</h2>
 
 @php
     // Obtener el usuario autenticado
