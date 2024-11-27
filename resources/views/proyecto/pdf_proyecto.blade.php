@@ -118,7 +118,7 @@
             <i class="fas fa-align-left detail-icon"></i>
             Descripción
         </h2>
-        <p>{{ $proyecto->descripcion_proyecto }}</p>
+        <p>{!! $proyecto->descripcion_proyecto !!}</p>
     </div>
     
     <div class="info-container">
