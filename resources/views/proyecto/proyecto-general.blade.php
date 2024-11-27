@@ -70,7 +70,7 @@
                         <td>{{ $proyecto->fecha_inicio }}</td>
                         <td>{{ $proyecto->fecha_fin }}</td>
                         <td>{{ $proyecto->lugar }}</td>
-                      
+                        <td>{{ $proyecto->estudiantes->first()?->porcentaje_completado ?? 'N/A' }} %</td>
                         <td>{{ $proyecto->estadoo->nombre_estado }}</td>
                         <td>{{ $proyecto->seccion->nombre_seccion }}</td>
                         <td>
