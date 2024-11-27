@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="container pt-3 pb-5">
-    <h2 class="titulo-documentos text-center mb-4">Documentos de Trámites Generales</h2>
+    <h2 class="titulo-documentos text-center mb-4">Trámites Generales</h2>
     <p class="descripcion-documentos text-center mb-5">Descarga los documentos necesarios para realizar trámites generales</p>
 
     <div class="row row-cols-1 row-cols-md-2 g-4">

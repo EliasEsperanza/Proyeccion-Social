@@ -29,7 +29,7 @@
 <div class="container ">
 
     <div class="container">
-        <h1 class="mb-4">Gestión de Proyectos</h1>
+        <h1 class="mb-4">Asignar Proyecto</h1>
 
         
 
