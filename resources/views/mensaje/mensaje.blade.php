@@ -4,7 +4,8 @@
 
 @section('content')
 <script src="https://cdn.socket.io/4.8.0/socket.io.min.js"></script>
-<script src="{{ asset(path: 'js/chat.js') }}"></script>
+<script src="{{ asset('js/chat.js') }}"></script>
+<script src="{{ asset('js/modal.js') }}"></script>
 
 <div class="container-fluid">
     <div class="row chat-container">
@@ -17,7 +18,8 @@
                 <span class="input-group-text bg-white border-0"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control border-0" placeholder="Buscar">
             </div>
-            <button class="btn btn-link text-danger text-uppercase fw-bold ms-2">Chat +</button>
+            <!-- Botón para abrir el modal de usuarios -->
+            <button id="createChatBtn" class="btn btn-link text-danger text-uppercase fw-bold ms-2" data-bs-toggle="modal" data-bs-target="#userModal">Chat +</button>
         </div>
         <div class="chat-list" id="chatList">
           <!-- Lista de chats cargada dinámicamente -->

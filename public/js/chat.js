@@ -1,4 +1,3 @@
-// Variables globales para mantener el estado del chat
 let selectedChatId = null;
 let currentUserId = null;
 
@@ -19,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Error al obtener usuario actual:", error);
     }
 });
+
 
 // Eventos de conexión WebSocket
 socket.on("connect", () => console.log("Conexión establecida con WebSocket."));
@@ -54,15 +54,20 @@ socket.on("server:nuevoMensaje", (message) => {
 
 // Cargar lista de usuarios disponibles para chat
 function loadUsers() {
-    fetch("/usuarios2")
+    fetch("/usuarios/con-seccion")
         .then((response) => response.json())
         .then((users) => {
+            console.log("Usuarios cargados:", users);  // Verifica la lista de usuarios
+
             const chatList = document.getElementById("chatList");
-            chatList.innerHTML = "";
+            chatList.innerHTML = "";  // Limpiar el contenido anterior de la lista
+
             // Filtrar para no mostrar al usuario actual
             users
                 .filter(user => user.id_usuario != currentUserId)
                 .forEach((user) => {
+                    console.log(`Agregando usuario: ${user.name}`);  // Verificar qué usuario estamos agregando
+
                     chatList.innerHTML += `
                         <div class="chat-item rounded-3" 
                             onclick="selectChat('${user.id_usuario}', '${user.name}', '${user.role || "Sin Rol"}')">
@@ -73,12 +78,15 @@ function loadUsers() {
                         </div>
                     `;
                 });
+
+            // Verifica que los elementos estén en el DOM
+            console.log("Lista de usuarios insertada.");
         })
         .catch((error) => console.error("Error al cargar los usuarios:", error));
 }
 
 // Seleccionar un chat y cargar sus mensajes
-function selectChat(chatId, chatName, chatRole, senderChat) {
+function selectChat(chatId, chatName, chatRole) {
     selectedChatId = chatId;
     document.getElementById("chatName").textContent = chatName;
     document.getElementById("chatRole").textContent = chatRole;
@@ -86,16 +94,12 @@ function selectChat(chatId, chatName, chatRole, senderChat) {
     const messageContainer = document.getElementById("messageContainer");
     messageContainer.innerHTML = '<p class="text-center text-muted">Cargando mensajes...</p>';
 
-
-    /*Aqui cambia lo que deba del sockets para hacer lo que te dije en los mensaje hopes  */
     // Solicitar mensajes históricos al servidor
     socket.emit("client:requestMessages", { chatId });
 
     // Evitar duplicación de listeners
     socket.off("server:chatMessages");
     socket.on("server:chatMessages", handleChatMessages);
-    
-
 }
 
 // Manejar los mensajes históricos recibidos del servidor
@@ -106,22 +110,12 @@ function handleChatMessages(messages) {
     messageContainer.innerHTML = "";
     
     messages.forEach(message => {
-        // Asegurarse de que el mensaje tenga sender y chatId
         const sender = String(message.sender || message.id_emisor);
         const chatId = String(message.chatId || message.id_receptor);
         const currentUserIdStr = String(currentUserId);
         const selectedChatIdStr = String(selectedChatId);
-/*        console.log(renderMessage({
-            sender: sender,
-            chatId: chatId,
-            text: message.text,
-            time: message.time
-        }))
-*/
-        // Verificar mensajes tanto como emisor o receptor
-        if ((sender === currentUserIdStr && chatId === selectedChatIdStr) /*||
-            (sender === selectedChatIdStr && chatId === currentUserIdStr)*/) {
-            console.log("Renderizando mensaje histórico:", message);
+
+        if ((sender === currentUserIdStr && chatId === selectedChatIdStr)) {
             renderMessage({
                 sender: sender,
                 chatId: chatId,
@@ -129,25 +123,14 @@ function handleChatMessages(messages) {
                 time: message.time
             });
         }
-        else{
-            console.log("Renderizando mensaje histórico:", message);
-            renderMessage({
-                sender: chatId,
-                chatId: sender,
-                text: message.text,
-                time: message.time
-            });
-        }
     });
 }
-
 
 // Renderizar un mensaje individual en el contenedor
 function renderMessage(message) {
     const messageContainer = document.getElementById("messageContainer");
     const isOwnMessage = message.sender === String(currentUserId);
 
-    // Determinamos el texto a mostrar
     const textToShow = message.text;
 
     const messageClass = isOwnMessage ? "sent" : "received";
@@ -166,8 +149,6 @@ function renderMessage(message) {
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
-
-
 // Enviar un nuevo mensaje
 function sendMessage(event) {
     if (event.key === "Enter" || event.type === "click") {
@@ -184,9 +165,6 @@ function sendMessage(event) {
 
             console.log("Enviando mensaje al servidor:", data);
             socket.emit("client:nuevoMensaje", data);
-            
-            // Mostrar el mensaje enviado inmediatamente
-            //renderMessage(data);
             
             input.value = "";
         }
