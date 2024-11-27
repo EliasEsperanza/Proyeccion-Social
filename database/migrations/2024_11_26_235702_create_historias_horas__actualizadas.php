@@ -16,7 +16,7 @@ return new class extends Migration
                 ->constrained('estudiantes', 'id_estudiante') 
                 ->onDelete('cascade');
             $table->foreignId('id_solicitud')
-                ->constrained('solicitudes', 'id_solicitud') 
+                ->constrained('solicitudes', 'solicitud_id') 
                 ->onDelete('cascade');
             $table->timestamps();
         });
