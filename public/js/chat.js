@@ -1,6 +1,12 @@
 // Variables globales para mantener el estado del chat
 let selectedChatId = null;
 let currentUserId = null;
+/**
+ * id,
+ * name.
+ * role: Usuarios
+ */
+
 
 // Inicializar conexión WebSocket
 const socket = io("wss://chat-ues-production.up.railway.app", {
@@ -78,7 +84,7 @@ function loadUsers() {
 }
 
 // Seleccionar un chat y cargar sus mensajes
-function selectChat(chatId, chatName, chatRole, senderChat) {
+function selectChat(chatId, chatName, chatRole) {
     selectedChatId = chatId;
     document.getElementById("chatName").textContent = chatName;
     document.getElementById("chatRole").textContent = chatRole;
@@ -86,86 +92,85 @@ function selectChat(chatId, chatName, chatRole, senderChat) {
     const messageContainer = document.getElementById("messageContainer");
     messageContainer.innerHTML = '<p class="text-center text-muted">Cargando mensajes...</p>';
 
-
-    /*Aqui cambia lo que deba del sockets para hacer lo que te dije en los mensaje hopes  */
-    // Solicitar mensajes históricos al servidor
-    socket.emit("client:requestMessages", { chatId });
+    console.log("Llegué hasta acá antes del socket.emit");
+    socket.emit("client:requestUserChats", { chatId });
+    console.log("Pasé del socket.emit");
 
     // Evitar duplicación de listeners
     socket.off("server:chatMessages");
     socket.on("server:chatMessages", handleChatMessages);
-    
-
+    console.log("Pasé del socket.on");
 }
 
 // Manejar los mensajes históricos recibidos del servidor
 function handleChatMessages(messages) {
+    console.log(messages);
     if (!selectedChatId) return;
     
     const messageContainer = document.getElementById("messageContainer");
     messageContainer.innerHTML = "";
     
     messages.forEach(message => {
-        // Asegurarse de que el mensaje tenga sender y chatId
-        const sender = String(message.sender || message.id_emisor);
-        const chatId = String(message.chatId || message.id_receptor);
-        const currentUserIdStr = String(currentUserId);
-        const selectedChatIdStr = String(selectedChatId);
-/*        console.log(renderMessage({
-            sender: sender,
+        // Convertir los IDs a cadenas para comparación consistente
+        const chatId = String(message.chatId || message.id);
+        
+
+        console.log("Renderizando mensaje histórico:", message);
+        renderMessage({
             chatId: chatId,
             text: message.text,
             time: message.time
-        }))
-*/
-        // Verificar mensajes tanto como emisor o receptor
-        if ((sender === currentUserIdStr && chatId === selectedChatIdStr) /*||
-            (sender === selectedChatIdStr && chatId === currentUserIdStr)*/) {
-            console.log("Renderizando mensaje histórico:", message);
-            renderMessage({
-                sender: sender,
-                chatId: chatId,
-                text: message.text,
-                time: message.time
-            });
-        }
-        else{
-            console.log("Renderizando mensaje histórico:", message);
-            renderMessage({
-                sender: chatId,
-                chatId: sender,
-                text: message.text,
-                time: message.time
-            });
-        }
+        });
     });
 }
 
-
-// Renderizar un mensaje individual en el contenedor
 function renderMessage(message) {
-    const messageContainer = document.getElementById("messageContainer");
-    const isOwnMessage = message.sender === String(currentUserId);
+    if(message.sender === null){
+        const messageContainer = document.getElementById("messageContainer");
+        const isOwnMessage = message.chatId === String(currentUserId);
 
-    // Determinamos el texto a mostrar
-    const textToShow = message.text;
+        const textToShow = message.text;
 
-    const messageClass = isOwnMessage ? "sent" : "received";
-    const messageStyle = isOwnMessage 
-        ? 'margin-left: auto; margin-right: 10px; width: 40%;' 
-        : 'margin-right: auto; background-color: #3766fa; margin-left: 10px; width: 40%;';  
+        const messageClass = isOwnMessage ? "sent" : "received";
+        const messageStyle = isOwnMessage 
+            ? 'margin-left: auto; margin-right: 10px; width: 40%;' 
+            : 'margin-right: auto; background-color: #3766fa; margin-left: 10px; width: 40%;';  
 
-    messageContainer.innerHTML += `
-        <div class="message ${messageClass}" style="${messageStyle}">
-            ${textToShow}
-             <small class="text-muted" style="color: white;">${message.time}</small>  
-        </div>
-    `;
+        messageContainer.innerHTML += `
+            <div class="message ${messageClass}" style="${messageStyle}">
+                ${textToShow}
+                <small class="text-muted" style="color: white;">${message.time}</small>  
+            </div>
+        `;
 
-    // Asegura que el contenedor se desplace al final para ver los nuevos mensajes
+        // Asegura que el contenedor se desplace al final para ver los nuevos mensajes
+        
+    }
+    else{
+        const messageContainer = document.getElementById("messageContainer");
+        const isOwnMessage = message.sender === String(currentUserId);
+
+        // Determinamos el texto a mostrar
+        const textToShow = message.text;
+
+        const messageClass = isOwnMessage ? "sent" : "received";
+        const messageStyle = isOwnMessage 
+            ? 'margin-left: auto; margin-right: 10px; width: 40%;' 
+            : 'margin-right: auto; background-color: #3766fa; margin-left: 10px; width: 40%;';  
+
+        messageContainer.innerHTML += 
+            <div class="message ${messageClass}" style="${messageStyle}">
+                ${textToShow}
+                <small class="text-muted" style="color: white;">${message.time}</small>  
+            </div>
+        ;
+
+        // Asegura que el contenedor se desplace al final para ver los nuevos mensajes
+        
+    
+    }
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
-
 
 
 // Enviar un nuevo mensaje
