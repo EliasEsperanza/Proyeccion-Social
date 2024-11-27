@@ -315,7 +315,6 @@ class ProyectoController extends Controller
 
         // Buscar el proyecto y asociar al estudiante
         $proyecto = Proyecto::findOrFail($idProyecto);
-
         // // Verificar si el estudiante ya está asignado
         if (!$proyecto->estudiantes->contains($estudiante->id_estudiante)) {
             $proyecto->estudiantes()->attach($estudiante->id_estudiante);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Estudiante;
 use App\Models\ProyectosEstudiantes;
+use App\Models\HistoriaHorasActualizada;
 use Illuminate\Http\Request;
 
 use App\Models\Proyecto;
@@ -117,7 +118,6 @@ class ProyectosEstudiantesController extends Controller
     }
 
 
-
     public function Detalles_proyecto()
     {
         $userId = auth()->user()->id_usuario;
@@ -134,16 +134,20 @@ class ProyectosEstudiantesController extends Controller
         if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
             return 'No posee proyecto asignado';
         }
-        // Usar las horas del estudiante
+
         $horasCompletadas = $estudiante->horas_sociales_completadas ?? 0;
         $horasTotales = $proyectoEstudiante->proyecto->horas_requeridas ?? 1;
 
-        // Calcula el porcentaje
         $porcentaje = $horasTotales > 0
             ? round(($horasCompletadas / $horasTotales) * 100, 2)
             : 0;
-        return view('estudiantes.detallesmio', compact('proyectoEstudiante', 'porcentaje', 'horasCompletadas', 'horasTotales'));
+
+        $historial = HistoriaHorasActualizada::where('id_solicitud', $proyectoEstudiante->proyecto->id_proyecto)
+            ->get();
+
+        return view('estudiantes.detallesmio', compact('proyectoEstudiante', 'porcentaje', 'horasCompletadas', 'horasTotales', 'historial'));
     }
+
 
     //retorna vista solicitud de proyecto
     public function Mi_proyecto()
@@ -163,7 +167,6 @@ class ProyectosEstudiantesController extends Controller
             return redirect()->back()->with('warning', 'No posee proyecto asignado.');
         }
 
-        // Usar las horas del estudiante
         $horasCompletadas = $estudiante->horas_sociales_completadas ?? 0;
         $horasTotales = $proyectoEstudiante->proyecto->horas_requeridas ?? 1;
 
@@ -175,26 +178,7 @@ class ProyectosEstudiantesController extends Controller
         return view('estudiantes.proyectomio', compact('proyectoEstudiante', 'porcentaje', 'horasCompletadas', 'horasTotales'));
     }
 
-    /*public function Solicitud_Proyecto_Student()
-    {
-        $estudianteId = auth()->user()->id_usuario;
 
-        $estudiante = Estudiante::where('id_usuario', $estudianteId)->first();
-        
-        if ($estudiante) {
-            $tieneProyecto = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
-                ->exists();
-                if ($tieneProyecto) {
-                    return redirect()->back()->with('warning', 'Este estudiante ya tiene un proyecto asignado.');
-                }
-                
-
-            $seccion_id = $estudiante->id_seccion;
-            $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
-            
-            return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
-        }  
-    }*/
     public function Solicitud_Proyecto_Student()
     {
         $estudianteId = auth()->user()->id_usuario;
