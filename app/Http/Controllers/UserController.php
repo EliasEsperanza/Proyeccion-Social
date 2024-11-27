@@ -547,4 +547,23 @@ class UserController extends Controller
         }
         return view('dashboard.dashboard');
     }
+
+    public function getUsersWithSeccion()
+    {
+        // Recuperar todos los usuarios con su sección
+        $users = User::leftJoin('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
+            ->leftJoin('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
+            ->select('users.id_usuario', 'users.name', 'users.email', 'secciones.nombre_seccion as seccion')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id_usuario' => $user->id_usuario,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'seccion' => $user->seccion ?? 'Sin sección', // Si no tiene sección, se muestra 'Sin sección'
+                ];
+            });
+
+        return response()->json($users);
+    }
 }
