@@ -64,7 +64,7 @@
   gap: 10px;
   overflow-y: auto;
   flex: 1;
-  max-height: 70vh;
+  max-height: 65vh;
 }
 
 .message {
