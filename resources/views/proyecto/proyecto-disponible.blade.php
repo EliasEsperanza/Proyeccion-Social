@@ -159,7 +159,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-light btn-sm p-2 px-3">
-                                    <i class="bi bi-trash text-danger">${project.id_proyecto}</i>
+                                    <i class="bi bi-trash text-danger"></i>
                                 </button>
                             </form>
 
