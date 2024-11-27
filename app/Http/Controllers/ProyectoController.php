@@ -315,7 +315,6 @@ class ProyectoController extends Controller
 
         // Buscar el proyecto y asociar al estudiante
         $proyecto = Proyecto::findOrFail($idProyecto);
-
         // // Verificar si el estudiante ya está asignado
         if (!$proyecto->estudiantes->contains($estudiante->id_estudiante)) {
             $proyecto->estudiantes()->attach($estudiante->id_estudiante);
@@ -1042,16 +1041,31 @@ class ProyectoController extends Controller
     public function aprobarSolicitud(string $id, string $solicitudId)
     {
         $solicitud = Solicitud::find($solicitudId);
-        $proyecto = Proyecto::find($solicitud->id_proyecto);
-        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
-        $usuario = User::find($estudiante->id_usuario);
-
         if (!$solicitud) {
             return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
         }
 
-        $estudiante->horas_sociales_completadas += $solicitud->valor;
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        if (!$proyecto) {
+            return redirect()->route('proyecto-g')->with('error', 'Proyecto no encontrado');
+        }
 
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        if (!$estudiante) {
+            return redirect()->route('proyecto-g')->with('error', 'Estudiante no encontrado');
+        }
+
+        $usuario = User::find($estudiante->id_usuario);
+
+        $porcentajeNuevo = $proyecto->horas_requeridas > 0
+        ? round((($estudiante->horas_sociales_completadas + $solicitud->valor) / $proyecto->horas_requeridas) * 100, 2)
+        : 0;
+
+        $estudiante->horas_sociales_completadas += $solicitud->valor;
+        $estudiante->porcentaje_completado += $porcentajeNuevo;
+        
         $solicitud->estado = 10;
 
         $estudiante->save();

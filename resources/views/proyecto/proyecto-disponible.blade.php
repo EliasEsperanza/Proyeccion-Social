@@ -3,7 +3,7 @@
 @section('title', 'Proyectos Disponibles')
 
 @section('content')
-<h2 class="my-4">Proyectos disponibles</h2>
+<h2 class="my-4">Proyectos Disponibles</h2>
 
 @php
     // Obtener el usuario autenticado
@@ -73,9 +73,7 @@
             <tbody id="projects-tbody"></tbody>
         </table>
     </div>
-</div>
-
-<!-- Controles de paginación -->
+    <!-- Controles de paginación -->
 <div class="d-flex justify-content-between align-items-center mt-3">
     <!-- Selector de número de filas por página -->
     <div class="d-flex align-items-center">
@@ -90,6 +88,9 @@
     </div>
     <ul id="pagination-buttons" class="pagination mb-0"></ul>
 </div>
+
+</div>
+
 
 <!-- Contenedor oculto para almacenar los datos filtrados -->
 <div id="all-projects" style="display: none;">{{ $filteredProjectsJson }}</div>
@@ -143,7 +144,7 @@
                 <tr>
                     <td><input type="checkbox" class="form-check-input" value="${project.id_proyecto}"></td>
                     <td>${project.nombre_proyecto}</td>
-                    <td>${project.descripcion_proyecto}</td>
+                    <td>${project.descripcion_proyecto.length > 100 ? project.descripcion_proyecto.substring(0, 100) + '...' : project.descripcion_proyecto}</td>
                     <td>${project.horas_requeridas}</td>
                     <td>${project.lugar}</td>
                     <td>${project.seccion?.nombre_seccion || 'No asignada'}</td>
@@ -159,7 +160,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-light btn-sm p-2 px-3">
-                                    <i class="bi bi-trash text-danger">${project.id_proyecto}</i>
+                                    <i class="bi bi-trash text-danger"></i>
                                 </button>
                             </form>
 
@@ -175,30 +176,41 @@
 
     // Generar controles de paginación
     function renderPagination() {
-        const paginationControls = document.getElementById('pagination-buttons');
-        const totalPages = Math.ceil(filteredProjects.length / rowsPerPage);
+    const paginationControls = document.getElementById('pagination-buttons');
+    const totalPages = Math.ceil(filteredProjects.length / rowsPerPage);
 
-        paginationControls.innerHTML = ''; // Limpiar controles previos
+    paginationControls.innerHTML = ''; // Limpiar controles previos
 
-        // Botón "Anterior"
-        if (currentPage > 1) {
-            const prevButton = `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Anterior</a></li>`;
-            paginationControls.innerHTML += prevButton;
-        }
-
-        // Botones de número de página
-        for (let i = 1; i <= totalPages; i++) {
-            const activeClass = i === currentPage ? 'active' : '';
-            const pageButton = `<li class="page-item ${activeClass}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`;
-            paginationControls.innerHTML += pageButton;
-        }
-
-        // Botón "Siguiente"
-        if (currentPage < totalPages) {
-            const nextButton = `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Siguiente</a></li>`;
-            paginationControls.innerHTML += nextButton;
-        }
+    // Botón "Anterior"
+    if (currentPage > 1) {
+        const prevButton = `<li class="page-item">
+                                <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Anterior</a>
+                            </li>`;
+        paginationControls.innerHTML += prevButton;
     }
+
+    // Botones de número de página
+    for (let i = 1; i <= totalPages; i++) {
+        const isActive = i === currentPage;
+        const pageButton = `<li class="page-item ${isActive ? 'active' : ''}">
+                                <a class="page-link ${isActive ? 'text-white bg-c' : ''}" 
+                                   href="#" 
+                                   onclick="changePage(${i})"
+                                   style="${isActive ? 'color: white; background-color: red;' : ''}">
+                                   ${i}
+                                </a>
+                            </li>`;
+        paginationControls.innerHTML += pageButton;
+    }
+
+    // Botón "Siguiente"
+    if (currentPage < totalPages) {
+        const nextButton = `<li class="page-item">
+                                <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Siguiente</a>
+                            </li>`;
+        paginationControls.innerHTML += nextButton;
+    }
+}
 
     // Cambiar página
     function changePage(page) {
@@ -206,4 +218,19 @@
         renderTable();
     }
 </script>
+<style>
+    .page-item.active .page-link {
+    background: #800000 !important;
+    color: white !important;
+    border-color: red;
+}
+.page-link {
+    color: #6c757d; 
+    text-decoration: none;
+}
+.page-link:hover {
+    color: #495057; 
+}
+
+</style>
 @endsection

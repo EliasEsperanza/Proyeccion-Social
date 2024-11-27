@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-<h1 style=" margin-left: 30px;">Solicitudes de proyectos</h1>
+<h1 style=" margin-left: 30px;">Solicitud de Proyectos</h1>
 @if (session()->has('error'))
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         {{ session('error') }}

@@ -29,7 +29,7 @@
 <div class="container ">
 
     <div class="container">
-        <h1 class="mb-4">Gestión de Proyectos</h1>
+        <h1 class="mb-4">Asignar Proyecto</h1>
 
         
 
@@ -40,7 +40,7 @@
                     <div class="mb-3">
                         <label class="form-label">Sección o Departamento</label>
                         <div class="input-group mb-3">
-                            <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id">
+                            <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id" required>
                                 <option selected disabled>Seleccionar departamento</option>
                                 @foreach($secciones as $seccion)
                                 <option value="{{$seccion->id_seccion}}">
@@ -56,7 +56,7 @@
             <label class="form-label">Estudiantes</label>
             
             <div class="d-flex">
-                <select class="form-select" id="idEstudiante" name="idEstudiante" disabled>
+                <select class="form-select" id="idEstudiante" name="idEstudiante" disabled required>
                     @foreach ($estudiantes as $estudiante)
                     <option value="{{ $estudiante->id_estudiante }}">
                         {{ $estudiante->usuario->name }}
@@ -69,7 +69,7 @@
             </div>
 
             <!-- Lista para mostrar los estudiantes seleccionados -->
-            <ul id="studentList" class="mt-3"></ul>
+            <ul id="studentList" class="mt-3" ></ul>
 
             <!-- Lista de estudiantes asignados -->
             <ul id="estudiantesList">
@@ -78,7 +78,7 @@
 
                     <div class="mb-3">
                         <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
-                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto" disabled>
+                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto" disabled required>
                             <option selected disabled>Seleccione un proyecto</option>
                             @foreach($proyectos as $proyecto)
                             <option value="{{$proyecto->id_proyecto}}">{{$proyecto->nombre_proyecto}}</option>
@@ -94,7 +94,7 @@
 
                     <div class="mb-3">
                         <label for="tutor" class="form-label">Tutor</label>
-                        <select class="form-control" id="idTutor" name="idTutor" disabled>
+                        <select class="form-control" id="idTutor" name="idTutor" disabled required>
                             <option selected disabled>Seleccione un tutor</option>
                             @foreach($tutores as $tutor)
                             <option value="{{$tutor->id_usuario}}">{{$tutor->name}}</option>
@@ -104,27 +104,27 @@
 
                     <div class="mb-3">
                         <label for="ubicacion" class="form-label">Ubicación</label>
-                        <input type="text" class="form-control" id="lugar" name="lugar" readonly>
+                        <input type="text" class="form-control" id="lugar" name="lugar" readonly required>
                     </div>
                     <div class="mb-3">
                         <label for="horas" class="form-label">Horas Requeridas</label>
-                        <input type="text" class="form-control" id="horas" name="horas" >
+                        <input type="text" class="form-control" id="horas" name="horas" required>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" readonly>
+                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" readonly required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="fechaFin" class="form-label">Fecha de Finalización</label>
-                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" readonly>
+                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" readonly required>
                         </div>
                     </div>
 
 
                     <div class="mb-3">
                         <label for="estado" class="form-label">Estado</label>
-                        <select class="form-select" id="estado" name="estado">
+                        <select class="form-select" id="estado" name="estado" required>
                             @foreach ($estados as $estado)
                             <option value="{{ $estado->id_estado }}">
                                 {{ $estado->nombre_estado }}

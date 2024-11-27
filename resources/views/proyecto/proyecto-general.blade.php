@@ -8,18 +8,18 @@
 @endsection
 
 @section('content')
-<h1>Proyectos</h1>
+<h1>Proyectos en Curso</h1>
 <form id="proyectosForm" action="{{ route('proyectos.generar') }}" method="POST">
     @csrf
     <input type="hidden" name="action" id="actionInput">
 
     @php
-        // Configuración de la paginación
-        $page = request('page', 1); // Página actual
-        $perPage = request('perPage', 10); // Número de elementos por página, por defecto 10
-        $total = $ListProyecto->count(); // Total de elementos
-        $paginatedProjects = $ListProyecto->slice(($page - 1) * $perPage, $perPage); // Elementos para la página actual
-        $totalPages = ceil($total / $perPage); // Total de páginas
+    // Configuración de la paginación
+    $page = request('page', 1); // Página actual
+    $perPage = request('perPage', 10); // Número de elementos por página, por defecto 10
+    $total = $ListProyecto->count(); // Total de elementos
+    $paginatedProjects = $ListProyecto->slice(($page - 1) * $perPage, $perPage); // Elementos para la página actual
+    $totalPages = ceil($total / $perPage); // Total de páginas
     @endphp
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -51,47 +51,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                @forelse($paginatedProjects as $proyecto)
+                    @forelse($paginatedProjects as $proyecto)
                     <tr>
                         <td><input type="checkbox" name="proyectos[]" value="{{ $proyecto->id_proyecto }}"></td>
                         <td>{{ $proyecto->nombre_proyecto }}</td>
                         <td>
                             @if($proyecto->estudiantes->isNotEmpty())
-                                <ul>
-                                    @foreach($proyecto->estudiantes as $estudiante)
-                                        <li>{{ $estudiante->usuario->name }}</li>
-                                    @endforeach
-                                </ul>
+                            <ul>
+                                @foreach($proyecto->estudiantes as $estudiante)
+                                <li>{{ $estudiante->usuario->name }}</li>
+                                @endforeach
+                            </ul>
                             @else
-                                <p>No hay estudiantes asignados</p>
+                            <p>No hay estudiantes asignados</p>
                             @endif
                         </td>
                         <td>{{ $proyecto->tutorr?->name ?? 'Sin tutor asignado' }}</td>
                         <td>{{ $proyecto->fecha_inicio }}</td>
                         <td>{{ $proyecto->fecha_fin }}</td>
                         <td>{{ $proyecto->lugar }}</td>
-                        <td>-</td>
+                        <td>{{ $proyecto->estudiantes->first()?->porcentaje_completado ?? 'N/A' }} %</td>
                         <td>{{ $proyecto->estadoo->nombre_estado }}</td>
                         <td>{{ $proyecto->seccion->nombre_seccion }}</td>
                         <td>
 
-                                    <!--Boton de solicitudes-->
-                                    <a href="{{ route('solicitudesProyectos', ['id' => $proyecto->id_proyecto]) }}"
-                                        class="btn btn-light btn-sm p-2 px-3 mb-2">
-                                        <i class="bi bi-info"></i>
-                                    </a>
-                                    <!-- Botón de edición -->
-                                    <a href="{{ route('proyecto.proyecto-editar', ['id' => $proyecto->id_proyecto]) }}"
-                                        class="btn btn-light btn-sm p-2 px-3">
-                                        <i class="bi bi-pencil text-warning"></i>
-                                    </a>
-                                </td>
+                            <!--Boton de solicitudes-->
+                            <a href="{{ route('solicitudesProyectos', ['id' => $proyecto->id_proyecto]) }}"
+                                class="btn btn-light btn-sm p-2 px-3 mb-2">
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                            </a>
+                            <!-- Botón de edición -->
+                            <a href="{{ route('proyecto.proyecto-editar', ['id' => $proyecto->id_proyecto]) }}"
+                                class="btn btn-light btn-sm p-2 px-3">
+                                <i class="fa fa-pencil text-warning"></i>
+                            </a>
+                        </td>
                     </tr>
-                @empty
+                    @empty
                     <tr>
                         <td colspan="11" class="text-center">No hay proyectos disponibles.</td>
                     </tr>
-                @endforelse
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -104,9 +104,9 @@
                 <ul class="pagination">
                     @for ($i = 1; $i <= $totalPages; $i++)
                         <li class="page-item {{ $i == $page ? 'active' : '' }}">
-                            <a class="page-link" href="{{ request()->fullUrlWithQuery(['page' => $i, 'perPage' => $perPage]) }}">{{ $i }}</a>
+                        <a class="page-link" href="{{ request()->fullUrlWithQuery(['page' => $i, 'perPage' => $perPage]) }}">{{ $i }}</a>
                         </li>
-                    @endfor
+                        @endfor
                 </ul>
             </div>
         </div>
@@ -114,9 +114,15 @@
 
     <div class="d-flex justify-content-end">
         <div class="button-group mt-3 px-4 mb-4">
-            <button type="button" onclick="return submitForm('pdf')" class="btn btn-success me-2">Generar PDF</button>
-            <button type="button" onclick="return submitForm('excel')" class="btn btn-primary">Generar Excel</button>
-            <button type="button" onclick="return submitForm('delete')" class="btn btn-danger">Eliminar Seleccionados</button>
+            <button type="button" onclick="return submitForm('pdf')" class="btn btn-animated btn-success me-2">
+                <i class="fa-solid fa-file-pdf"></i> Generar PDF
+            </button>
+            <button type="button" onclick="return submitForm('excel')" class="btn btn-animated btn-primary">
+                <i class="fa-solid fa-file-excel"></i> Generar Excel
+            </button>
+            <button type="button" onclick="return submitForm('delete')" class="btn btn-delete btn-danger">
+                <i class="fa-solid fa-trash-can"></i> Eliminar Seleccionados
+            </button>
         </div>
     </div>
 </form>
@@ -145,15 +151,15 @@
         return false;
     }
 
-    document.getElementById('selectAll').addEventListener('change', function () {
+    document.getElementById('selectAll').addEventListener('change', function() {
         const checkboxes = document.querySelectorAll('input[name="proyectos[]"]');
         checkboxes.forEach(checkbox => checkbox.checked = this.checked);
     });
 
-    document.getElementById('perPageSelect').addEventListener('change', function () {
+    document.getElementById('perPageSelect').addEventListener('change', function() {
         const perPage = this.value;
         const url = new URL(window.location.href);
-        url.searchParams.set('perPage', perPage); 
+        url.searchParams.set('perPage', perPage);
         url.searchParams.set('page', 1);
         window.location.href = url.toString();
     });

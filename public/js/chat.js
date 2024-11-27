@@ -12,8 +12,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch('/curret-user');
         const user = await response.json();
         currentUserId = user.id_usuario.id_usuario;
-        loadUsers();
         console.log("Usuario actual:", currentUserId);
+
+        // Solicitar los chats asociados al usuario actual
+        socket.emit("client:requestUserChats", currentUserId);
     } catch (error) {
         console.error("Error al obtener usuario actual:", error);
     }
@@ -54,20 +56,15 @@ socket.on("server:nuevoMensaje", (message) => {
 
 // Cargar lista de usuarios disponibles para chat
 function loadUsers() {
-    fetch("/usuarios/con-seccion")
+    fetch("/usuarios2")
         .then((response) => response.json())
         .then((users) => {
-            console.log("Usuarios cargados:", users);  // Verifica la lista de usuarios
-
             const chatList = document.getElementById("chatList");
-            chatList.innerHTML = "";  // Limpiar el contenido anterior de la lista
-
+            chatList.innerHTML = "";
             // Filtrar para no mostrar al usuario actual
             users
                 .filter(user => user.id_usuario != currentUserId)
                 .forEach((user) => {
-                    console.log(`Agregando usuario: ${user.name}`);  // Verificar qué usuario estamos agregando
-
                     chatList.innerHTML += `
                         <div class="chat-item rounded-3" 
                             onclick="selectChat('${user.id_usuario}', '${user.name}', '${user.role || "Sin Rol"}')">
@@ -78,12 +75,23 @@ function loadUsers() {
                         </div>
                     `;
                 });
-
-            // Verifica que los elementos estén en el DOM
-            console.log("Lista de usuarios insertada.");
         })
         .catch((error) => console.error("Error al cargar los usuarios:", error));
 }
+
+    chatList.forEach((chat) => {
+        chatListContainer.innerHTML += `
+            <div class="chat-item rounded-3" 
+                onclick="selectChat('${chat.id}', '${chat.name}', '${chat.role}')">
+                <img src="img/user3.png" alt="User Image">
+                <div>
+                    <strong>${chat.name}</strong><br>
+                    <small>${chat.role}</small>
+                </div>
+            </div>
+        `;
+    });
+});
 
 // Seleccionar un chat y cargar sus mensajes
 function selectChat(chatId, chatName, chatRole) {
@@ -110,12 +118,22 @@ function handleChatMessages(messages) {
     messageContainer.innerHTML = "";
     
     messages.forEach(message => {
+        // Asegurarse de que el mensaje tenga sender y chatId
         const sender = String(message.sender || message.id_emisor);
         const chatId = String(message.chatId || message.id_receptor);
         const currentUserIdStr = String(currentUserId);
         const selectedChatIdStr = String(selectedChatId);
-
-        if ((sender === currentUserIdStr && chatId === selectedChatIdStr)) {
+/*        console.log(renderMessage({
+            sender: sender,
+            chatId: chatId,
+            text: message.text,
+            time: message.time
+        }))
+*/
+        // Verificar mensajes tanto como emisor o receptor
+        if ((sender === currentUserIdStr && chatId === selectedChatIdStr) /*||
+            (sender === selectedChatIdStr && chatId === currentUserIdStr)*/) {
+            console.log("Renderizando mensaje histórico:", message);
             renderMessage({
                 sender: sender,
                 chatId: chatId,
@@ -132,7 +150,6 @@ function renderMessage(message) {
     const isOwnMessage = message.sender === String(currentUserId);
 
     const textToShow = message.text;
-
     const messageClass = isOwnMessage ? "sent" : "received";
     const messageStyle = isOwnMessage 
         ? 'margin-left: auto; margin-right: 10px; width: 40%;' 
@@ -145,9 +162,10 @@ function renderMessage(message) {
         </div>
     `;
 
-    // Asegura que el contenedor se desplace al final para ver los nuevos mensajes
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
+
+
 
 // Enviar un nuevo mensaje
 function sendMessage(event) {
@@ -165,6 +183,9 @@ function sendMessage(event) {
 
             console.log("Enviando mensaje al servidor:", data);
             socket.emit("client:nuevoMensaje", data);
+            
+            // Mostrar el mensaje enviado inmediatamente
+            //renderMessage(data);
             
             input.value = "";
         }
