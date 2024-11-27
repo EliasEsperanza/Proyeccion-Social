@@ -413,4 +413,5 @@ route::post('/proyecto/{id}/solicitudes/{solicitud}/deny', [ProyectoController::
 
 Route::get('/curret-user', [AuthController::class, 'Identificador']);
 Route::get('/usuarios3', [UserController::class, 'getUsersWithSeccion'])->name('usuarios.getUsersWithSeccion');
+
 ?>
