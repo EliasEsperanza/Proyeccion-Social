@@ -134,13 +134,14 @@ class ProyectosEstudiantesController extends Controller
         if (!$proyectoEstudiante || !$proyectoEstudiante->proyecto) {
             return 'No posee proyecto asignado';
         }
+        // Usar las horas del estudiante
         $horasCompletadas = $estudiante->horas_sociales_completadas ?? 0;
         $horasTotales = $proyectoEstudiante->proyecto->horas_requeridas ?? 1;
 
+        // Calcula el porcentaje
         $porcentaje = $horasTotales > 0
             ? round(($horasCompletadas / $horasTotales) * 100, 2)
             : 0;
-
         return view('estudiantes.detallesmio', compact('proyectoEstudiante', 'porcentaje', 'horasCompletadas', 'horasTotales'));
     }
 
