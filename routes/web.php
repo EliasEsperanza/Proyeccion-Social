@@ -40,9 +40,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
 
 
-Route::get('/', function () {
-    return view('Bienvenida');
-})->name('welcome');
+Route::get('/bienvenida', function () {
+    return view('Bienvenida'); 
+})->name('Bienvenida');
 
 Route::get('/login', function () {
     return view('login.login');
@@ -146,7 +146,7 @@ Route::post('/proyecto/rechazar/{id_proyecto}', [ProyectosEstudiantesController:
 // Ruta para la solicitud de proyecto
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])
     ->name('solicitud_proyecto');
-Route::get('/proyecto-disponibles-list', [ProyectoController::class, 'proyecto__disponible_list'])->name('proyecto__disponible_list');
+Route::get('/proyecto-disponibles-list', [ProyectoController::class, 'proyecto_disponible_list'])->name('proyecto_disponible_list');
 
 Route::get('/proyecto/{id}/editar',[ProyectoController::class, 'edit'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
@@ -450,4 +450,3 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/malisioso', function () {
     return view('Malisioso');
 })->name('Malisioso');
-
