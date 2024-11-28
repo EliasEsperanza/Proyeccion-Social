@@ -29,7 +29,7 @@
 <div class="container ">
 
     <div class="container">
-        <h1 class="mb-4">Asignar Proyecto</h1>
+        <h1 class="mb-4">Gestión de Proyectos</h1>
 
 
 
@@ -40,7 +40,7 @@
                     <div class="mb-3">
                         <label class="form-label">Sección o Departamento</label>
                         <div class="input-group mb-3">
-                            <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id" required>
+                            <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id">
                                 <option selected disabled>Seleccionar departamento</option>
                                 @foreach($secciones as $seccion)
                                 <option value="{{$seccion->id_seccion}}">
@@ -56,7 +56,8 @@
             <label class="form-label">Estudiantes</label>
 
             <div class="d-flex">
-                <select class="form-select" id="idEstudiante" name="idEstudiante" disabled required>
+                <select class="form-select" id="idEstudiante" name="idEstudiante" disabled>
+                    <option value='' disabled>Seleccionar un estudiante</option>
                     @foreach ($estudiantes as $estudiante)
                     <option value="{{ $estudiante->id_estudiante }}">
                         {{ $estudiante->usuario->name }}
@@ -69,7 +70,7 @@
             </div>
 
             <!-- Lista para mostrar los estudiantes seleccionados -->
-            <ul id="studentList" class="mt-3" ></ul>
+            <ul id="studentList" class="mt-3"></ul>
 
             <!-- Lista de estudiantes asignados -->
             <ul id="estudiantesList">
@@ -78,7 +79,7 @@
 
                     <div class="mb-3">
                         <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
-                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto" disabled required>
+                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto" disabled>
                             <option selected disabled>Seleccione un proyecto</option>
                             @foreach($proyectos as $proyecto)
                             <option value="{{$proyecto->id_proyecto}}">{{$proyecto->nombre_proyecto}}</option>
@@ -94,7 +95,7 @@
 
                     <div class="mb-3">
                         <label for="tutor" class="form-label">Tutor</label>
-                        <select class="form-control" id="idTutor" name="idTutor" disabled required>
+                        <select class="form-control" id="idTutor" name="idTutor" disabled>
                             <option selected disabled>Seleccione un tutor</option>
                             @foreach($tutores as $tutor)
                             <option value="{{$tutor->id_usuario}}">{{$tutor->name}}</option>
@@ -104,27 +105,27 @@
 
                     <div class="mb-3">
                         <label for="ubicacion" class="form-label">Ubicación</label>
-                        <input type="text" class="form-control" id="lugar" name="lugar" readonly required>
+                        <input type="text" class="form-control" id="lugar" name="lugar" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="horas" class="form-label">Horas Requeridas</label>
-                        <input type="text" class="form-control" id="horas" name="horas" required>
+                        <input type="text" class="form-control" id="horas" name="horas" >
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="fechaInicio" class="form-label">Fecha de Inicio</label>
-                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" readonly required>
+                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" readonly>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="fechaFin" class="form-label">Fecha de Finalización</label>
-                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" readonly required>
+                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" readonly>
                         </div>
                     </div>
 
 
                     <div class="mb-3">
                         <label for="estado" class="form-label">Estado</label>
-                        <select class="form-select" id="estado" name="estado" required>
+                        <select class="form-select" id="estado" name="estado">
                             @foreach ($estados as $estado)
                             <option value="{{ $estado->id_estado }}">
                                 {{ $estado->nombre_estado }}
@@ -155,7 +156,7 @@
             const proyectoSelect = document.getElementById("nombre_proyecto");
             const form = document.getElementById("actualizarProyecto");
             const estudiantesInput = document.getElementById("estudiantesSeleccionados");
-
+            
             // Escuchar cambios en el select de proyectos
             proyectoSelect.addEventListener("change", function() {
                 const selectedProyectoId = proyectoSelect.value; // Obtener el ID del proyecto seleccionado
@@ -172,6 +173,9 @@
                     alert("Por favor, agregue estudiantes al proyecto.");
                 }
             });
+
+            
+            
         });
     </script>
 
@@ -186,15 +190,17 @@
 
     // Evento: Agregar estudiantes seleccionados a la lista
     addStudentBtn.addEventListener('click', function () {
-    const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
-    const studentId = selectedOption.value;
-    const studentName = selectedOption.textContent;
+        const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
+        const studentId = selectedOption.value;
+        const studentName = selectedOption.textContent;
+        console.log(selectedOption.textContent)
 
-    // Evitar duplicados
-    if (!selectedStudents.has(studentId)) {
-        selectedStudents.set(studentId, studentName);
-        updateStudentList();
-    }
+        // Evitar duplicados
+        if (!selectedStudents.has(studentId) && selectedOption.textContent !== "Seleccionar estudiante") {
+            selectedStudents.set(studentId, studentName);
+            updateStudentList();
+            estudianteSelect.remove(estudianteSelect.selectedIndex);
+        }
     });
 
     // Función: Actualizar la lista visual y el campo oculto
@@ -224,8 +230,15 @@
         studentList.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', function () {
                 const studentId = button.getAttribute('data-id');
+                const li = button.parentElement;
                 selectedStudents.delete(studentId);
                 updateStudentList();
+                // Restaurar la opción al select
+                const estudianteSelect = document.getElementById('idEstudiante');
+                const newOption = document.createElement('option');
+                newOption.value = studentId;
+                newOption.textContent = li.textContent;
+                estudianteSelect.appendChild(newOption);
             });
         });
     }
@@ -252,7 +265,7 @@
             idTutor.disabled = false;
             addStudentBtn.disabled = false;
 
-            // Limpiar opciones del select de proyectos
+            // Limpiar opciones del select de proyectosestudianteSelect.remove(estudianteSelect.selectedIndex);
             proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
 
             // Cargar proyectos por sección
@@ -304,7 +317,33 @@
                 .catch(error => console.error('Error al obtener los detalles del proyecto:', error));
         }
     });
+    
+    
 });
+window.onload = function() {
+        const estudianteSelect = document.getElementById('idEstudiante');
+        const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
+        console.log(selectedOption.textContent);
+        // Verificar si el texto del seleccionado es diferente de 'Seleccionar un estudiante'
+        if (selectedOption.textContent !== 'Seleccionar estudiante') {
+            // Crear una nueva opción para 'Seleccionar un estudiante' si no existe
+            console.log("entro en el if");
+            let defaultOption = estudianteSelect.querySelector('option[value=""]');
+            if (!defaultOption) {
+                defaultOption = document.createElement('option');
+                defaultOption.disabled = true;
+                defaultOption.value = '';
+                defaultOption.textContent = 'Seleccionar un estudiante';
+                estudianteSelect.insertBefore(defaultOption, estudianteSelect.firstChild);
+            }
+
+            // Mover la selección actual al principio del select
+            //estudianteSelect.prepend(selectedOption, estudianteSelect.firstChild);
+            //console.log(estudianteSelect.firstChild.textContent);
+            // Opcional: Seleccionar automáticamente el nuevo primer elemento
+            estudianteSelect.selectedIndex = 0;
+        }
+    };
 
 </script>
 
