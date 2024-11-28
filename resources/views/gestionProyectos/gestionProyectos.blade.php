@@ -31,7 +31,7 @@
     <div class="container">
         <h1 class="mb-4">Gestión de Proyectos</h1>
 
-        
+
 
         <div class="card w-100">
             <div class="card-body">
@@ -54,9 +54,10 @@
                     <!-- Sección de Estudiantes -->
         <div class="mb-3">
             <label class="form-label">Estudiantes</label>
-            
+
             <div class="d-flex">
                 <select class="form-select" id="idEstudiante" name="idEstudiante" disabled>
+                    <option value='' disabled>Seleccionar un estudiante</option>
                     @foreach ($estudiantes as $estudiante)
                     <option value="{{ $estudiante->id_estudiante }}">
                         {{ $estudiante->usuario->name }}
@@ -131,7 +132,7 @@
                             </option>
                             @endforeach
                         </select>
-                        
+
                     </div>
                     <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Asignar Proyecto</button>
                 </form>
@@ -172,6 +173,9 @@
                     alert("Por favor, agregue estudiantes al proyecto.");
                 }
             });
+
+
+
         });
     </script>
 
@@ -186,15 +190,17 @@
 
     // Evento: Agregar estudiantes seleccionados a la lista
     addStudentBtn.addEventListener('click', function () {
-    const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
-    const studentId = selectedOption.value;
-    const studentName = selectedOption.textContent;
+        const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
+        const studentId = selectedOption.value;
+        const studentName = selectedOption.textContent;
+        console.log(selectedOption.textContent)
 
-    // Evitar duplicados
-    if (!selectedStudents.has(studentId)) {
-        selectedStudents.set(studentId, studentName);
-        updateStudentList();
-    }
+        // Evitar duplicados
+        if (!selectedStudents.has(studentId) && selectedOption.textContent !== "Seleccionar estudiante") {
+            selectedStudents.set(studentId, studentName);
+            updateStudentList();
+            estudianteSelect.remove(estudianteSelect.selectedIndex);
+        }
     });
 
     // Función: Actualizar la lista visual y el campo oculto
@@ -224,8 +230,15 @@
         studentList.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', function () {
                 const studentId = button.getAttribute('data-id');
+                const li = button.parentElement;
                 selectedStudents.delete(studentId);
                 updateStudentList();
+                // Restaurar la opción al select
+                const estudianteSelect = document.getElementById('idEstudiante');
+                const newOption = document.createElement('option');
+                newOption.value = studentId;
+                newOption.textContent = li.textContent;
+                estudianteSelect.appendChild(newOption);
             });
         });
     }
@@ -252,7 +265,7 @@
             idTutor.disabled = false;
             addStudentBtn.disabled = false;
 
-            // Limpiar opciones del select de proyectos
+            // Limpiar opciones del select de proyectosestudianteSelect.remove(estudianteSelect.selectedIndex);
             proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
 
             // Cargar proyectos por sección
@@ -304,8 +317,55 @@
                 .catch(error => console.error('Error al obtener los detalles del proyecto:', error));
         }
     });
-});
 
+
+});
+window.onload = function() {
+        const estudianteSelect = document.getElementById('idEstudiante');
+        const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
+        console.log(selectedOption.textContent);
+        // Verificar si el texto del seleccionado es diferente de 'Seleccionar un estudiante'
+        if (selectedOption.textContent !== 'Seleccionar estudiante') {
+            // Crear una nueva opción para 'Seleccionar un estudiante' si no existe
+            console.log("entro en el if");
+            let defaultOption = estudianteSelect.querySelector('option[value=""]');
+            if (!defaultOption) {
+                defaultOption = document.createElement('option');
+                defaultOption.disabled = true;
+                defaultOption.value = '';
+                defaultOption.textContent = 'Seleccionar un estudiante';
+                estudianteSelect.insertBefore(defaultOption, estudianteSelect.firstChild);
+            }
+
+            // Mover la selección actual al principio del select
+            //estudianteSelect.prepend(selectedOption, estudianteSelect.firstChild);
+            //console.log(estudianteSelect.firstChild.textContent);
+            // Opcional: Seleccionar automáticamente el nuevo primer elemento
+            estudianteSelect.selectedIndex = 0;
+        }
+    };
+
+</script>
+
+<script>
+    document.getElementById('fecha_inicio').addEventListener('change', function () {
+        const fechaInicio = this.value;
+        const fechaFinInput = document.getElementById('fecha_fin');
+
+        if (fechaInicio) {
+            const fechaInicioDate = new Date(fechaInicio);
+            fechaInicioDate.setMonth(fechaInicioDate.getMonth() + 6);
+
+
+            const minFechaFin = fechaInicioDate.toISOString().split('T')[0];
+
+            fechaFinInput.min = minFechaFin;
+
+            if (fechaFinInput.value < minFechaFin) {
+                fechaFinInput.value = '';
+            }
+        }
+    });
 </script>
 
     @endsection
