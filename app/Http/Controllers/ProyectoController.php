@@ -189,34 +189,54 @@ class ProyectoController extends Controller
 
     public function store(Request $request)
     {
+        // Validación de datos
         $validatedData = $request->validate([
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'horas' => 'required|integer|min:1',
-            'ubicacion' => 'required|string|max:255',
-            'id_seccion' => 'required|exists:secciones,id_seccion',
-        ]);
+            'titulo' => 'required|string|max:255|regex:/^\S.*$/', // No permite espacios al inicio
+            'descripcion' => 'required|string|min:10|max:1000', // Longitud mínima y máxima
+            'horas' => 'required|integer|min:1|max:500', // Número válido
+            'ubicacion' => 'required|string|max:255|regex:/^\S.*$/', // No permite espacios al inicio
+            'id_seccion' => 'required|exists:secciones,id_seccion', // Debe existir en la tabla 'secciones'
+        ]); 
+    
 
         try {
+            // Crear proyecto 
             $proyecto = new Proyecto();
-            $proyecto->nombre_proyecto = $validatedData['titulo'];
-            $proyecto->descripcion_proyecto = strip_tags($validatedData['descripcion']);
+            $proyecto->nombre_proyecto = htmlspecialchars($validatedData['titulo'], ENT_QUOTES, 'UTF-8'); // XSS es importante aquí para evitar inyección de scripts
+            $proyecto->descripcion_proyecto = strip_tags($validatedData['descripcion'], '<p><a><ul><li><ol><strong><em>');
             $proyecto->horas_requeridas = $validatedData['horas'];
-            $proyecto->lugar = $validatedData['ubicacion'];
+            $proyecto->lugar = htmlspecialchars($validatedData['ubicacion'], ENT_QUOTES, 'UTF-8');
             $proyecto->estado = 1;
             $proyecto->periodo = now()->format('Y-m');
-            $proyecto->coordinador = auth()->id();
+            $proyecto->coordinador = auth()->id();  // Coordinador actual
             $proyecto->seccion_id = $validatedData['id_seccion'];
             $proyecto->fecha_inicio = now();
             $proyecto->fecha_fin = now()->addMonths(3);
 
+            // Validar lógica de fechas
+            if ($proyecto->fecha_fin <= $proyecto->fecha_inicio) {  // Fecha de finalización debe ser posterior a la de inicio 
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', 'La fecha de finalización debe ser posterior a la fecha de inicio.');
+            }
+
+            // Guardar proyecto
             $proyecto->save();
 
+            // Mensaje de éxito
             return redirect()
                 ->back()
-                ->with('success', 'Proyecto creado exitosamente');
+                ->with('success', "El proyecto '{$proyecto->nombre_proyecto}' ha sido creado exitosamente.");
         } catch (\Exception $e) {
-            \Log::error('Error al crear proyecto: ' . $e->getMessage());
+            // Loggear error
+            \Log::error('Error al crear proyecto', [
+                'usuario' => auth()->id(),
+                'datos' => $validatedData,
+                'error' => $e->getMessage(),
+            ]);
+
+            // Mensaje de error
             return redirect()
                 ->back()
                 ->withInput()
