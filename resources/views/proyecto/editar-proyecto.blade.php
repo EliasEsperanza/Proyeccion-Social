@@ -140,7 +140,10 @@
                 title: "¡Actualización en proceso!",
                 text: "El proyecto se está actualizando...",
                 icon: "info",
+                iconColor: '#800000',
                 timer: 3000, 
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#800000',
                 timerProgressBar: true, 
                 didClose: () => {
                 }
@@ -150,4 +153,17 @@
         });
     });
 </script>
+<style>
+    .custom-swal-popup {
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    background: rgba(255, 255, 255, 0.9); 
+    border-radius: 10px;
+}
+
+.swal2-container {
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px); 
+}
+</style>
 @endsection

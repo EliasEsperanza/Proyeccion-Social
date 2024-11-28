@@ -1,9 +1,10 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
 @section('title', 'Editar proyecto')
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/gestionProyecto.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 
 @section('content')
@@ -12,6 +13,18 @@
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
+    <script>
+            Swal.fire({
+                title: "¡Actualizado!",
+                text: "El proyecto fue actualizado con éxito.",
+                icon: "success",
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                    // Opcional agregar algo
+                }
+            });
+        </script>
 @endif
 
 @if ($errors->any())
@@ -32,7 +45,7 @@
             <!-- Sección de Estudiantes -->
             <div class="mb-3">
                 <label class="form-label">Estudiantes</label>
-                
+
                 <!-- Formulario para agregar estudiantes -->
                 <form action="{{ route('proyectos.asignarEstudiante', $proyecto->id_proyecto) }}" method="POST" class="d-flex mb-3">
                     @csrf
@@ -73,7 +86,7 @@
             <form action="{{ route('proyectos.actualizar', $proyecto->id_proyecto) }}" method="POST">
                 @csrf
                 @method('PUT') <!-- Método para actualización -->
-                
+
                 <div class="mb-3">
                     <label for="nombreProyecto" class="form-label">Nombre del Proyecto</label>
                     <input type="text" class="form-control" id="nombreProyecto" name="nombre_proyecto" value="{{ $proyecto->nombre_proyecto }}" required>
@@ -142,4 +155,49 @@
 <script src="{{ asset('js/filtrarTutor.js') }}"></script>
 <script src="{{ asset('js/filtrarEstudiantes.js') }}"></script>
 <script src="{{ asset('js/gestionProyecto.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Asociar el evento al formulario específico de actualización
+    document.querySelector('form[action="{{ route("proyectos.actualizar", $proyecto->id_proyecto) }}"]').addEventListener('submit', function (event) {
+        event.preventDefault(); // Evita el envío inmediato del formulario
+        
+        Swal.fire({
+            title: "¡Actualización en proceso!",
+            text: "El proyecto se está actualizando...",
+            icon: "info",
+            iconColor: '#800000',
+            timer: 3000,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#800000',
+            timerProgressBar: true,
+            didClose: () => {
+                // Este bloque se ejecuta después de cerrar la alerta
+            }
+        }).then(() => {
+            event.target.submit(); // Envía el formulario después de la alerta
+        });
+    });
+  });
+
+  // Validar fechas: Asegurar que la fecha de finalización sea al menos 6 meses después de la fecha de inicio
+  document.getElementById('fechaInicio').addEventListener('change', function () {
+    const fechaInicio = this.value;
+    const fechaFinInput = document.getElementById('fechaFinalizacion');
+
+    if (fechaInicio) {
+        const fechaInicioDate = new Date(fechaInicio);
+        fechaInicioDate.setMonth(fechaInicioDate.getMonth() + 6);
+
+        const minFechaFin = fechaInicioDate.toISOString().split('T')[0];
+
+        fechaFinInput.min = minFechaFin;
+
+        if (fechaFinInput.value < minFechaFin) {
+            fechaFinInput.value = '';
+        }
+    }
+  });
+</script>
+
 @endsection
+

@@ -1,6 +1,12 @@
 // Variables globales para mantener el estado del chat
 let selectedChatId = null;
 let currentUserId = null;
+/**
+ * id,
+ * name.
+ * role: Usuarios
+ */
+
 
 // Inicializar conexión WebSocket
 const socket = io("wss://chat-ues-production.up.railway.app", {
@@ -93,6 +99,7 @@ function selectChat(chatId, chatName, chatRole) {
 
 // Manejar los mensajes históricos recibidos del servidor
 function handleChatMessages(messages) {
+    console.log(messages);
     if (!selectedChatId) return;
     
     const messageContainer = document.getElementById("messageContainer");
@@ -118,8 +125,9 @@ function handleChatMessages(messages) {
 
 // Renderizar un mensaje individual en el contenedor
 function renderMessage(message) {
-    const messageContainer = document.getElementById("messageContainer");
-    const isOwnMessage = message.sender === String(currentUserId);
+    if(message.sender === null){
+        const messageContainer = document.getElementById("messageContainer");
+        const isOwnMessage = message.chatId === String(currentUserId);
 
     const textToShow = message.text;
     const messageClass = isOwnMessage ? "sent" : "received";
@@ -127,12 +135,12 @@ function renderMessage(message) {
         ? 'margin-left: auto; margin-right: 10px; width: 40%;' 
         : 'margin-right: auto; background-color: #3766fa; margin-left: 10px; width: 40%;';  
 
-    messageContainer.innerHTML += `
-        <div class="message ${messageClass}" style="${messageStyle}">
-            ${textToShow}
-             <small class="text-muted" style="color: white;">${message.time}</small>  
-        </div>
-    `;
+        messageContainer.innerHTML += `
+            <div class="message ${messageClass}" style="${messageStyle}">
+                ${textToShow}
+                <small class="text-muted" style="color: white;">${message.time}</small>  
+            </div>
+        `;
 
     messageContainer.scrollTop = messageContainer.scrollHeight;
 }
