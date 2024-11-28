@@ -24,6 +24,21 @@ use App\Models\Estado;
 use App\Models\Proyecto;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\RegisterYLoginController;
+
+Route::prefix('auth')->name('auth.')->group(function () {
+    // Rutas para el login
+    Route::get('login', [RegisterYLoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [RegisterYLoginController::class, 'login']);
+
+    // Rutas para el registro
+    Route::get('register', [RegisterYLoginController::class, 'showRegisterForm'])->name('register');
+    Route::post('register', [RegisterYLoginController::class, 'register']);
+
+    // Ruta para el logout
+    Route::post('logout', [RegisterYLoginController::class, 'logout'])->name('logout');
+});
+
 
 Route::get('/', function () {
     return view('Bienvenida');
@@ -412,4 +427,24 @@ route::post('/proyecto/{id}/solicitudes/{solicitud}/deny', [ProyectoController::
 
 
 Route::get('/curret-user', [AuthController::class, 'Identificador']);
+Route::get('/usuarios3', [UserController::class, 'getUsersWithSeccion'])->name('usuarios.getUsersWithSeccion');
+
+
+Route::prefix('auth')->name('auth.')->group(function () {
+    // Rutas para el login
+    Route::get('login', [RegisterYLoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [RegisterYLoginController::class, 'login']);
+
+    // Rutas para el registro
+    Route::get('register', [RegisterYLoginController::class, 'showRegisterForm'])->name('register');
+    Route::post('register', [RegisterYLoginController::class, 'register']);
+
+    // Ruta para el logout
+    Route::post('logout', [RegisterYLoginController::class, 'logout'])->name('logout');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/solicitud-proyecto', [SolicitudProyectoController::class, 'index'])->name('solicitud-proyecto');
+});
+
 ?>

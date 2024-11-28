@@ -24,7 +24,7 @@
         </div>
     @endif
 
-    <h2 class="mb-4">Publicar nuevo proyecto de horas sociales</h2>
+    <h2 class="mb-4">Publicar Proyecto</h2>
     <div class="card shadow-sm">
         <div class="card-body">
             <form action="{{ route('proyectos.store') }}" method="POST">

@@ -1,13 +1,25 @@
 @extends('layouts.app')
 @section('title', 'Editar Proyecto')
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="container mt-4">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
+        <script>
+            Swal.fire({
+                title: "¡Actualizado!",
+                text: "El proyecto fue actualizado con éxito.",
+                icon: "success",
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                    // Opcional agregar algo
+                }
+            });
+        </script>
     @endif
-
     @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -100,7 +112,7 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-publicar w-100" style="background-color: #800000; color: white;">
+                <button type="submit" class="btn btn-publicar w-100" id="updateButton" style="background-color: #800000; color: white;">
                     Actualizar Proyecto
                 </button>
             </form>
@@ -120,6 +132,22 @@
             .catch(error => {
                 console.error('Error al inicializar CKEditor:', error);
             });
+
+        
+        document.getElementById('updateButton').addEventListener('click', function(event) {
+            event.preventDefault(); 
+            Swal.fire({
+                title: "¡Actualización en proceso!",
+                text: "El proyecto se está actualizando...",
+                icon: "info",
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                }
+            }).then(() => {
+                event.target.form.submit();
+            });
+        });
     });
 </script>
 @endsection

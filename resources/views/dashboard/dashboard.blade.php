@@ -26,14 +26,14 @@
         </div>
 
         <div class="informacion__proyectos">
-            <h3>Proyectos Asignados</h3>
+            <h3>Cantidad de proyectos</h3>
             <p>
                 @if(Auth::user()->hasRole('Tutor'))
                     Todos los proyectos asignados a este tutor
                 @elseif(Auth::user()->hasRole('Coordinador'))
                     Todos los proyectos disponibles para el coordinador
                 @else
-                    Proyectos registrados en el sistema
+                    Total proyectos registrados en el sistema
                 @endif
             </p>
             <h2>{{ $totalProyectosAsignados }}</h2>
@@ -86,13 +86,19 @@
             })
             .then(data => {
                 new Chart(ctxEstado, {
-                    type: 'pie',
+                    type: 'bar',
                     data: {
                         labels: data.labels,
                         datasets: [{
-                            label: 'Estado de Proyectos',
+                            label: 'Cantidad de Proyectos', 
                             data: data.data,
-                            backgroundColor: ['#36A2EB', '#4BC0C0', '#FFCE56'],
+                            backgroundColor: [
+                                '#36A2EB',
+                                '#4BC0C0',
+                                '#FFCE56', 
+                                '#FF6384'
+                            ],
+                            borderColor: '#fff',
                             borderWidth: 1
                         }]
                     },
@@ -105,7 +111,22 @@
                                 text: 'Estado de Proyectos'
                             },
                             legend: {
-                                position: 'bottom'
+                                display: false 
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Estados de Proyectos'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Cantidad'
+                                }
                             }
                         }
                     }
@@ -125,19 +146,26 @@
                 const proyectos = data.map(item => item.total_proyectos);
 
                 new Chart(ctxFecha, {
-                    type: 'bar',
+                    type: 'bar', 
                     data: {
                         labels: fechas,
                         datasets: [
                             {
+                                type: 'line', 
                                 label: 'Estudiantes',
                                 data: estudiantes,
-                                backgroundColor: '#8e44ad',
+                                borderColor: '#8e44ad',
+                                backgroundColor: 'rgba(142, 68, 173, 0.2)',
+                                fill: true,
+                                tension: 0.4 
                             },
                             {
+                                type: 'bar', 
                                 label: 'Proyectos',
                                 data: proyectos,
                                 backgroundColor: '#1abc9c',
+                                borderColor: '#16a085',
+                                borderWidth: 1
                             }
                         ],
                     },
@@ -154,16 +182,27 @@
                             }
                         },
                         scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Fechas'
+                                }
+                            },
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Cantidad'
+                                }
                             }
                         }
                     }
                 });
             })
             .catch(error => {
-                console.error('Error al cargar los datos:', error);
+                console.error('Error al cargar los datos del gráfico:', error);
             });
     });
 </script>
+
 @endsection

@@ -63,13 +63,12 @@
                 <p class="card-text">Descripción:</p>
                 <p class="card-text">{{ $proyecto->descripcion_proyecto }}</p>
                 <p class="card-text"><strong>Horas requeridas:</strong> {{ $proyecto->horas_requeridas }}</p>
-                <div class="estado-boton">
-                    <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
-                    <span class="badge {{ $proyecto->estado == 1 ? 'estado-disponible' : 'estado-no-disponible' }}">
-                        <i class="fa-solid fa-circle-exclamation"></i>
-                        {{ $proyecto->estado == 1 ? 'Disponible' : 'No Disponible' }}
-                    </span>
-                </div>
+
+                <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
+                <span class="{{ $proyecto->estado == 1 ? 'estado-disponible' : 'estado-no-disponible' }}">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    {{ $proyecto->estado == 1 ? 'Disponible' : 'No Disponible' }}
+                </span>
             </div>
             @endforeach
         </div>

@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container-fluid mt-1">
-    <h2 class="text-start mb-4">Crear Nuevo Usuario</h2>
+    <h2 class="text-start mb-4">Registrar Usuario</h2>
 
     <div class="card p-4 shadow-sm">
         <form action="{{ route('usuarios.store') }}" method="POST">

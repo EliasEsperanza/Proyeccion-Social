@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="container mt-4 contenedor-con-margen">
-    <h2 class="titulo-documentos text-center mb-4">Proceso de Horas Sociales</h2>
+    <h2 class="titulo-documentos text-center mb-4">Proceso de Inscripción</h2>
     <p class="descripcion-documentos text-center mb-5">Sigue estos pasos para completar tu servicio social</p>
 
     <div class="row g-4">

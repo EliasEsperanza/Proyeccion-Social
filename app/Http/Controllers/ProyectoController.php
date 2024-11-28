@@ -43,7 +43,7 @@ class ProyectoController extends Controller
                 })
                 ->whereHas('estadoo', function ($query) {
                     $query->where('nombre_estado', '!=', 'Disponible')
-                    ->where('nombre_estado', '!=', 'Solicitud');
+                        ->where('nombre_estado', '!=', 'Solicitud');
                 })
                 ->get();
         } else {
@@ -57,7 +57,7 @@ class ProyectoController extends Controller
             ])
                 ->whereHas('estadoo', function ($query) {
                     $query->where('nombre_estado', '!=', 'Disponible')
-                    ->where('nombre_estado', '!=', 'Solicitud');
+                        ->where('nombre_estado', '!=', 'Solicitud');
                 })
                 ->get();
         }
@@ -72,85 +72,90 @@ class ProyectoController extends Controller
 
 
     public function store_solicitud(Request $request)
-{
-    $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
-    
-    $validatedData = $request->validate([
-        'nombre_proyecto' => 'required|string|max:255',
-        'descripcion' => 'required|string',
-        'lugar' => 'required|string|max:255',
-        'fecha_inicio' => 'required|date|before_or_equal:fecha_fin',
-        'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
-        'id_seccion' => 'required|integer|exists:secciones,id_seccion',
-        'estudiantes' => 'required|string',
-    ]);
+    {
+        $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
 
-    try {
-        // Crear el proyecto
-        $proyecto = Proyecto::create([
-            'nombre_proyecto' => $validatedData['nombre_proyecto'],
-            'descripcion_proyecto' => strip_tags($validatedData['descripcion']),
-            'lugar' => $validatedData['lugar'],
-            'estado' => 9, // Estado inicial de solicitud
-            'horas_requeridas' => 0, // Inicialmente en 0
-            'periodo' => now()->format('Y-m'),
-            'coordinador' => auth()->id(),
-            'seccion_id' => $validatedData['id_seccion'],
-            'fecha_inicio' => $validatedData['fecha_inicio'],
-            'fecha_fin' => $validatedData['fecha_fin'],
+        $validatedData = $request->validate([
+            'nombre_proyecto' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'lugar' => 'required|string|max:255',
+            'fecha_inicio' => 'required|date|before_or_equal:fecha_fin',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
+            'id_seccion' => 'required|integer|exists:secciones,id_seccion',
+            'estudiantes' => 'required|string',
         ]);
 
-        // Asociar estudiantes al proyecto
-        if (is_array($estudiantesSeleccionados)) {
-            $estudianteNotificacion = Estudiante::find($estudiantesSeleccionados[0]);
-            $idCoordinador = $estudianteNotificacion->seccion->id_coordinador;
+        try {
+            // Crear el proyecto
+            $proyecto = Proyecto::create([
+                'nombre_proyecto' => $validatedData['nombre_proyecto'],
+                'descripcion_proyecto' => strip_tags($validatedData['descripcion']),
+                'lugar' => $validatedData['lugar'],
+                'estado' => 9, // Estado inicial de solicitud
+                'horas_requeridas' => 0, // Inicialmente en 0
+                'periodo' => now()->format('Y-m'),
+                'coordinador' => auth()->id(),
+                'seccion_id' => $validatedData['id_seccion'],
+                'fecha_inicio' => $validatedData['fecha_inicio'],
+                'fecha_fin' => $validatedData['fecha_fin'],
+            ]);
 
-            app(NotificacionController::class)->enviarNotificacion(
-                $idCoordinador,
-                'Se ha solicitado la aprobación del proyecto ' . $validatedData['nombre_proyecto']
-            );
+            // Asociar estudiantes al proyecto
+            if (is_array($estudiantesSeleccionados)) {
+                $estudianteNotificacion = Estudiante::find($estudiantesSeleccionados[0]);
+                $idCoordinador = $estudianteNotificacion->seccion->id_coordinador;
 
-            foreach ($estudiantesSeleccionados as $idEstudiante) {
-                $estudiante = Estudiante::find($idEstudiante);
+                app(NotificacionController::class)->enviarNotificacion(
+                    $idCoordinador,
+                    'Se ha solicitado la aprobación del proyecto ' . $validatedData['nombre_proyecto']
+                );
 
-                if ($estudiante) {
-                    $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+                foreach ($estudiantesSeleccionados as $idEstudiante) {
+                    $estudiante = Estudiante::find($idEstudiante);
+
+                    if ($estudiante) {
+                        $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+                    }
                 }
             }
+
+            // Redirigir con mensaje de éxito
+            return redirect()->route('estudiantes.dashboard')->with('success', 'Proyecto creado exitosamente.');
+        } catch (\Exception $e) {
+            \Log::error('Error al crear el proyecto: ' . $e->getMessage());
+
+            // Redirigir con mensaje de error
+            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
         }
-
-        // Redirigir con mensaje de éxito
-        return redirect()->route('estudiantes.dashboard')->with('success', 'Proyecto creado exitosamente.');
-
-    } catch (\Exception $e) {
-        \Log::error('Error al crear el proyecto: ' . $e->getMessage());
-
-        // Redirigir con mensaje de error
-        return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
     }
-}
 
 
     //agregar id de estudiantes a un proyecto en fase de solicitud
     public function store_solicitud_alumno(Request $request)
     {
 
+
         try {
             $estudiantesSeleccionados = json_decode($request->input('estudiantesSeleccionados'), true);
             $proyecto = Proyecto::find($request->input('id_proyecto'));
             if (is_array($estudiantesSeleccionados)) {
-                $estudianteNotificacion=Estudiante::find($estudiantesSeleccionados[0]);
-                $idCoordinador=$estudianteNotificacion->seccion->id_coordinador;
-             
-                app(NotificacionController::class)->enviarNotificacion($idCoordinador,'Hay una nueva aplicacion al proyecto '.$proyecto->nombre_proyecto);
+                $estudianteNotificacion = Estudiante::find($estudiantesSeleccionados[0]);
+                $idCoordinador = $estudianteNotificacion->seccion->id_coordinador;
+
+                app(NotificacionController::class)->enviarNotificacion($idCoordinador, 'Hay una nueva aplicacion al proyecto ' . $proyecto->nombre_proyecto);
                 foreach ($estudiantesSeleccionados as $idEstudiante) {
                     $estudiante = Estudiante::find($idEstudiante);
-                    
                     if ($estudiante) {
-                        // Asignar id estudiante en tabla pivote Estudiante_Proyecto
-                        $proyecto->estudiantes()->attach($estudiante->id_estudiante);
-                        //update a id 9 para estado solicitud 
-                        $proyecto->update(['estado' => 9]);
+                        // evitar que se aplique al mismo proyecto mas de una vez
+                        $existeRelacion = $proyecto->estudiantes()
+                            ->where('id_estudiante', $estudiante->id_estudiante)
+                            ->exists();
+
+                        if (!$existeRelacion) {
+                            $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+                        } else {
+                            return redirect()->back()->with('warning', 'El estudiante con Due {$estudiante->id_estudiante} ya está asociado al proyecto.');
+                        }
                     }
                 }
             }
@@ -158,7 +163,8 @@ class ProyectoController extends Controller
             return redirect()->back()->with('success', 'Proyecto creado exitosamente.');
         } catch (\Exception $e) {
             \Log::error('Error al crear el proyecto: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto.');
+            \Log::error('Código de error: ' . $e->getCode());
+            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto. Por favor, inténtalo de nuevo más tarde.');
         }
     }
 
@@ -315,7 +321,6 @@ class ProyectoController extends Controller
 
         // Buscar el proyecto y asociar al estudiante
         $proyecto = Proyecto::findOrFail($idProyecto);
-
         // // Verificar si el estudiante ya está asignado
         if (!$proyecto->estudiantes->contains($estudiante->id_estudiante)) {
             $proyecto->estudiantes()->attach($estudiante->id_estudiante);
@@ -360,7 +365,7 @@ class ProyectoController extends Controller
             'lugar' => $validatedData['lugar'],
             'fecha_inicio' => $validatedData['fecha_inicio'],
             'fecha_fin' => $validatedData['fecha_fin'],
-            'estado' => $validatedData['estado'],
+            'estado' => 1, //para mantener el proyecto disponible hasta futura asignacion
             'seccion_id' => $validatedData['seccion_id'],
             'horas' => $validatedData['horas'],
         ]);
@@ -546,7 +551,7 @@ class ProyectoController extends Controller
     // Método para mostrar los proyectos disponibles
     public function proyectos_disponibles()
     {
-        $proyectos = Proyecto::where('estado', 1)->get(); // 1 = Disponible 
+        $proyectos = Proyecto::where('estado', 1)->get(); // 1 = Disponible
         return view('proyecto.proyecto-disponible', compact('proyectos'));
     }
 
@@ -567,7 +572,7 @@ class ProyectoController extends Controller
         return Proyecto::whereBetween('estado', [1, 6])->count();
     }
 
-    public function totalProyectosAsignados()
+    /*public function totalProyectosAsignados()
     {
         $user = Auth::user();
 
@@ -591,7 +596,14 @@ class ProyectoController extends Controller
         }
 
         return $totalProyectosAsignados;
+    }*/
+
+    public function totalProyectosAsignados()
+    {
+        $totalProyectosAsignados = Proyecto::count();
+        return $totalProyectosAsignados;
     }
+
 
     public function obtenerDatosGrafico()
     {
@@ -674,9 +686,6 @@ class ProyectoController extends Controller
         return response()->json($data);
     }
 
-
-
-
     //retorna vista gertor de TI
     public function detallesSolicitud($id_proyecto)
     {
@@ -691,13 +700,12 @@ class ProyectoController extends Controller
     //aceptar solucitud
     public function aceptarSolicitud($id_proyecto)
     {
-        $proyecto=Proyecto::find($id_proyecto);
-        $estudiantes=$proyecto->estudiantes;
-        foreach($estudiantes as $estu){
-            $id=$estu->usuario->id_usuario;
-           
-            app(NotificacionController::class)->enviarNotificacion($id,'Has sido aprobado en el proyecto '.$proyecto->nombre_proyecto);
+        $proyecto = Proyecto::find($id_proyecto);
+        $estudiantes = $proyecto->estudiantes;
+        foreach ($estudiantes as $estu) {
+            $id = $estu->usuario->id_usuario;
 
+            app(NotificacionController::class)->enviarNotificacion($id, 'Has sido aprobado en el proyecto ' . $proyecto->nombre_proyecto);
         }
         return $this->actualizarEstadoSolicitud($id_proyecto, 1, 'El proyecto ha sido aceptado exitosamente.');
     }
@@ -833,8 +841,8 @@ class ProyectoController extends Controller
                     ->get(['id_proyecto', 'nombre_proyecto', 'descripcion_proyecto', 'horas_requeridas', 'estado']);
 
                 // Retornar la vista con los proyectos filtrados
-                $notificaciones= app(NotificacionController::class)->getNotifiaciones(Auth::user()->id_usuario);
-                return view('estudiantes.dashboard', compact('proyectos','notificaciones'));
+                $notificaciones = app(NotificacionController::class)->getNotifiaciones(Auth::user()->id_usuario);
+                return view('estudiantes.dashboard', compact('proyectos', 'notificaciones'));
             }
 
             // Si no hay sección asignada, redirigir con error
@@ -1042,15 +1050,30 @@ class ProyectoController extends Controller
     public function aprobarSolicitud(string $id, string $solicitudId)
     {
         $solicitud = Solicitud::find($solicitudId);
-        $proyecto = Proyecto::find($solicitud->id_proyecto);
-        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
-        $usuario = User::find($estudiante->id_usuario);
-
         if (!$solicitud) {
             return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
         }
 
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        if (!$proyecto) {
+            return redirect()->route('proyecto-g')->with('error', 'Proyecto no encontrado');
+        }
+
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        if (!$estudiante) {
+            return redirect()->route('proyecto-g')->with('error', 'Estudiante no encontrado');
+        }
+
+        $usuario = User::find($estudiante->id_usuario);
+
+        $porcentajeNuevo = $proyecto->horas_requeridas > 0
+            ? round((($estudiante->horas_sociales_completadas + $solicitud->valor) / $proyecto->horas_requeridas) * 100, 2)
+            : 0;
+
         $estudiante->horas_sociales_completadas += $solicitud->valor;
+        $estudiante->porcentaje_completado += $porcentajeNuevo;
 
         $solicitud->estado = 10;
 
