@@ -7,12 +7,18 @@
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-        Swal.fire({
+        <script>
+            Swal.fire({
                 title: "¡Actualizado!",
                 text: "El proyecto fue actualizado con éxito.",
                 icon: "success",
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#800000'});
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                    // Opcional agregar algo
+                }
+            });
+        </script>
     @endif
     @if(session('error'))
         <div class="alert alert-danger">
@@ -106,7 +112,7 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-publicar w-100" style="background-color: #800000; color: white;">
+                <button type="submit" class="btn btn-publicar w-100" id="updateButton" style="background-color: #800000; color: white;">
                     Actualizar Proyecto
                 </button>
             </form>
@@ -114,8 +120,6 @@
     </div>
 </div>
 
-<!-- CKEditor Script -->
-<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 <!-- CKEditor Script -->
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 <script>
@@ -129,6 +133,21 @@
                 console.error('Error al inicializar CKEditor:', error);
             });
 
+        
+        document.getElementById('updateButton').addEventListener('click', function(event) {
+            event.preventDefault(); 
+            Swal.fire({
+                title: "¡Actualización en proceso!",
+                text: "El proyecto se está actualizando...",
+                icon: "info",
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                }
+            }).then(() => {
+                event.target.form.submit();
+            });
+        });
     });
 </script>
 @endsection
