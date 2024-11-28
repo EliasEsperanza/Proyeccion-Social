@@ -2,11 +2,24 @@
 @section('title', 'Editar Proyecto')
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="container mt-4">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
+        <script>
+            Swal.fire({
+                title: "¡Actualizado!",
+                text: "El proyecto fue actualizado con éxito.",
+                icon: "success",
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                    // Opcional agregar algo
+                }
+            });
+        </script>
         <script>
             Swal.fire({
                 title: "¡Actualizado!",
@@ -112,6 +125,7 @@
                     </div>
                 </div>
                 
+                <button type="submit" class="btn btn-publicar w-100" id="updateButton" style="background-color: #800000; color: white;">
                 <button type="submit" class="btn btn-publicar w-100" id="updateButton" style="background-color: #800000; color: white;">
                     Actualizar Proyecto
                 </button>
