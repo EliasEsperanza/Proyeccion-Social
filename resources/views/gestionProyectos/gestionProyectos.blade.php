@@ -35,7 +35,7 @@
 
         <div class="card w-100">
             <div class="card-body">
-                <form action="" method="POST" id="actualizarProyecto">
+                <form action="" method="" id="actualizarProyecto">
                     @csrf
                     <div class="mb-3">
                         <label class="form-label">Sección o Departamento</label>
@@ -150,34 +150,54 @@
     <script src="{{ asset('js/gestionProyecto.js') }}"></script>
 
     <script>
-        //enviar form
-        document.addEventListener("DOMContentLoaded", function() {
-            // Obtener referencias a los elementos
-            const proyectoSelect = document.getElementById("nombre_proyecto");
-            const form = document.getElementById("actualizarProyecto");
-            const estudiantesInput = document.getElementById("estudiantesSeleccionados");
-            
-            // Escuchar cambios en el select de proyectos
-            proyectoSelect.addEventListener("change", function() {
-                const selectedProyectoId = proyectoSelect.value; // Obtener el ID del proyecto seleccionado
+    document.addEventListener("DOMContentLoaded", function() {
+        // Obtener referencias a los elementos
+        const proyectoSelect = document.getElementById("nombre_proyecto");
+        const form = document.getElementById("actualizarProyecto");
+        const estudiantesInput = document.getElementById("estudiantesSeleccionados");
+        const tutorInput = document.getElementById("idTutor");
+        const horasRequeridaInput = document.getElementById("horas");
+        const nombreProyectoInput = document.getElementById("nombreProyecto");
 
-                if (selectedProyectoId) {
-                    // Asignar la URL dinámica al atributo action del formulario
-                    form.action = `/proyectos/${selectedProyectoId}/gestionActualizar`;
-                }
-            });
-            form.addEventListener("submit", function(event) {
-                // Validar lista de estudiantes
-                if (!estudiantesInput.value) {
-                    event.preventDefault();
-                    alert("Por favor, agregue estudiantes al proyecto.");
-                }
-            });
+        // Escuchar el evento submit del formulario
+        form.addEventListener("submit", function(event) {
+            // Crear un array para recopilar mensajes de error
+            const errores = [];
 
-            
-            
+            // Validar cada campo
+            if (!nombreProyectoInput.value.trim()) {
+                errores.push("El nombre del proyecto es obligatorio.");
+            }
+            if (!estudiantesInput.value.trim()) {
+                errores.push("Debe seleccionar al menos un estudiante.");
+            }
+            if (!tutorInput.value.trim()) {
+                errores.push("Debe seleccionar un tutor.");
+            }
+            if (!horasRequeridaInput.value.trim()) {
+                errores.push("Debe ingresar las horas requeridas.");
+            }
+
+            // Si hay errores, prevenir el envío del formulario y mostrar mensajes
+            if (errores.length > 0) {
+                event.preventDefault();
+                alert(errores.join("\n"));
+            }
         });
-    </script>
+
+        // Escuchar cambios en el select de proyectos
+        proyectoSelect.addEventListener("change", function() {
+            const selectedProyectoId = proyectoSelect.value; // Obtener el ID del proyecto seleccionado
+
+            if (selectedProyectoId) {
+                // Asignar la URL dinámica y el método POST al formulario
+                form.action = `/proyectos/${selectedProyectoId}/gestionActualizar`;
+                form.method = "POST"; // Configurar el método como POST
+            }
+        });
+    });
+</script>
+
 
 <script>
 

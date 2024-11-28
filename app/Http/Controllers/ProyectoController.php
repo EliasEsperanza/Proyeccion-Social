@@ -370,45 +370,71 @@ class ProyectoController extends Controller
     }
     public function gestionActualizar(Request $request, $id)
     {
-        // dd($request);
-        $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
-        $validatedData = $request->validate([
-            'idTutor' => 'nullable|string|exists:users,id_usuario',
-            'lugar' => 'nullable|string|max:255',
-            'fecha_inicio' => 'nullable|date',
-            'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
-            'estado' => 'required|integer|exists:estados,id_estado',
-            'seccion_id' => 'required|string|exists:secciones,id_seccion',
-            'horas' => 'required|integer|min:0',
-        ]);
 
-        $tutor = User::find($request->idTutor);
+    // Decodificar los estudiantes seleccionados desde el input JSON
+    $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
 
-        if ($validatedData['idTutor'] && !$tutor) {
-            return redirect()->back()->withErrors(['tutor' => 'El tutor ingresado no existe.']);
-        }
+    // Validar los datos recibidos
+    $validatedData = $request->validate([
+        'idTutor' => 'nullable|string|exists:users,id_usuario',
+        'lugar' => 'nullable|string|max:255',
+        'fecha_inicio' => 'nullable|date',
+        'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
+        'estado' => 'required|integer|exists:estados,id_estado',
+        'seccion_id' => 'required|string|exists:secciones,id_seccion',
+        'horas' => 'required|integer|min:0',
+    ], [
+        // Mensajes personalizados para validación
+        'idTutor.exists' => 'El tutor seleccionado no es válido.',
+        'estado.required' => 'El estado del proyecto es obligatorio.',
+        'estado.exists' => 'El estado seleccionado no es válido.',
+        'seccion_id.required' => 'La sección es obligatoria.',
+        'seccion_id.exists' => 'La sección seleccionada no es válida.',
+        'horas.required' => 'Debe especificar las horas requeridas.',
+        'horas.min' => 'Las horas requeridas deben ser un número positivo.',
+    ]);
 
-        $proyecto = Proyecto::findOrFail($id);
-
-        //limpiar lista de usuarios
-        $proyecto->estudiantes()->detach();
-
-        foreach ($estudiantesSeleccionados as $estudiante) {
-            $estudiante2 = Estudiante::find($estudiante);
-            $proyecto->estudiantes()->attach($estudiante2->id_estudiante);
-        };
-
-        $proyecto->update([
-            'tutor' => $tutor->id_usuario ?? null,
-            'lugar' => $validatedData['lugar'],
-            'fecha_inicio' => $validatedData['fecha_inicio'],
-            'fecha_fin' => $validatedData['fecha_fin'],
-            'estado' => 1, //para mantener el proyecto disponible hasta futura asignacion
-            'seccion_id' => $validatedData['seccion_id'],
-            'horas' => $validatedData['horas'],
-        ]);
-        return redirect()->route('gestion-proyecto')->with('success', 'Proyecto actualizado correctamente.');
+    // Validar que existan estudiantes seleccionados
+    if (!$estudiantesSeleccionados || !is_array($estudiantesSeleccionados) || count($estudiantesSeleccionados) === 0) {
+        return redirect()->back()->withErrors(['estudiantes' => 'Debe seleccionar al menos un estudiante.'])->withInput();
     }
+
+    // Verificar que el tutor exista si se proporciona
+    $tutor = $validatedData['idTutor'] ? User::find($validatedData['idTutor']) : null;
+
+    if ($validatedData['idTutor'] && !$tutor) {
+        return redirect()->back()->withErrors(['idTutor' => 'El tutor ingresado no existe.'])->withInput();
+    }
+
+    // Buscar el proyecto
+    $proyecto = Proyecto::findOrFail($id);
+
+    // Limpiar lista de estudiantes asociados al proyecto
+    $proyecto->estudiantes()->detach();
+
+    // Asociar los estudiantes seleccionados al proyecto
+    foreach ($estudiantesSeleccionados as $estudianteId) {
+        $estudiante = Estudiante::find($estudianteId);
+        if ($estudiante) {
+            $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+        }
+    }
+
+    // Actualizar los datos del proyecto
+    $proyecto->update([
+        'tutor' => $tutor->id_usuario ?? null,
+        'lugar' => $validatedData['lugar'],
+        'fecha_inicio' => $validatedData['fecha_inicio'],
+        'fecha_fin' => $validatedData['fecha_fin'],
+        'estado' => $validatedData['estado'],
+        'seccion_id' => $validatedData['seccion_id'],
+        'horas' => $validatedData['horas'],
+    ]);
+
+    // Redirigir con éxito
+    return redirect()->route('gestion-proyecto')->with('success', 'Proyecto actualizado correctamente.');
+}
+
     public function eliminarEstudiante($proyectoId, $estudianteId)
     {
         // Buscar el proyecto y estudiante en la tabla pivot
