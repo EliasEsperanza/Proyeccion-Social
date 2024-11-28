@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <div class="alert alert-danger text-center">
-            <h1>Asi te queria cachar puerco</h1>
+            <h1>Acceso denegado</h1>
             <p>{{ session('error') }}</p>
         </div>
     </div>
