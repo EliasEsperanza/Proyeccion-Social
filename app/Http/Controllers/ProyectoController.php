@@ -267,7 +267,6 @@ class ProyectoController extends Controller
             // Guardar proyecto
             $proyecto->save();
 
-            // Mensaje de éxito
             return redirect()
                 ->back()
                 ->with('success', "El proyecto '{$proyecto->nombre_proyecto}' ha sido creado exitosamente.");
