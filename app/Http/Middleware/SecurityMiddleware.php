@@ -16,7 +16,6 @@ class SecurityMiddleware
     public function handle(Request $request, Closure $next): Response
     {
 
-
         $response = $next($request);
 
         $response->headers->set('Access-Control-Allow-Origin', '*');
@@ -42,7 +41,7 @@ class SecurityMiddleware
     {
         $patterns = [
             '/(\b(UNION|DROP|ALTER|INSERT|DELETE|UPDATE|SELECT)\b.+?(FROM|INTO))/i',
-            '/(--|\/\|\\/|;)/', 
+            '/(--|\/\*|\*\/|;)/', 
         ];
 
         foreach ($patterns as $pattern) {

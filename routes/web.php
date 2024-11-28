@@ -25,8 +25,6 @@ use App\Models\Proyecto;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\RegisterYLoginController;
-use app\Http\Controllers\SolicitudProyectoController;
-
 
 Route::prefix('auth')->name('auth.')->group(function () {
     // Rutas para el login
@@ -41,9 +39,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('logout', [RegisterYLoginController::class, 'logout'])->name('logout');
 });
 
+Route::get('/', function () {
+    return view('Bienvenida');
+})->name('welcome');
 
 Route::get('/bienvenida', function () {
-    return view('Bienvenida'); 
+    return view('bienvenida'); 
 })->name('Bienvenida');
 
 Route::get('/login', function () {
@@ -80,12 +81,12 @@ Route::get('/dashboard/datos-grafico', [ProyectoController::class, 'obtenerDatos
 Route::get('/dashboard/estudiantes-proyectos-por-fecha', [ProyectoController::class, 'obtenerEstudiantesYProyectosPorFecha'])->name('dashboard.estudiantesProyectosPorFecha');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware('auth')
+    ->middleware('auth') 
     ->name('dashboard');
 
 Route::post('/logout', function () {
     auth()->logout();
-    return redirect('/');
+    return redirect('/'); 
 })->middleware('auth')->name('logout');
 
 Route::get('/registro', [UserController::class, 'allSeccionRegistro'])->name('registro');
@@ -93,7 +94,7 @@ Route::post('/registro', [UserController::class, 'registro'])->name('usuarios.re
 
 
 // -----------------rutas de proyectos---------
-Route::get('/proyecto-g', [ProyectoController::class, 'index'], function () {
+Route::get('/proyecto-g',[ProyectoController::class, 'index'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Administrador', 'Coordinador', 'Tutor'])) {
         return view('proyecto.proyecto-general');
     }
@@ -112,7 +113,7 @@ Route::post('/proyectos/generar', [ProyectoController::class, 'generar'])->name(
 
 
 //editar
-Route::get('/proyecto/{id}/editar_proyecto', [ProyectoController::class, 'edit_proyecto'], function () {
+Route::get('/proyecto/{id}/editar_proyecto',[ProyectoController::class, 'edit_proyecto'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
         return view('proyecto.editar-proyecto');
     }
@@ -132,7 +133,7 @@ Route::get('/proyecto/{id}/descargar-pdf', [ProyectoController::class, 'descarga
 //Mostrar los departamentos en publicar proyectos
 Route::get('/proyecto', [ProyectoController::class, 'retornar_departamentos'])->name('proyecto');
 
-Route::get('/proyecto-disponible', [ProyectoController::class, 'retornar_proyectos'], function () {
+Route::get('/proyecto-disponible',[ProyectoController::class, 'retornar_proyectos'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Administrador', 'Coordinador', 'Tutor'])) {
         return view('proyecto.proyect-disponible');
     }
@@ -148,9 +149,9 @@ Route::post('/proyecto/rechazar/{id_proyecto}', [ProyectosEstudiantesController:
 // Ruta para la solicitud de proyecto
 Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])
     ->name('solicitud_proyecto');
-Route::get('/proyecto-disponibles-list', [ProyectoController::class, 'proyecto_disponible_list'])->name('proyecto_disponible_list');
+Route::get('/proyecto-disponibles-list', [ProyectoController::class, 'proyecto__disponible_list'])->name('proyecto__disponible_list');
 
-Route::get('/proyecto/{id}/editar', [ProyectoController::class, 'edit'], function () {
+Route::get('/proyecto/{id}/editar',[ProyectoController::class, 'edit'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Tutor', 'Coordinador', 'Administrador'])) {
         return view('proyecto.proyecto-editar');
     }
@@ -184,7 +185,7 @@ Route::get('/mensajeria', [UserController::class, 'show'])
 Route::get('/api/users', [UserController::class, 'getUsers']);
 
 
-Route::get('/gestion-proyecto', [ProyectoController::class, 'edit_gestion_proyecto'], function () {
+Route::get('/gestion-proyecto',[ProyectoController::class, 'edit_gestion_proyecto'], function () {
     if (Auth::check() && auth()->user()->hasAnyRole(['Coordinador', 'Administrador'])) {
         $estados = Estado::orderBy('nombre_estado', 'asc')->get();
 
@@ -215,7 +216,7 @@ Route::get('/usuarios2', [UserController::class, 'getUsers'])->name('usuarios.ge
 Route::get('/crear', [UserController::class, 'allSeccion'])->name('crear');
 Route::get('/usuarios/{id}/editar', [UserController::class, 'edit'])->name('usuarios.editarUsuario');
 Route::put('/usuarios/{id}/actualizar', [UserController::class, 'update'])->name('usuarios.actualizar');
-Route::get('/usuarios', [UserController::class, 'list'])->name('usuarios');
+Route::get('/usuarios', [UserController::class, 'list'])->name('usuarios'); 
 Route::post('/usuarios', [UserController::class, 'store'])->name('usuarios.store');
 Route::delete('/usuarios/eliminar', [UserController::class, 'deleteSelected'])->name('usuarios.eliminar');
 Route::delete('/usuarios/{id}', [UserController::class, 'destroy'])->name('usuarios.eliminarUsuario');
@@ -252,14 +253,14 @@ Route::controller(EstudianteController::class)
     ->prefix('estudiantes')
     ->name('estudiantes.')
     ->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/{id}', 'show')->name('show');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::get('/', 'index')->name('index');          
+        Route::get('/create', 'create')->name('create');          
+        Route::post('/', 'store')->name('store'); 
+        Route::get('/{id}', 'show')->name('show');        
+        Route::put('/{id}', 'update')->name('update');    
+        Route::delete('/{id}', 'destroy')->name('destroy'); 
     });
-Route::get('/obtenerNombreEstudiante/{id}', [EstudianteController::class, 'obtenerNombreEstudiante'])->name('obtenerNombreEstudiante');
+    Route::get('/obtenerNombreEstudiante/{id}', [EstudianteController::class,'obtenerNombreEstudiante'])->name('obtenerNombreEstudiante');
 
 // Rutas del controlador Proyecto
 // Route::controller(ProyectoController::class)
@@ -285,7 +286,7 @@ Route::get('/recuperarpassword', function () {
     return view('auth.recupassword');
 })->name('recuperarpassword');
 
-Route::get('/resetearpassword/{idUser}', [UserController::class, 'resetearpassword']);
+Route::get('/resetearpassword/{idUser}',[UserController::class,'resetearpassword'] );
 
 Route::post('/enviocorreocode', [UserController::class, 'enviocorreocode'])->name('enviocorreocode');
 
@@ -293,20 +294,20 @@ Route::post('/updatepassword/{idUser}', [UserController::class, 'updatepassword'
 
 // Rutas del controlador Estado
 Route::controller(EstadoController::class)->group(function () {
-    Route::get('/estados', 'index');
-    Route::post('/estados', 'store');
-    Route::get('/estados/{id}', 'show');
-    Route::put('/estados/{id}', 'update');
-    Route::delete('/estados/{id}', 'destroy');
+    Route::get('/estados', 'index');            
+    Route::post('/estados', 'store');          
+    Route::get('/estados/{id}', 'show');        
+    Route::put('/estados/{id}', 'update');       
+    Route::delete('/estados/{id}', 'destroy');   
 });
 
 // Rutas del controlador Documento
 Route::controller(DocumentoController::class)->group(function () {
-    Route::get('/documentos', 'index');
-    Route::post('/documentos', 'store');
-    Route::get('/documentos/{id}', 'show');
-    Route::put('/documentos/{id}', 'update');
-    Route::delete('/documentos/{id}', 'destroy');
+    Route::get('/documentos', 'index');            
+    Route::post('/documentos', 'store');            
+    Route::get('/documentos/{id}', 'show');        
+    Route::put('/documentos/{id}', 'update');       
+    Route::delete('/documentos/{id}', 'destroy');   
 });
 
 // Rutas del controlador Asignacion
@@ -330,13 +331,13 @@ Route::controller(ChatDocumentoController::class)
     ->prefix('chat_documentos')
     ->name('chat_documentos.')
     ->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/crear', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/{id}/editar', 'edit')->name('edit');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'destroy')->name('destroy');
-        Route::get('/buscar', 'search')->name('search');
+        Route::get('/', 'index')->name('index');            
+        Route::get('/crear', 'create')->name('create');       
+        Route::post('/', 'store')->name('store');            
+        Route::get('/{id}/editar', 'edit')->name('edit');   
+        Route::put('/{id}', 'update')->name('update');            
+        Route::delete('/{id}', 'destroy')->name('destroy');         
+        Route::get('/buscar', 'search')->name('search');            
     });
 
 // Rutas del controlador HorasSociales
@@ -359,13 +360,13 @@ Route::controller(NotificacionController::class)
     ->prefix('notificaciones')
     ->name('notificaciones.')
     ->group(function () {
-        Route::get('/usuario/{userId}', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/{id}', 'show')->name('show');
-        Route::get('/{id}/edit', 'edit')->name('edit');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::get('/usuario/{userId}', 'index')->name('index');        
+        Route::get('/create', 'create')->name('create');                  
+        Route::post('/', 'store')->name('store');                        
+        Route::get('/{id}', 'show')->name('show');                        
+        Route::get('/{id}/edit', 'edit')->name('edit');                   
+        Route::put('/{id}', 'update')->name('update');                   
+        Route::delete('/{id}', 'destroy')->name('destroy');               
     });
 
 // Rutas del controlador ProyectosDocumentos
@@ -373,42 +374,42 @@ Route::controller(ProyectosDocumentosController::class)
     ->prefix('proyectos_documentos')
     ->name('proyectos_documentos.')
     ->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::get('/{id}', 'show')->name('show');
-        Route::get('/{id}/edit', 'edit')->name('edit');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::get('/', 'index')->name('index');             
+        Route::get('/create', 'create')->name('create');      
+        Route::post('/', 'store')->name('store');            
+        Route::get('/{id}', 'show')->name('show');            
+        Route::get('/{id}/edit', 'edit')->name('edit');      
+        Route::put('/{id}', 'update')->name('update');        
+        Route::delete('/{id}', 'destroy')->name('destroy');  
     });
-//Rutas de controllador de roles 
-Route::get('/layouts/roles', [RoleController::class, 'index'])->name('layouts.roles');
-Route::post('/layouts/roles/store', [RoleController::class, 'store'])->name('roles.store');
-Route::delete('/layouts/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
-Route::put('/layouts/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+    //Rutas de controllador de roles 
+    Route::get('/layouts/roles', [RoleController::class, 'index'])->name('layouts.roles');
+    Route::post('/layouts/roles/store', [RoleController::class, 'store'])->name('roles.store');
+    Route::delete('/layouts/roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::put('/layouts/roles/{role}', [RoleController::class, 'update'])->name('roles.update');
 
-Route::get('/perfil_usuario', [UserController::class, 'mostrarPerfil'], function () {
-    return view('usuarios.perfilUsuario');
-})->name('perfil_usuario');
+    Route::get('/perfil_usuario', [UserController::class, 'mostrarPerfil'], function () {
+        return view('usuarios.perfilUsuario');
+    })->name('perfil_usuario');
 
-Route::put('/perfil_usuario/{id}', [UserController::class, 'updateusuario'])->name('update_usuario');
+    Route::put('/perfil_usuario/{id}', [UserController::class, 'updateusuario'])->name('update_usuario');
 
-Route::put('/perfil_usuario', [UserController::class, 'updatepassperfil'])->name('update_password');
+    Route::put('/perfil_usuario', [UserController::class, 'updatepassperfil'])->name('update_password');
 
 
-//ruta solicitud proyectos de estudiantes
-Route::get('/solicitudproyecto', function () {
-    return view('estudiantes.solicitud-proyecto');
-});
+    //ruta solicitud proyectos de estudiantes
+    Route::get('/solicitudproyecto', function () {
+        return view('estudiantes.solicitud-proyecto');
+    });
 
-Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
-Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
+    Route::get('/gestor-de-TI', [ProyectoController::class, 'gestor_de_TI'])->name('gestor_de_TI');
+    Route::get('/solicitud-proyecto', [ProyectoController::class, 'solicitud_proyecto'])->name('solicitud_proyecto');
 
-Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
-Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
-Route::get('/solicitud-proyecto', [ProyectosEstudiantesController::class, 'Solicitud_Proyecto_Student'])->name('solicitud-proyecto');
-Route::get('/procesos', [ProyectosEstudiantesController::class, 'Procesos'])->name('vista_procesos_horas');
-Route::get('/docs', [ProyectosEstudiantesController::class, 'docs'])->name('docs_tramites');
+    Route::get('/detallesmio', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
+    Route::get('/proyectomio', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
+    Route::get('/solicitud-proyecto', [ProyectosEstudiantesController::class, 'Solicitud_Proyecto_Student'])->name('solicitud-proyecto');
+    Route::get('/procesos', [ProyectosEstudiantesController::class, 'Procesos'])->name('vista_procesos_horas');
+    Route::get('/docs', [ProyectosEstudiantesController::class, 'docs'])->name('docs_tramites');
 
 Route::get('/descargar/{filename}', function ($filename) {
     $filePath = 'documentos/' . $filename;
@@ -445,7 +446,11 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('logout', [RegisterYLoginController::class, 'logout'])->name('logout');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/solicitud-proyecto', [SolicitudProyectoController::class, 'index'])->name('solicitud-proyecto');
+});
 
 Route::get('/malisioso', function () {
     return view('Malisioso');
 })->name('Malisioso');
+
