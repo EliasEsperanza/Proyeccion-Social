@@ -227,10 +227,10 @@ class ProyectoController extends Controller
                     ->with('error', 'La fecha de finalización debe ser posterior a la fecha de inicio.');
             }
 
-            // Guardar proyecto
+
             $proyecto->save();
 
-            // Mensaje de éxito
+
             return redirect()
                 ->back()
                 ->with('success', "El proyecto '{$proyecto->nombre_proyecto}' ha sido creado exitosamente.");
