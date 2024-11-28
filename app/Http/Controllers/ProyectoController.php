@@ -164,20 +164,48 @@ class ProyectoController extends Controller
 
     public function solicitudes_coordinador()
     {
-        $proyectos = Proyecto::with('estudiantes.usuario')
+        // Obtener el usuario autenticado
+        $user = auth()->user();
+        $userSeccion = null;
 
+        // Determinar la sección según el rol del usuario
+        if ($user->hasRole('Estudiante')) {
+            $userSeccion = DB::table('estudiantes')
+                ->join('secciones', 'estudiantes.id_seccion', '=', 'secciones.id_seccion')
+                ->where('estudiantes.id_usuario', $user->id_usuario)
+                ->select('secciones.id_seccion', 'secciones.nombre_seccion')
+                ->first();
+        } elseif ($user->hasRole('Tutor')) {
+            $userSeccion = DB::table('seccion_tutor')
+                ->join('secciones', 'seccion_tutor.id_seccion', '=', 'secciones.id_seccion')
+                ->where('seccion_tutor.id_tutor', $user->id_usuario)
+                ->select('secciones.id_seccion', 'secciones.nombre_seccion')
+                ->first();
+        } elseif ($user->hasRole('Coordinador')) {
+            $userSeccion = DB::table('secciones')
+                ->where('id_coordinador', $user->id_usuario)
+                ->select('id_seccion', 'nombre_seccion')
+                ->first();
+        }
+
+        // Obtener los proyectos con sus relaciones
+        $proyectos = Proyecto::with('estudiantes.usuario', 'seccion') // Asegúrate de que exista la relación con "seccion"
             ->where('estado', 9)
             ->get();
-        return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
 
+        // Filtrar proyectos según la sección y el rol del usuario
+        $proyectosFiltrados = $proyectos->filter(function ($proyecto) use ($user, $userSeccion) {
+            // Administrador: Mostrar todos los proyectos
+            if ($user->hasRole('Administrador')) {
+                return true;
+            }
 
-        //de aqui modifique @Aleman solo comente
+            // Filtrar proyectos según la sección asociada al usuario
+            return isset($proyecto->seccion) && $proyecto->seccion->id_seccion == ($userSeccion->id_seccion ?? null);
+        });
 
-        // $user = Auth::user();
-
-        // $departamentoCoordinador = $user->getDepartamentoCoordinador();
-
-
+        // Retornar la vista con los proyectos filtrados
+        return view('proyecto.solicitud-proyecto-coordinador', ['proyectos' => $proyectosFiltrados]);
     }
 
     public function retornar_proyectos()
