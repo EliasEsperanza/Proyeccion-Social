@@ -417,30 +417,6 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    public function updateEmail(Request $request)
-{
-    $user = auth()->user(); // Obtén el usuario autenticado
-
-    // Validar el nuevo correo electrónico
-    $validated = $request->validate([
-        'nuevo_email' => [
-            'required',
-            'email',
-            'regex:/@ues\.edu\.sv$/',
-            'unique:users,email', // Verifica que el correo sea único en la tabla
-        ],
-    ]);
-
-    // Actualizar el correo
-    $user->email = $validated['nuevo_email'];
-    $user->save();
-
-    // Redirigir con un mensaje de éxito
-    return redirect()->back()->with('success', 'Correo electrónico actualizado correctamente.');
-}
-
-
-
     public function updatepassperfil(Request $request)
     {
         $request->validate([

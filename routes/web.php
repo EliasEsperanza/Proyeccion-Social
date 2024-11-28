@@ -378,10 +378,6 @@ Route::controller(ProyectosDocumentosController::class)
 
     Route::put('/perfil_usuario', [UserController::class, 'updatepassperfil'])->name('update_password');
 
-    Route::put('/user/update-email', [UserController::class, 'updateEmail'])->name('user.updateEmail');
-
-
-
 
     //ruta solicitud proyectos de estudiantes
     Route::get('/solicitudproyecto', function () {

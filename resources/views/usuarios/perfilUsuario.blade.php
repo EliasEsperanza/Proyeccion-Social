@@ -136,52 +136,6 @@
     </div>
 </div>
 
-<div class="container my-5">
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
-            <h5 class="card-title mb-3">
-                <i class="bi bi-envelope me-2"></i> Actualizar correo electrónico
-            </h5>
-            <p class="text-muted mb-4 text-color">
-                Asegúrese de que el nuevo correo electrónico sea válido y termine en @ues.edu.sv.
-            </p>
-
-            <!-- Formulario -->
-            <form id="emailForm" action="{{ route('user.updateEmail') }}" class="d-flex flex-column align-items-center" method="POST">
-                @csrf
-                @method('PUT')
-
-                <!-- Nuevo correo electrónico -->
-                <div class="mb-3 w-40">
-                    <label for="nuevo_email" class="form-label">Nuevo correo electrónico</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-envelope icono-candado"></i></span>
-                        <input type="email" 
-                            class="form-control @error('nuevo_email') is-invalid @enderror" 
-                            id="nuevo_email" 
-                            name="nuevo_email" 
-                            placeholder="Ingrese su nuevo correo electrónico"
-                            value="{{ old('nuevo_email') }}" 
-                            required>
-                    </div>
-                    <div class="form-text">
-                        El correo debe terminar en @ues.edu.sv.
-                    </div>
-                    @error('nuevo_email')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <button type="submit" class="btn-custom">
-                    Actualizar correo electrónico
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
-
-
-
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     @foreach ($errors->all() as $error)
     <div class="toast show mb-2 overflow-hidden border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
