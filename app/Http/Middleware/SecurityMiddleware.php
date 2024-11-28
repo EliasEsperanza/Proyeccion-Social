@@ -15,8 +15,9 @@ class SecurityMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-
+        if ($request->is('/') && $request->getMethod() === 'GET') {
+            return redirect()->route('Bienvenida'); // Cambia 'home' por la ruta deseada
+        }
         $response = $next($request);
 
         $response->headers->set('Access-Control-Allow-Origin', '*');
