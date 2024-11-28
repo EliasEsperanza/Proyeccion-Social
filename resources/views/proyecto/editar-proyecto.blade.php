@@ -1,13 +1,38 @@
 @extends('layouts.app')
 @section('title', 'Editar Proyecto')
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="container mt-4">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
+        <script>
+            Swal.fire({
+                title: "¡Actualizado!",
+                text: "El proyecto fue actualizado con éxito.",
+                icon: "success",
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                    // Opcional agregar algo
+                }
+            });
+        </script>
+        <script>
+            Swal.fire({
+                title: "¡Actualizado!",
+                text: "El proyecto fue actualizado con éxito.",
+                icon: "success",
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                    // Opcional agregar algo
+                }
+            });
+        </script>
     @endif
-
     @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -100,7 +125,8 @@
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-publicar w-100" style="background-color: #800000; color: white;">
+                <button type="submit" class="btn btn-publicar w-100" id="updateButton" style="background-color: #800000; color: white;">
+                <button type="submit" class="btn btn-publicar w-100" id="updateButton" style="background-color: #800000; color: white;">
                     Actualizar Proyecto
                 </button>
             </form>
@@ -120,6 +146,38 @@
             .catch(error => {
                 console.error('Error al inicializar CKEditor:', error);
             });
+
+        
+        document.getElementById('updateButton').addEventListener('click', function(event) {
+            event.preventDefault(); 
+            Swal.fire({
+                title: "¡Actualización en proceso!",
+                text: "El proyecto se está actualizando...",
+                icon: "info",
+                iconColor: '#800000',
+                timer: 3000, 
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#800000',
+                timerProgressBar: true, 
+                didClose: () => {
+                }
+            }).then(() => {
+                event.target.form.submit();
+            });
+        });
     });
 </script>
+<style>
+    .custom-swal-popup {
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    background: rgba(255, 255, 255, 0.9); 
+    border-radius: 10px;
+}
+
+.swal2-container {
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px); 
+}
+</style>
 @endsection

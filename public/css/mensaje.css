@@ -2,7 +2,7 @@
   background-color: #ffffff;
   color: black;
   padding-top: 10px;
-  height: auto;
+  height: 80vh;
   max-height: 86vh;
   overflow-y: auto;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -11,21 +11,23 @@
 
 .chat-container {
   display: flex;
-  height: 100vh;
+  height: 80vh;
   overflow: hidden;
 }
 
 .ventana {
-  height: calc(100vh - 80px); 
+  height: calc(100vh - 80px);
   overflow: hidden;
   overflow-y: hidden;
 }
 
-.chat-list, .chat-messages {
+.chat-list,
+.chat-messages {
   overflow-y: auto;
 }
 
-.chat-header, .chat-footer {
+.chat-header,
+.chat-footer {
   background-color: #ffffff;
   padding: 15px;
   border-bottom: 1px solid #e0e0e0;
@@ -40,7 +42,8 @@
   margin-top: 3px;
 }
 
-.chat-item:hover, .chat-item.active {
+.chat-item:hover,
+.chat-item.active {
   background-color: #f8f9fa;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   border: 2px solid rgba(220, 20, 60, 0.2);
@@ -61,7 +64,7 @@
   gap: 10px;
   overflow-y: auto;
   flex: 1;
-  max-height: 70vh; 
+  max-height: 65vh;
 }
 
 .message {
@@ -74,37 +77,41 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
+
 .message:hover {
-  transform: translateY(-3px); 
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);  
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+
 .message.sent {
-  background: linear-gradient(145deg, #f44336, #e53935);   
-  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);  
+  background: linear-gradient(145deg, #f44336, #cd413e);
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
   color: white;
+  font-weight: 700;
   align-self: flex-end;
   border-top-right-radius: 0;
 }
 
 .message.received {
-  background: linear-gradient(145deg, #0084ff, #0059b3); 
-  box-shadow: 0 4px 8px rgba(0, 132, 255, 0.3); 
-  /* OPCION 2 DE COLOR ROJO MAS OSCURO PARA LOS MENSAJES RECIBIDOS
-   background: linear-gradient(145deg, #b71c1c, #c62828); 
-   box-shadow: 0 4px 8px rgba(183, 28, 28, 0.3);  
-  */
+  background: linear-gradient(145deg, #bd3131, #b42525);
+  box-shadow: 0 4px 8px rgba(183, 28, 28, 0.3);
   color: white;
+  font-weight: 700;
   align-self: flex-start;
   border-top-left-radius: 0;
 }
 
+/* OPCION 2 DE COLOR ROJO MAS OSCURO PARA LOS MENSAJES RECIBIDOS
+background: linear-gradient(145deg, #0084ff, #0059b3); 
+box-shadow: 0 4px 8px rgba(0, 132, 255, 0.3); 
+*/
 .message small {
   display: block;
   font-size: 0.75rem;
   margin-top: 5px;
   color: #fff !important;
   font-weight: bold;
-  opacity: 0.7; 
+  opacity: 0.7;
 }
 
 .chat-footer {
@@ -156,19 +163,19 @@
 
 @media (max-width: 767px) {
   #sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 75%;
-      height: 100%;
-      background-color: #fff;
-      z-index: 1050;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 75%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   }
 
   #sidebar.show {
-      transform: translateX(0);
+    transform: translateX(0);
   }
 }

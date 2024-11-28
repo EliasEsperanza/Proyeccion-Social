@@ -8,6 +8,7 @@
     <title>@yield('title', 'Dashboard')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/user.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboardStyle.css') }}">
@@ -26,6 +27,8 @@
                 <i class="bi bi-list"></i>
             </button>
 
+            <a href="" class="logo-bienvenida">Plataforma Horas Sociales</a>
+
             <div class="d-flex ms-auto position-relative me-3 topbar-notification" id="notification-bell">
                 <i class="bi bi-bell" style="font-size: 1.5rem; color: #800000;"></i>
                 <span class="badge notification-count">0</span>
@@ -38,11 +41,11 @@
                     </div>
                     <div class="notification-list">
                         @isset($notificaciones)
-                            @foreach($notificaciones as $noti)
-                                <div>
-                                    <p>{{$noti->mensaje}}</p>
-                                </div>
-                            @endforeach
+                        @foreach($notificaciones as $noti)
+                        <div>
+                            <p>{{$noti->mensaje}}</p>
+                        </div>
+                        @endforeach
                         @endisset
                     </div>
                 </div>
@@ -73,14 +76,14 @@
                 <li class="nav-item text-muted">Usuarios</li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('crear') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-people me-2"></i> Gestión de Usuarios
+                        <i class="bi bi-person me-2"></i> Registrar Usuario
                     </a>
                 </li>
 
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('usuarios') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-person me-2"></i> Usuarios
+                        <i class="bi bi-people me-2 "></i> Usuarios
                     </a>
                 </li>
 
@@ -89,7 +92,7 @@
                 <li class="nav-item text-muted">Usuarios</li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('crear') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-people me-2"></i> Gestión de Usuarios
+                        <i class="bi bi-people me-2"></i> Usuarios
                     </a>
                 </li>
 
@@ -114,19 +117,18 @@
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('proyecto') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-folder me-2"></i> Publicar Proyectos
-                    </a>
+                        <i class="bi bi-folder-plus me-2"></i> Publicar Proyecto </a>
                 </li>
 
                 @if(auth()->user()->hasAnyRole(['Coordinador', 'Administrador']))
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('proyecto-disponible') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-person me-2"></i> Proyectos Disponibles
+                        <i class="bi bi-folder-check me-2"></i> Proyectos Disponibles
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('gestion-proyecto') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-folder-check me-2"></i> Gestión de Proyectos
+                        <i class="bi bi-person-plus me-2"></i> Asignar Proyecto
                     </a>
                 </li>
                 @endif
@@ -141,14 +143,12 @@
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('proyecto-g') }}" onclick="establecerActivo(this)">
-                        <i class="bi bi-briefcase me-2"></i> Proyectos
-                    </a>
+                        <i class="bi bi-list-check me-2"></i> Proyectos en Curso </a>
                 </li>
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('solicitudes_coordinador') }}" onclick="establecerActivo(this)">
-                        <i class="fas fa-file-alt me-2"></i>Solicitud de Proyectos
-                    </a>
+                    <i class="bi bi-file-earmark-text me-2"></i> Solicitud de Proyectos                    </a>
                 </li>
 
                 @endif

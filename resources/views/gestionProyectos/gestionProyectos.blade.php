@@ -213,7 +213,7 @@
         const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
         const studentId = selectedOption.value;
         const studentName = selectedOption.textContent;
-        //console.log(selectedOption.textContent)
+        console.log(selectedOption.textContent)
 
         // Evitar duplicados
         if (!selectedStudents.has(studentId) && selectedOption.textContent !== "Seleccionar estudiante") {
@@ -227,7 +227,7 @@
     function updateStudentList() {
         // Limpiar la lista visual
         studentList.innerHTML = "";
-        //console.log(selectedStudents);
+        console.log(selectedStudents);
         // Iterar sobre los estudiantes seleccionados y renderizar en la lista
         selectedStudents.forEach((name, id) => {
             const listItem = document.createElement('li');
@@ -299,29 +299,7 @@
                         proyectoSelect.appendChild(option);
                     });
                 })
-                .catch(error => console.error('Error al cargar proyectos:', error));/*
-                const studentList = document.getElementById('studentList');
-                if(studentList.firstChild){
-                    
-                    
-                    const hiddenInput = document.getElementById('estudiantesSeleccionados');
-                    
-                    const selectedStudents = JSON.parse(hiddenInput.value);
-                    
-                    //console.log(button);
-                    while (studentList.FirstChild) {
-                        const hijoStudent = studentList.firstChild;
-                        const button = hijoStudent.querySelector('button'); // Encuentra el primer botón en el elemento
-                        const studentId = button.getAttribute('data-id');
-                        const li = button.parentElement;
-                        selectedStudents.delete(studentId);
-                        studentList.removeChild(studentList.FirstChild);
-                        hiddenInput.value = JSON.stringify([...selectedStudents.keys()]);
-                    }
-                }*/
-
-                
-                
+                .catch(error => console.error('Error al cargar proyectos:', error));
         });
     });
 

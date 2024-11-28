@@ -35,8 +35,8 @@
                     <div class="campo-formulario">
                         <label for="horasTrabajadas" class="form-label">Horas trabajadas</label>
                         <input type="number" class="form-control" id="horasTrabajadas" name="horasTrabajadas"
-                            value="{{ old('horasTrabajadas') }}" placeholder="Ingrese las horas trabajadas" min="0"
-                            max="8" required>
+                            value="{{ old('horasTrabajadas') }}" placeholder="Ingrese las horas trabajadas" min="10"
+                            max="128" required>
                         @error('horasTrabajadas')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror

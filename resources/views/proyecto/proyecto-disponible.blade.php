@@ -3,8 +3,9 @@
 @section('title', 'Proyectos Disponibles')
 
 @section('content')
-<h2 class="my-4">Proyectos disponibles</h2>
-
+<h2 class="my-4">Proyectos Disponibles</h2>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 @php
     // Obtener el usuario autenticado
     $user = auth()->user();
@@ -73,9 +74,7 @@
             <tbody id="projects-tbody"></tbody>
         </table>
     </div>
-</div>
-
-<!-- Controles de paginación -->
+    <!-- Controles de paginación -->
 <div class="d-flex justify-content-between align-items-center mt-3">
     <!-- Selector de número de filas por página -->
     <div class="d-flex align-items-center">
@@ -90,6 +89,9 @@
     </div>
     <ul id="pagination-buttons" class="pagination mb-0"></ul>
 </div>
+
+</div>
+
 
 <!-- Contenedor oculto para almacenar los datos filtrados -->
 <div id="all-projects" style="display: none;">{{ $filteredProjectsJson }}</div>
@@ -143,7 +145,7 @@
                 <tr>
                     <td><input type="checkbox" class="form-check-input" value="${project.id_proyecto}"></td>
                     <td>${project.nombre_proyecto}</td>
-                    <td>${project.descripcion_proyecto}</td>
+                    <td>${project.descripcion_proyecto.length > 100 ? project.descripcion_proyecto.substring(0, 100) + '...' : project.descripcion_proyecto}</td>
                     <td>${project.horas_requeridas}</td>
                     <td>${project.lugar}</td>
                     <td>${project.seccion?.nombre_seccion || 'No asignada'}</td>
@@ -158,8 +160,8 @@
                             <form action="/proyecto/${project.id_proyecto}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-light btn-sm p-2 px-3">
-                                    <i class="bi bi-trash text-danger">${project.id_proyecto}</i>
+                                <button type="submit" class="btn btn-light btn-sm p-2 px-3 delete-button">
+                                    <i class="bi bi-trash text-danger"></i>
                                 </button>
                             </form>
 
@@ -175,35 +177,117 @@
 
     // Generar controles de paginación
     function renderPagination() {
-        const paginationControls = document.getElementById('pagination-buttons');
-        const totalPages = Math.ceil(filteredProjects.length / rowsPerPage);
+    const paginationControls = document.getElementById('pagination-buttons');
+    const totalPages = Math.ceil(filteredProjects.length / rowsPerPage);
 
-        paginationControls.innerHTML = ''; // Limpiar controles previos
+    paginationControls.innerHTML = ''; // Limpiar controles previos
 
-        // Botón "Anterior"
-        if (currentPage > 1) {
-            const prevButton = `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Anterior</a></li>`;
-            paginationControls.innerHTML += prevButton;
-        }
-
-        // Botones de número de página
-        for (let i = 1; i <= totalPages; i++) {
-            const activeClass = i === currentPage ? 'active' : '';
-            const pageButton = `<li class="page-item ${activeClass}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`;
-            paginationControls.innerHTML += pageButton;
-        }
-
-        // Botón "Siguiente"
-        if (currentPage < totalPages) {
-            const nextButton = `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Siguiente</a></li>`;
-            paginationControls.innerHTML += nextButton;
-        }
+    // Botón "Anterior"
+    if (currentPage > 1) {
+        const prevButton = `<li class="page-item">
+                                <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Anterior</a>
+                            </li>`;
+        paginationControls.innerHTML += prevButton;
     }
+
+    // Botones de número de página
+    for (let i = 1; i <= totalPages; i++) {
+        const isActive = i === currentPage;
+        const pageButton = `<li class="page-item ${isActive ? 'active' : ''}">
+                                <a class="page-link ${isActive ? 'text-white bg-c' : ''}" 
+                                   href="#" 
+                                   onclick="changePage(${i})"
+                                   style="${isActive ? 'color: white; background-color: red;' : ''}">
+                                   ${i}
+                                </a>
+                            </li>`;
+        paginationControls.innerHTML += pageButton;
+    }
+
+    // Botón "Siguiente"
+    if (currentPage < totalPages) {
+        const nextButton = `<li class="page-item">
+                                <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Siguiente</a>
+                            </li>`;
+        paginationControls.innerHTML += nextButton;
+    }
+}
 
     // Cambiar página
     function changePage(page) {
         currentPage = page;
         renderTable();
     }
+
+    //ALERTA DE ELIMINAR DATA
+    document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.delete-button')) {
+                e.preventDefault();
+                const form = e.target.closest('form');
+                Swal.fire({
+                    html: `        <p>¡No podrás revertir esto!</p>
+       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;">
+            <defs>
+                <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#800000" />
+                    <stop offset="100%" stop-color="#e91d53" />
+                </linearGradient>
+            </defs>
+            <path d="M3 6h18M9 6v12M15 6v12M19 6v16H5V6z" />
+        </svg>
+    `,
+    title: '¿Estás seguro?',
+    showCancelButton: true,
+    confirmButtonColor: '#800000',
+    cancelButtonColor: '#C7C8CC',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+        popup: 'custom-swal-popup' 
+    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                        Swal.fire({
+                            title: "ELiminado!",
+                            text: "El proyecto fue elimando con exito.",
+                            icon: "success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#800000'
+    }); 
+                    }
+                });
+            }
+        });
+    });
 </script>
+<style>
+    .page-item.active .page-link {
+    background: #800000 !important;
+    color: white !important;
+    border-color: red;
+}
+.page-link {
+    color: #6c757d; 
+    text-decoration: none;
+}
+.page-link:hover {
+    color: #495057; 
+}
+/* Fondo con desenfoque para la alerta */
+.custom-swal-popup {
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    background: rgba(255, 255, 255, 0.9); 
+    border-radius: 10px;
+}
+
+.swal2-container {
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px); 
+}
+
+
+</style>
 @endsection

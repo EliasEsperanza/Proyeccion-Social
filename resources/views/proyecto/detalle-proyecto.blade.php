@@ -9,7 +9,7 @@
             <h2 class="text-center">{{ $proyecto->nombre_proyecto }}</h2>
             
             <h3>Descripción:</h3>
-            <p>{{ $proyecto->descripcion_proyecto }}</p>
+            <p>{!! $proyecto->descripcion_proyecto !!}</p>
             
             <h4>Horas requeridas:</h4>
             <p>{{ $proyecto->horas_requeridas }}</p>
@@ -24,6 +24,10 @@
                 <a href="{{ route('proyecto-disponible') }}" class="btn btn-secondary btn-return">Volver</a>
                 <a href="{{ route('proyecto.descargar-pdf', ['id' => $proyecto->id_proyecto]) }}" class="btn btn-danger btn-pdf">Generar PDF</a>
             </div>
+
+
+
+            
         </div>
     </div>
 </div>

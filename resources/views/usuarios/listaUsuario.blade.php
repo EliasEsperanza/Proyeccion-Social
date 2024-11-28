@@ -3,9 +3,11 @@
 @section('title', 'Lista de Usuarios')
 
 @section('content')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
-    .w-5,.h-5 {
+    .w-5, .h-5 {
         width: 1rem;
         height: 1rem;
     }
@@ -16,22 +18,72 @@
     .flex.justify-between.flex-1.sm\:hidden > a {
         display: none;
     }
+    .form-control {
+        border: 1px solid #800000;
+        border-radius: 5px;
+    }
+    .form-control:focus {
+        box-shadow: 0 0 3px #800000;
+    }
+  
+    .btn-eliminar {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .input-d{
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ced4da !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    }
+
+    .input-d:checked {
+        background-color: #0d6efd !important;
+        border-color: #0d6efd !important;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25)!important;
+    }
+    .icon-d{
+        background: #800000;
+        color: #fff !important;
+        padding: 0.49rem 0.8rem ;
+    }
+
+    .icon-d i{
+        color: #fff !important; 
+    }
+    /* Fondo con desenfoque para la alerta */
+.custom-swal-popup {
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    background: rgba(255, 255, 255, 0.9); 
+    border-radius: 10px;
+}
+
+.swal2-container {
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px); 
+}
+    
 </style>
 
 <div class="container-fluid mt-1">
-    <h2 class="text-start mb-4">Lista de Usuarios</h2>
+    <h2 class="text-start mb-4">Usuarios</h2>
     <div class="card shadow-sm p-4" style="border-radius: 12px; overflow: hidden;">
 
         <!-- Formulario de búsqueda -->
         <form method="GET" action="{{ route('usuarios') }}" class="d-flex justify-content-between align-items-center mb-3">
-            <button type="submit" class="btn btn-danger" form="deleteForm" onclick="return confirm('¿Estás seguro de que deseas eliminar los usuarios seleccionados?')">
-                Eliminar seleccionados
+            <button type="submit" class="btn btn-danger btn-eliminar" form="deleteForm">
+                <i class="fa-solid fa-trash-can"></i> Eliminar seleccionados
             </button>
+            
             <div class="input-group ms-auto w-25">
-                <span class="input-group-text bg-light border-0">
-                    <i class="bi bi-search text-secondary"></i>
+                <span class="input-group-text icon-d">
+                    <i class="bi bi-search "></i>
                 </span>
-                <input type="text" name="search" value="{{ request('search') }}" class="form-control border-0" placeholder="Buscar">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Buscar">
                 <button type="submit" class="input-group-text bg-light border-0">
                     <i class="fas fa-filter custom-filter-icon"></i>
                 </button>
@@ -57,7 +109,7 @@
                 <table class="table align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col"><input type="checkbox" id="selectAll"></th>
+                            <th scope="col"><input type="checkbox" class="input-d"  id="selectAll"></th>
                             <th scope="col">ID</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Correo Electrónico</th>
@@ -69,7 +121,7 @@
                     <tbody>
                     @foreach($users as $usuario)
                         <tr>
-                            <td><input type="checkbox" name="users[]" value="{{ $usuario->id_usuario }}"></td>
+                            <td><input type="checkbox" class="form-check-input " name="users[]" value="{{ $usuario->id_usuario }}"></td>
                             <td>{{ $usuario->id_usuario }}</td>
                             <td>{{ $usuario->name }}</td>
                             <td>{{ $usuario->email }}</td>
@@ -88,7 +140,7 @@
                                     <form method="POST" action="{{ route('usuarios.eliminarUsuario', ['id' => $usuario->id_usuario]) }}" style="display: inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-light btn-sm p-2 px-3" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">
+                                        <button type="submit" class="btn btn-light btn-sm p-2 px-3 delete-button">
                                             <i class="bi bi-trash text-danger"></i>
                                         </button>
                                     </form>
@@ -116,7 +168,7 @@
             </div>
 
             <div class="rounded-pagination-wrapper" id="paginationWrapper">
-                <div class="pagination-container">
+                <div class="pagination-container pag page-item">
                     {{ $users->appends(['search' => request('search'), 'per_page' => request('per_page')])->links() }}
                 </div>
             </div>
@@ -125,9 +177,116 @@
 </div>
 
 <script>
-    document.getElementById('selectAll').addEventListener('click', function() {
+ document.getElementById('selectAll').addEventListener('click', function() {
         const checkboxes = document.querySelectorAll('input[name="users[]"]');
         checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+});
+
+    
+ //ALERTA DE ELIMINAR USUARIO INDIVIDUAL
+ document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.delete-button')) {
+                e.preventDefault();
+                const form = e.target.closest('form');
+                Swal.fire({
+                    html: `        <p>¡No podrás revertir esto!</p>
+       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;">
+            <defs>
+                <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#800000" />
+                    <stop offset="100%" stop-color="#e91d53" />
+                </linearGradient>
+            </defs>
+            <path d="M3 6h18M9 6v12M15 6v12M19 6v16H5V6z" />
+        </svg>
+    `,
+    title: '¿Estás seguro?',
+    showCancelButton: true,
+    confirmButtonColor: '#800000',
+    cancelButtonColor: '#C7C8CC',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+        popup: 'custom-swal-popup' 
+    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); 
+                        Swal.fire({
+                            title: "ELiminado!",
+                            text: "El Usuario fue elimando con exito.",
+                            icon: "success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#800000'
+    }); 
+                    }
+                });
+            }
+        });
     });
+
+     //ALERTA DE ELIMINAR TODOS LOS USUARIOS SELECCIONADOS
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.btn-eliminar')) {
+            e.preventDefault();
+
+            // Verificar si hay al menos un usuario seleccionado
+            const checkboxes = document.querySelectorAll('input[name="users[]"]');
+            let isChecked = false;
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    isChecked = true;
+                }
+            });
+
+            if (!isChecked) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Por favor, seleccione al menos un usuario para eliminar.",
+                });
+                return; // Detener la ejecución del resto de la función
+            }
+            Swal.fire({
+                html: `
+                    <p>¡No podrás revertir esto!</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;">
+                        <defs>
+                            <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#800000" />
+                                <stop offset="100%" stop-color="#e91d53" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M3 6h18M9 6v12M15 6v12M19 6v16H5V6z" />
+                    </svg>
+                `,
+                title: '¿Estás seguro de eliminar a todos los usuarios seleccionados?',
+                showCancelButton: true,
+                confirmButtonColor: '#800000',
+                cancelButtonColor: '#C7C8CC',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: 'custom-swal-popup' 
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('deleteForm').submit();
+                    Swal.fire({
+                            title: "ELiminado!",
+                            text: "El Usuario fue elimando con exito.",
+                            icon: "success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#800000'
+    }); 
+                }
+            });
+        }
+    });
+});
+
 </script>
 @endsection
