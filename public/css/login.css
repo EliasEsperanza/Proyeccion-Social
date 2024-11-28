@@ -1,32 +1,27 @@
 body {
-    position: relative !important; 
-    background: 
+    position: relative !important;
+    background:
     url(../img/minerva.png) no-repeat 30% 50% ,
-    url(../img/FondoBienvenida.png) no-repeat 100% top, 
-    url(../img/FondoBienvenida2.png) no-repeat 0% bottom !important;  
+    url(../img/FondoBienvenida.png) no-repeat 100% top,
+    url(../img/FondoBienvenida2.png) no-repeat 0% bottom !important;
+    margin: 0;
+    padding: 0;
     background-size: 50%, 30%,30% !important;
 }
 /*----------------PRELOADER ANIMATION-------*/
-#preloader {
-    z-index: 9999;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: white;
-    display: none;
-}
+
 .loader{
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 200px;
     height: 200px;
     box-sizing: border-box;
-    background: white;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
 }
+
 .loader .face{
     position: absolute;
     border:  2px solid transparent;
@@ -57,7 +52,7 @@ body {
     position: absolute;
     top: calc(50% - 1px);
     left: 50%;
-    width: 50%;
+    width: 2px;
     height: 2px;
     transform-origin: left;
 }
@@ -101,6 +96,22 @@ transform: rotate(-45deg);
 
 }
 
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 9998;
+    display: none;
+}
+
+.loader.active + .overlay {
+    display: block;
+}
+
 @keyframes animate {
     0%{
         transform: rotate(0deg);
@@ -121,11 +132,11 @@ transform: rotate(-45deg);
     font-weight: bold;
 }
 button:focus {
-    outline: none; 
-    box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.5); 
-    background-color: #660000 !important; 
-    border-color: #440000 !important; 
-} 
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.5);
+    background-color: #660000 !important;
+    border-color: #440000 !important;
+}
 button:focus-visible {
     outline: none;
     box-shadow: 0 0 0 0.2rem rgba(128, 0, 0, 0.5) !important;
@@ -133,10 +144,10 @@ button:focus-visible {
     border-color: #440000 !important;
 }
 button:active {
-    background-color: #660000; 
-    border-color: #440000; 
-    box-shadow: none; 
-    outline: none; 
+    background-color: #660000;
+    border-color: #440000;
+    box-shadow: none;
+    outline: none;
 }
 .btn-primary {
     background-color: #800000;

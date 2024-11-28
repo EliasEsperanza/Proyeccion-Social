@@ -30,7 +30,7 @@
             <div class="card-body">
                 <h3 class="text-center mb-4 fw-bold">Iniciar sesión</h3>
 
-                <form action="{{ route('login.process') }}" method="POST" class="needs-validation" novalidate autocomplete="off">
+                <form action="{{ route('login.process') }}" method="POST" class="needs-validation" novalidate autocomplete="off" onsubmit="showPreloader()">
                     @csrf
 
                     @if($errors->has('error'))
@@ -128,6 +128,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/login.js') }}"></script>
+
+    <script>
+        function showPreloader() {
+
+            document.getElementById('preloader').style.display = 'flex';
+        }
+
+        function hidePreloader() {
+
+            document.getElementById('preloader').style.display = 'none';
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function () {
+                    showPreloader();
+                });
+            });
+        });
+    </script>
+
 
 </body>
 
