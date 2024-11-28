@@ -1,13 +1,19 @@
 @extends('layouts.app')
 @section('title', 'Editar Proyecto')
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="container mt-4">
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
+        Swal.fire({
+                title: "¡Actualizado!",
+                text: "El proyecto fue actualizado con éxito.",
+                icon: "success",
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#800000'});
     @endif
-
     @if(session('error'))
         <div class="alert alert-danger">
             {{ session('error') }}
@@ -110,6 +116,8 @@
 
 <!-- CKEditor Script -->
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+<!-- CKEditor Script -->
+<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         ClassicEditor
@@ -120,6 +128,7 @@
             .catch(error => {
                 console.error('Error al inicializar CKEditor:', error);
             });
+
     });
 </script>
 @endsection

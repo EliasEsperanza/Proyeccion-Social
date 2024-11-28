@@ -4,6 +4,8 @@
 
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     .w-5, .h-5 {
         width: 1rem;
@@ -52,6 +54,18 @@
     .icon-d i{
         color: #fff !important; 
     }
+    /* Fondo con desenfoque para la alerta */
+.custom-swal-popup {
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    background: rgba(255, 255, 255, 0.9); 
+    border-radius: 10px;
+}
+
+.swal2-container {
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px); 
+}
     
 </style>
 
@@ -61,7 +75,7 @@
 
         <!-- Formulario de búsqueda -->
         <form method="GET" action="{{ route('usuarios') }}" class="d-flex justify-content-between align-items-center mb-3">
-            <button type="submit" class="btn btn-danger btn-eliminar" form="deleteForm" onclick="return confirm('¿Estás seguro de que deseas eliminar los usuarios seleccionados?')">
+            <button type="submit" class="btn btn-danger btn-eliminar" form="deleteForm">
                 <i class="fa-solid fa-trash-can"></i> Eliminar seleccionados
             </button>
             
@@ -126,7 +140,7 @@
                                     <form method="POST" action="{{ route('usuarios.eliminarUsuario', ['id' => $usuario->id_usuario]) }}" style="display: inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-light btn-sm p-2 px-3" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">
+                                        <button type="submit" class="btn btn-light btn-sm p-2 px-3 delete-button">
                                             <i class="bi bi-trash text-danger"></i>
                                         </button>
                                     </form>
@@ -167,5 +181,112 @@
         const checkboxes = document.querySelectorAll('input[name="users[]"]');
         checkboxes.forEach(checkbox => checkbox.checked = this.checked);
 });
+
+    
+ //ALERTA DE ELIMINAR USUARIO INDIVIDUAL
+ document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.delete-button')) {
+                e.preventDefault();
+                const form = e.target.closest('form');
+                Swal.fire({
+                    html: `        <p>¡No podrás revertir esto!</p>
+       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;">
+            <defs>
+                <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#800000" />
+                    <stop offset="100%" stop-color="#e91d53" />
+                </linearGradient>
+            </defs>
+            <path d="M3 6h18M9 6v12M15 6v12M19 6v16H5V6z" />
+        </svg>
+    `,
+    title: '¿Estás seguro?',
+    showCancelButton: true,
+    confirmButtonColor: '#800000',
+    cancelButtonColor: '#C7C8CC',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+    customClass: {
+        popup: 'custom-swal-popup' 
+    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); 
+                        Swal.fire({
+                            title: "ELiminado!",
+                            text: "El proyecto fue elimando con exito.",
+                            icon: "success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#800000'
+    }); 
+                    }
+                });
+            }
+        });
+    });
+
+     //ALERTA DE ELIMINAR TODOS LOS USUARIOS SELECCIONADOS
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.btn-eliminar')) {
+            e.preventDefault();
+
+            // Verificar si hay al menos un usuario seleccionado
+            const checkboxes = document.querySelectorAll('input[name="users[]"]');
+            let isChecked = false;
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    isChecked = true;
+                }
+            });
+
+            if (!isChecked) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Por favor, seleccione al menos un usuario para eliminar.",
+                });
+                return; // Detener la ejecución del resto de la función
+            }
+            Swal.fire({
+                html: `
+                    <p>¡No podrás revertir esto!</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;">
+                        <defs>
+                            <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#800000" />
+                                <stop offset="100%" stop-color="#e91d53" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M3 6h18M9 6v12M15 6v12M19 6v16H5V6z" />
+                    </svg>
+                `,
+                title: '¿Estás seguro de eliminar a todos los usuarios seleccionados?',
+                showCancelButton: true,
+                confirmButtonColor: '#800000',
+                cancelButtonColor: '#C7C8CC',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: 'custom-swal-popup' 
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('deleteForm').submit();
+                    Swal.fire({
+                            title: "ELiminado!",
+                            text: "El proyecto fue elimando con exito.",
+                            icon: "success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#800000'
+    }); 
+                }
+            });
+        }
+    });
+});
+
 </script>
 @endsection
