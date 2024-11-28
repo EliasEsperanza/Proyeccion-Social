@@ -73,18 +73,15 @@
                         <div class="card shadow-sm h-100 card-reducido">
                             <div class="card-body">
                                 <h5 class="titulo-documento">
-                                    <span class="step-number">2.</span> Autorización y Planificación
+                                    <span class="step-number">2.</span> Asignación de tutor
                                 </h5>
-                                <p class="descripcion-corta">Obtén la autorización y planifica tu servicio social</p>
+                                <p class="descripcion-corta">Solicita la asignacion de un tutor para orientarte en el servicio social</p>
                                 <ul class="step-list">
-                                    <li>Recibir carta de autorización para iniciar el servicio social.</li>
-                                    <li>Consultar las opciones de servicio social disponibles.</li>
-                                    <li>Elaborar un plan de trabajo con ayuda del tutor asignado.</li>
-                                    <li>Entregar el plan de trabajo al coordinador de la subunidad.</li>
+                                    <li>Rellena la asignacion de tutor</li>
+                                    <li>Entregar la solicitud al coordinador de la subunidad.</li>
                                 </ul>
-                                <a href="{{ route('descargar', ['filename' => 'Constancia de aprobación del Plan de Trabajo del Servicio Social.docx']) }}" class="btn btn-descargar">
-                                    <i class="bi bi-download me-2"></i> Descargar plan-trabajo.docx
-                                </a>
+                                <a href="{{ route('descargar', ['filename' => 'CARTA ASIGNACION DE TUTOR.docx']) }}" class="btn btn-descargar"><i class="bi bi-download"></i> Descargar Asignación Tutor</a>
+
                             </div>
                         </div>
                     </div>
@@ -100,8 +97,23 @@
                 </button>
                 </h2>
                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                </div>
+                    <div class="accordion-body">
+                        <div class="col-12">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-body">
+                                    <h5 class="titulo-documento">
+                                        <span class="step-number">3. </span>Modelo de Carta a la Institución
+                                    </h5>
+                                    <p class="descripcion-corta">Plantilla de carta para la institución que recibirá el estudiante</p>
+                                    <ul class="step-list">
+                                        <li>Rellena la solicitud </li>
+                                        <li>Una vez rellenado, entregalo a la institucion en donde se realizarán las horas sociales</li>
+                                    </ul>
+                                    <a href="{{ route('descargar', ['filename' => 'MODELO DE CARTA A LA INSTITUCION QUE SOLICITA ESTUDIANTES EN SERVICIO SOCIAL.docx']) }}" class="btn btn-descargar"><i class="bi bi-download"></i> Descargar Modelo Carta</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="accordion-item">
