@@ -15,12 +15,7 @@ class SecurityMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
-            if ($request->is('bienvenida') || $request->is('login.login')) {
-                return $next($request); 
-            }
-            return redirect()->route('Bienvenida');  
-        }
+
 
         $response = $next($request);
 
