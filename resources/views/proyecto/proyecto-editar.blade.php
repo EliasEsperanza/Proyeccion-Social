@@ -1,4 +1,4 @@
-@extends('layouts.app') 
+@extends('layouts.app')
 
 @section('title', 'Editar proyecto')
 
@@ -45,7 +45,7 @@
             <!-- Sección de Estudiantes -->
             <div class="mb-3">
                 <label class="form-label">Estudiantes</label>
-                
+
                 <!-- Formulario para agregar estudiantes -->
                 <form action="{{ route('proyectos.asignarEstudiante', $proyecto->id_proyecto) }}" method="POST" class="d-flex mb-3">
                     @csrf
@@ -86,7 +86,7 @@
             <form action="{{ route('proyectos.actualizar', $proyecto->id_proyecto) }}" method="POST">
                 @csrf
                 @method('PUT') <!-- Método para actualización -->
-                
+
                 <div class="mb-3">
                     <label for="nombreProyecto" class="form-label">Nombre del Proyecto</label>
                     <input type="text" class="form-control" id="nombreProyecto" name="nombre_proyecto" value="{{ $proyecto->nombre_proyecto }}" required>
@@ -157,7 +157,7 @@
 <script src="{{ asset('js/gestionProyecto.js') }}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Asocia el evento al formulario específico de actualización
+    // Asociar el evento al formulario específico de actualización
     document.querySelector('form[action="{{ route("proyectos.actualizar", $proyecto->id_proyecto) }}"]').addEventListener('submit', function (event) {
         event.preventDefault(); // Evita el envío inmediato del formulario
         
@@ -177,7 +177,27 @@
             event.target.submit(); // Envía el formulario después de la alerta
         });
     });
-});
+  });
 
+  // Validar fechas: Asegurar que la fecha de finalización sea al menos 6 meses después de la fecha de inicio
+  document.getElementById('fechaInicio').addEventListener('change', function () {
+    const fechaInicio = this.value;
+    const fechaFinInput = document.getElementById('fechaFinalizacion');
+
+    if (fechaInicio) {
+        const fechaInicioDate = new Date(fechaInicio);
+        fechaInicioDate.setMonth(fechaInicioDate.getMonth() + 6);
+
+        const minFechaFin = fechaInicioDate.toISOString().split('T')[0];
+
+        fechaFinInput.min = minFechaFin;
+
+        if (fechaFinInput.value < minFechaFin) {
+            fechaFinInput.value = '';
+        }
+    }
+  });
 </script>
+
 @endsection
+
