@@ -36,6 +36,7 @@
         text-align: center;
     }
 }
+
 .circulo-paso {
     width: 2rem;
     height: 2rem;
@@ -43,19 +44,28 @@
     line-height: 2rem;
     text-align: center;
     border-radius: 50%;
-    color: #800000;
-    background-color: #d1d5db;
+    color:  #fff;
+    background-color: #800000;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 1rem; /* Espacio entre el círculo y el texto */
-    flex-shrink: 0; /* Evita que el círculo cambie de tamaño */
-    transform: translate(12px, 15px); 
+    margin-right: 1rem;
+    /* Espacio entre el círculo y el texto */
+    flex-shrink: 0;
+    /* Evita que el círculo cambie de tamaño */
+    transform: translate(-50px, 20px);
 }
-
 @media (max-width: 576px) {
     .circulo-paso {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+        margin-right: 0.5rem;
+    }
+}
+@media (max-width: 576px) {
+    .circulo-paso2 {
         width: 2rem;
         height: 2rem;
         font-size: 1rem;
@@ -116,20 +126,20 @@
     border-bottom: none; /* Elimina la línea del último elemento */
 }
 
-.circulo-paso {
-    width: 2.2rem;
-    height: 2.2rem;
-    font-size: 1rem;
-    line-height: 2.2rem;
-    text-align: center;
-    border-radius: 50%;
-    color: #fff;
-    background-color: #800000;
-    font-weight: bold;
-    flex-shrink: 0; /* Evita que cambie de tamaño */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Agrega un ligero efecto de sombra */
-    margin-top: 0.2rem; /* Alinea mejor con el texto */
-}
+    /* .circulo-paso {
+        width: 2.2rem;
+        height: 2.2rem;
+        font-size: 1rem;
+        line-height: 2.2rem;
+        text-align: center;
+        border-radius: 50%;
+        color: #fff;
+        background-color: #800000;
+        font-weight: bold;
+        flex-shrink: 0; 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        margin-top: 0.2rem; 
+    }*/
 
 .list-group-item p {
     margin: 0; /* Elimina márgenes adicionales del texto */
