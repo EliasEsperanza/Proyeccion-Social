@@ -4,6 +4,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/gestionProyecto.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 
 @section('content')
@@ -12,6 +13,18 @@
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
+    <script>
+            Swal.fire({
+                title: "¡Actualizado!",
+                text: "El proyecto fue actualizado con éxito.",
+                icon: "success",
+                timer: 3000, 
+                timerProgressBar: true, 
+                didClose: () => {
+                    // Opcional agregar algo
+                }
+            });
+        </script>
 @endif
 
 @if ($errors->any())
@@ -142,4 +155,29 @@
 <script src="{{ asset('js/filtrarTutor.js') }}"></script>
 <script src="{{ asset('js/filtrarEstudiantes.js') }}"></script>
 <script src="{{ asset('js/gestionProyecto.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Asocia el evento al formulario específico de actualización
+    document.querySelector('form[action="{{ route("proyectos.actualizar", $proyecto->id_proyecto) }}"]').addEventListener('submit', function (event) {
+        event.preventDefault(); // Evita el envío inmediato del formulario
+        
+        Swal.fire({
+            title: "¡Actualización en proceso!",
+            text: "El proyecto se está actualizando...",
+            icon: "info",
+            iconColor: '#800000',
+            timer: 3000,
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#800000',
+            timerProgressBar: true,
+            didClose: () => {
+                // Este bloque se ejecuta después de cerrar la alerta
+            }
+        }).then(() => {
+            event.target.submit(); // Envía el formulario después de la alerta
+        });
+    });
+});
+
+</script>
 @endsection
