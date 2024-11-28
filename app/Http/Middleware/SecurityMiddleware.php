@@ -21,13 +21,35 @@ class SecurityMiddleware
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
         // Prevenir inyecciones SQL
-        foreach ($request->all() as $key => $value) {
-            if (is_string($value) && preg_match('/(\b(SELECT|INSERT|DELETE|UPDATE|DROP|ALTER)\b|--|\/\*|\*\/|;)/i', $value)) {
-                abort(400, "Entrada inválida detectada en el campo '{$key}'.");
+        foreach ($request->except(['_token', '_method']) as $key => $value) {
+            if (is_string($value) && $this->containsMaliciousSQL($value)) {
+                return redirect()->route('Malisioso')->with('error', 'Entrada inválida, cuidadito');
             }
         }
+        
 
         return $response;
     }
-}
 
+        /**
+     * Detecta patrones de SQL maliciosos en una cadena
+     *
+     * @param string $value
+     * @return bool
+     */
+    protected function containsMaliciousSQL(string $value): bool
+    {
+        $patterns = [
+            '/(\b(UNION|DROP|ALTER|INSERT|DELETE|UPDATE|SELECT)\b.+?(FROM|INTO))/i',
+            '/(--|\/\*|\*\/|;)/', 
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
