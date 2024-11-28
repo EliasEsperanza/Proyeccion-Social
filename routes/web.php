@@ -447,4 +447,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/solicitud-proyecto', [SolicitudProyectoController::class, 'index'])->name('solicitud-proyecto');
 });
 
-?>
+Route::get('/malisioso', function () {
+    return view('Malisioso');
+})->name('Malisioso');
+
