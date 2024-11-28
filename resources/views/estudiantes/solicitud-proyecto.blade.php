@@ -16,7 +16,7 @@
         <div class="card-body">
             <form id="formProyecto" method="POST" action="{{ route('proyectos.store_solicitud') }}">
                 @csrf
-                
+
                 <div class="mb-4">
                     <label for="nombreProyecto" class="form-label">Nombre del Proyecto</label>
                     <input type="text" class="form-control" id="nombreProyecto" name="nombre_proyecto" placeholder="Nombre del Proyecto" required>
@@ -71,7 +71,7 @@
     const selectEstudiantes = document.querySelector('#nombreEstudiante');
     const estudiantesList = document.querySelector('#estudiantesList');
     const estudiantesInput = document.querySelector('#estudiantesIds');
-    let estudiantesSeleccionados = []; 
+    let estudiantesSeleccionados = [];
 
     fetch(`/estudiantes-por-seccion/${idSeccion}`)
         .then(response => response.json())
@@ -127,7 +127,7 @@
             alert('El estudiante ya ha sido agregado o no es válido.');
         }
 
-        selectEstudiantes.value = ''; 
+        selectEstudiantes.value = '';
     }
 
 
@@ -147,6 +147,27 @@
         console.log('Fecha de inicio:', document.querySelector('#fechaInicio').value);
         console.log('Fecha de finalización:', document.querySelector('#fechaFin').value);
         console.log('ID de la Sección:', idSeccion);
+    });
+</script>
+
+<script>
+    document.getElementById('fechaInicio').addEventListener('change', function () {
+        const fechaInicio = this.value;
+        const fechaFinInput = document.getElementById('fechaFin');
+
+        if (fechaInicio) {
+            const fechaInicioDate = new Date(fechaInicio);
+            fechaInicioDate.setMonth(fechaInicioDate.getMonth() + 6);
+
+
+            const minFechaFin = fechaInicioDate.toISOString().split('T')[0];
+
+            fechaFinInput.min = minFechaFin;
+
+            if (fechaFinInput.value < minFechaFin) {
+                fechaFinInput.value = '';
+            }
+        }
     });
 </script>
 

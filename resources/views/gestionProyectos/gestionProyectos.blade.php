@@ -31,7 +31,7 @@
     <div class="container">
         <h1 class="mb-4">Asignar Proyecto</h1>
 
-        
+
 
         <div class="card w-100">
             <div class="card-body">
@@ -54,7 +54,7 @@
                     <!-- Sección de Estudiantes -->
         <div class="mb-3">
             <label class="form-label">Estudiantes</label>
-            
+
             <div class="d-flex">
                 <select class="form-select" id="idEstudiante" name="idEstudiante" disabled required>
                     @foreach ($estudiantes as $estudiante)
@@ -131,7 +131,7 @@
                             </option>
                             @endforeach
                         </select>
-                        
+
                     </div>
                     <button type="submit" class="btn btn-primary w-100 btn-gestion fw-bold">Asignar Proyecto</button>
                 </form>
@@ -306,6 +306,27 @@
     });
 });
 
+</script>
+
+<script>
+    document.getElementById('fecha_inicio').addEventListener('change', function () {
+        const fechaInicio = this.value;
+        const fechaFinInput = document.getElementById('fecha_fin');
+
+        if (fechaInicio) {
+            const fechaInicioDate = new Date(fechaInicio);
+            fechaInicioDate.setMonth(fechaInicioDate.getMonth() + 6);
+
+
+            const minFechaFin = fechaInicioDate.toISOString().split('T')[0];
+
+            fechaFinInput.min = minFechaFin;
+
+            if (fechaFinInput.value < minFechaFin) {
+                fechaFinInput.value = '';
+            }
+        }
+    });
 </script>
 
     @endsection
