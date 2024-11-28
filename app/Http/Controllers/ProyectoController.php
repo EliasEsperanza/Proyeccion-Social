@@ -280,7 +280,7 @@ class ProyectoController extends Controller
         }
         return view("proyecto.proyecto-editar", compact('proyecto', 'estados', 'estudiantes', 'tutores', 'secciones'));
     }
-    public function edit_gestion_proyecto()
+    public function edit_gestion_proyecto(Request $request)
     {
         $proyectos = Proyecto::with([
             'seccion.departamento',
@@ -289,11 +289,10 @@ class ProyectoController extends Controller
             'tutorr.seccionesTutoreadas',
             'estadoo'
         ])
-
-            ->whereHas('estadoo', function ($query) {
-                $query->where('nombre_estado', '=', 'Disponible');
-            })
-            ->get();
+        ->whereHas('estadoo', function ($query) {
+            $query->where('nombre_estado', '=', 'Disponible');
+        })
+        ->get();
 
         $estados = Estado::all();
         $estudiantes = Estudiante::all();
@@ -303,10 +302,28 @@ class ProyectoController extends Controller
             ->with('seccionesTutoreadas')
             ->get();
 
+        if ($request->has('tutor_id') && $request->has('seccion_id')) {
+            $tutor = User::role('tutor')->find($request->input('tutor_id'));
+            if (!$tutor) {
+                return redirect()->back()->with('error', 'El tutor seleccionado no existe.');
+            }
+
+            $seccionTutor = $tutor->seccionesTutoreadas()->where('id', $request->input('seccion_id'))->first();
+            if (!$seccionTutor) {
+                return redirect()->back()->with('error', 'El tutor no pertenece a la sección seleccionada.');
+            }
+
+            $proyecto = Proyecto::findOrFail($request->input('proyecto_id'));
+            $proyecto->tutor_id = $tutor->id;
+            $proyecto->seccion_id = $request->input('seccion_id');
+            $proyecto->save();
+
+            return redirect()->route('gestionProyectos.gestionProyectos')->with('success', 'Tutor asignado correctamente.');
+        }
+
         if (!$proyectos) {
             return redirect()->route('gestionProyectos.gestionProyectos')->with('error', 'Proyecto no encontrado');
         }
-        // dd($proyectos);
 
         return view("gestionProyectos.gestionProyectos", compact('proyectos', 'estados', 'estudiantes', 'tutores', 'secciones'));
     }
