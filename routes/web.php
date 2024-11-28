@@ -412,4 +412,9 @@ route::post('/proyecto/{id}/solicitudes/{solicitud}/deny', [ProyectoController::
 
 
 Route::get('/curret-user', [AuthController::class, 'Identificador']);
-?>
+
+// En routes/web.php
+Route::get('/malisioso', function () {
+    return view('malisioso');
+})->name('login.malisioso');
+
