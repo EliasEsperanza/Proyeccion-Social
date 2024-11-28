@@ -463,7 +463,8 @@ class UserController extends Controller
         return view('usuarios.perfilUsuario', compact('usuario'));
     }
     public function updateusuario(Request $request, $id)
-    {
+    {   
+
         try {
             $request->validate([
                 'nombre' => [
@@ -472,21 +473,32 @@ class UserController extends Controller
                     'max:28',
                     'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'
                 ],
+                'email' => [
+                    'required',
+                    'string',
+                    'email',
+                    'regex:/@ues\.edu\.sv$/'
+                ],
             ], [
                 'nombre.required' => 'El nombre es obligatorio.',
-                'nombre.max' => 'El nombre no puede tener más de 22 caracteres.',
+                'nombre.max' => 'El nombre no puede tener más de 28 caracteres.',
                 'nombre.regex' => 'El nombre solo puede contener letras.',
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.email' => 'Debe ingresar un correo electrónico válido.',
+                'email.regex' => 'El correo debe ser del dominio @ues.edu.sv.',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
         }
-
         $usuario = User::findOrFail($id);
         $usuario->name = $request->nombre;
+        $usuario->email = $request->email;
+    
         $usuario->save();
-
+    
         return redirect()->route('perfil_usuario')->with('success', 'Perfil actualizado correctamente');
     }
+    
 
     public function login(Request $request)
     {

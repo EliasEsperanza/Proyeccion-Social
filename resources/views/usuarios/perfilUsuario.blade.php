@@ -1,12 +1,12 @@
 @php
-    $role = auth()->user()->roles->first()->name ?? null;
+$role = auth()->user()->roles->first()->name ?? null;
 @endphp
 
 @extends(
-    $role === 'Estudiante' ? 'layouts.appE' : 
-    ($role === 'Tutor' ? 'layouts.app' : 
-    ($role === 'Coordinador' ? 'layouts.app' : 
-    'layouts.app'))
+$role === 'Estudiante' ? 'layouts.appE' :
+($role === 'Tutor' ? 'layouts.app' :
+($role === 'Coordinador' ? 'layouts.app' :
+'layouts.app'))
 )
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -35,7 +35,7 @@
                 @csrf
                 @method('PUT')
                 <div class="mb-3 w-50">
-                    <label for="nombre" class="form-label">Nombre</label>
+                    <label for="nombre" class="form-label">Nomjghjbre</label>
                     <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" value="{{$usuario->name}}">
                     @error('nombre')
                     <div class="invalid-feedback">{{ $message }}</div>
@@ -43,7 +43,15 @@
                 </div>
                 <div class="mb-3 w-50">
                     <label for="correo" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="correo" value="{{$usuario->email}}" readonly>
+                    <input
+                        type="email"
+                        class="form-control @error('email') is-invalid @enderror"
+                        id="correo"
+                        name="email"
+                        value="{{ old('email', $usuario->email) }}">
+                    @error('email')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="mb-3 w-50">
                     <label for="rol" class="form-label">Rol</label>
@@ -69,7 +77,7 @@
             <form id="passwordForm" action="{{ route('update_password') }}" class="d-flex flex-column align-items-center" method="POST">
                 @csrf
                 @method('PUT')
-                
+
                 <!-- Contraseña actual -->
                 <div class="mb-3 w-40">
                     <label for="contrasena_actual" class="form-label">Contraseña actual</label>
@@ -95,10 +103,10 @@
                     <label for="nueva_contrasena" class="form-label">Nueva contraseña</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock icono-candado"></i></span>
-                        <input type="password" 
-                            class="form-control @error('nueva_contrasena') is-invalid @enderror" 
-                            id="nueva_contrasena" 
-                            name="nueva_contrasena" 
+                        <input type="password"
+                            class="form-control @error('nueva_contrasena') is-invalid @enderror"
+                            id="nueva_contrasena"
+                            name="nueva_contrasena"
                             placeholder="Ingrese su nueva contraseña"
                             required>
                         <button type="button" class="btn btn-outline-secondary toggle-password" data-target="nueva_contrasena">
@@ -118,10 +126,10 @@
                     <label for="nueva_contrasena_confirmation" class="form-label">Confirmar contraseña</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock icono-candado"></i></span>
-                        <input type="password" 
-                            class="form-control" 
-                            id="nueva_contrasena_confirmation" 
-                            name="nueva_contrasena_confirmation" 
+                        <input type="password"
+                            class="form-control"
+                            id="nueva_contrasena_confirmation"
+                            name="nueva_contrasena_confirmation"
                             placeholder="Confirme su nueva contraseña"
                             required>
                         <button type="button" class="btn btn-outline-secondary toggle-password" data-target="nueva_contrasena_confirmation">
