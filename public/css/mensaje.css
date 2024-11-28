@@ -1,21 +1,24 @@
 .sidebar {
   background-color: #ffffff;
   color: black;
-  padding-top: 20px;
-  height: 95vh;
+  padding-top: 10px;
+  height: auto;
+  max-height: 86vh;
   overflow-y: auto;
-   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border: 2px solid rgba(220, 20, 60, 0.2); 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(220, 20, 60, 0.2);
 }
 
 .chat-container {
+  display: flex;
   height: 100vh;
   overflow: hidden;
 }
 
-.ventana{
-  height: 95vh;
+.ventana {
+  height: calc(100vh - 80px); 
   overflow: hidden;
+  overflow-y: hidden;
 }
 
 .chat-list, .chat-messages {
@@ -40,7 +43,7 @@
 .chat-item:hover, .chat-item.active {
   background-color: #f8f9fa;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border: 2px solid rgba(220, 20, 60, 0.2); 
+  border: 2px solid rgba(220, 20, 60, 0.2);
 }
 
 .chat-item img {
@@ -58,27 +61,39 @@
   gap: 10px;
   overflow-y: auto;
   flex: 1;
+  max-height: 70vh; 
 }
 
 .message {
-  max-width: 70%;
+  max-width: 300px;
   padding: 10px 15px;
   border-radius: 15px;
   margin-bottom: 10px;
   font-size: 0.9rem;
-  word-wrap:break-word;
+  word-wrap: break-word;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
-
+.message:hover {
+  transform: translateY(-3px); 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);  
+}
 .message.sent {
-  background-color: #B22222;
+  background: linear-gradient(145deg, #f44336, #e53935);   
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);  
   color: white;
   align-self: flex-end;
   border-top-right-radius: 0;
 }
 
 .message.received {
-  background-color: #f0f0f0;
-  color: black;
+  background: linear-gradient(145deg, #0084ff, #0059b3); 
+  box-shadow: 0 4px 8px rgba(0, 132, 255, 0.3); 
+  /* OPCION 2 DE COLOR ROJO MAS OSCURO PARA LOS MENSAJES RECIBIDOS
+   background: linear-gradient(145deg, #b71c1c, #c62828); 
+   box-shadow: 0 4px 8px rgba(183, 28, 28, 0.3);  
+  */
+  color: white;
   align-self: flex-start;
   border-top-left-radius: 0;
 }
@@ -87,11 +102,14 @@
   display: block;
   font-size: 0.75rem;
   margin-top: 5px;
+  color: #fff !important;
+  font-weight: bold;
+  opacity: 0.7; 
 }
 
 .chat-footer {
   padding: 10px 15px;
-  border-top: none; /* Quita el borde superior */
+  border-top: none;
   background-color: white;
 }
 
@@ -154,4 +172,3 @@
       transform: translateX(0);
   }
 }
-

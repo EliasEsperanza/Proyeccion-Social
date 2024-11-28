@@ -47,8 +47,10 @@
 </div>
 
 <div class="contenedor-carrusel ">
-    <h2 class="titulo-proyectos mb-4">Proyectos disponibles
-    </h2>
+    <h2 class="titulo-proyectos mb-4">Proyectos disponibles</h2>
+    @if ($proyectos->isEmpty())
+        <p class="text-muted text-center">No hay proyectos disponibles en este momento.</p>
+    @endif
     <div class="d-flex align-items-center justify-content-center ">
         <button class="btn boton-carrusel" id="btnIzquierda">
             <span class="flecha-carrusel"><i class="bi bi-arrow-left"></i></span>
@@ -56,16 +58,17 @@
         <div class="carrusel carru" id="contenedorCarrusel">
             @foreach ($proyectos as $proyecto)
             <div class="tarjeta-proyecto carru">
-                <h3 class="card-title">{{ $proyecto->nombre_proyecto }}</h3>
+                <h3 class="card-title c-titulo">{{ $proyecto->nombre_proyecto }}</h3>
                 <br>
                 <p class="card-text">Descripción:</p>
                 <p class="card-text">{{ $proyecto->descripcion_proyecto }}</p>
                 <p class="card-text"><strong>Horas requeridas:</strong> {{ $proyecto->horas_requeridas }}</p>
                 <div class="estado-boton">
+                    <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
                     <span class="badge {{ $proyecto->estado == 1 ? 'estado-disponible' : 'estado-no-disponible' }}">
                         {{ $proyecto->estado == 1 ? 'Disponible' : 'No Disponible' }}
+                        <i class="fa-solid fa-circle-exclamation"></i>
                     </span>
-                    <a href="{{ route('proyecto.ver', $proyecto->id_proyecto) }}" class="ver-mas">VER MÁS</a>
                 </div>
             </div>
             @endforeach
@@ -99,8 +102,8 @@
             </li>
 
         </ul>
-        <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>
+       <a href="{{ route('documentos_horas_sociales') }}" class="ver-mas-documentos">VER MÁS</a>
     </div>
 
-    <script src="{{ asset('js/estudianteprincipal.js') }}"></script>
-    @endsection
+<script src="{{ asset('js/estudianteprincipal.js') }}"></script>
+@endsection

@@ -131,6 +131,14 @@
                 </li>
                 @endif
 
+                @if (auth()->user()->hasAnyRole(['Tutor']))
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('proyecto-disponible') }}" onclick="establecerActivo(this)">
+                            <i class="bi bi-person me-2"></i> Proyectos Disponibles
+                        </a>
+                    </li>
+                @endif
+
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('proyecto-g') }}" onclick="establecerActivo(this)">
                         <i class="bi bi-briefcase me-2"></i> Proyectos

@@ -19,30 +19,35 @@ function establecerActivo(elemento) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const activeLink = localStorage.getItem('activeLink');
-    if (activeLink) {
-        const link = document.querySelector(`#barra-lateral .nav-link[href="${activeLink}"]`);
-        if (link) {
-            link.classList.add("activo");
+document.addEventListener("DOMContentLoaded", function () {
+    const enlaces = document.querySelectorAll("#barra-lateral .nav-link"); 
+    const currentUrl = window.location.origin + window.location.pathname; 
+    const perfilUrl = "{{ route('perfil_usuario') }}";
+
+    function desactivarTodos() {
+        enlaces.forEach((enlace) => enlace.classList.remove("activo"));
+    }
+
+    function establecerEnlaceActivo() {
+        desactivarTodos(); 
+        if (currentUrl === perfilUrl) {
+            return; 
+        }
+
+        const enlaceActivo = Array.from(enlaces).find((enlace) => enlace.href === currentUrl);
+        if (enlaceActivo) {
+            enlaceActivo.classList.add("activo");
         }
     }
-});
 
-
-//proyectos disponibles
-document.addEventListener('DOMContentLoaded', function() {
-    const paginationItems = document.querySelectorAll('.paginacion .pagina-item');
-
-    paginationItems.forEach(item => {
-        item.addEventListener('click', function(event) {
-            event.preventDefault(); 
-
-            paginationItems.forEach(el => el.classList.remove('activo'));
-
-            this.classList.add('activo');
+    enlaces.forEach((enlace) => {
+        enlace.addEventListener("click", function () {
+            desactivarTodos();
+            this.classList.add("activo");
         });
     });
+
+    establecerEnlaceActivo();
 });
 
 document.addEventListener('DOMContentLoaded', function() {

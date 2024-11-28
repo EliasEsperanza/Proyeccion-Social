@@ -373,6 +373,7 @@ class ProyectoController extends Controller
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
             'estado' => 'required|integer|exists:estados,id_estado',
             'seccion_id' => 'required|string|exists:secciones,id_seccion',
+            'horas' => 'required|integer|min:0',
         ]);
 
         $tutor = User::find($request->idTutor);
@@ -398,8 +399,8 @@ class ProyectoController extends Controller
             'fecha_fin' => $validatedData['fecha_fin'],
             'estado' => $validatedData['estado'],
             'seccion_id' => $validatedData['seccion_id'],
+            'horas' => $validatedData['horas'],
         ]);
-
         return redirect()->route('gestion-proyecto')->with('success', 'Proyecto actualizado correctamente.');
     }
     public function eliminarEstudiante($proyectoId, $estudianteId)

@@ -472,5 +472,8 @@ input[type="checkbox"].form-check-input:checked::before {
         font-size: 0.875rem;
         padding-left: 2.5rem;
     }
+    #contenido-principal {
+        margin-left: 0px;
+    }
 }
 
