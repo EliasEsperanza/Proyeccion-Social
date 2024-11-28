@@ -5,6 +5,7 @@
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/proyecto-general.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
 
 @section('content')
@@ -129,27 +130,74 @@
 
 <script>
     function submitForm(action) {
-        const form = document.getElementById('proyectosForm');
-        const actionInput = document.getElementById('actionInput');
-        const selectedItems = document.querySelectorAll('input[name="proyectos[]"]:checked');
+    const form = document.getElementById('proyectosForm');
+    const actionInput = document.getElementById('actionInput');
+    const selectedItems = document.querySelectorAll('input[name="proyectos[]"]:checked');
 
-        if (selectedItems.length === 0) {
-            alert('Por favor, selecciona al menos un proyecto para realizar esta acción.');
-            return false;
-        }
-
-        if (action === 'delete') {
-            const confirmDelete = confirm(`¿Estás seguro de que deseas eliminar los ${selectedItems.length} proyectos seleccionados?`);
-            if (!confirmDelete) {
-                return false;
-            }
-        }
-
-        actionInput.value = action;
-
-        form.submit();
+    if (selectedItems.length === 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Por favor, selecciona al menos un proyecto para realizar esta acción.',
+            confirmButtonText: 'Aceptar'
+        });
         return false;
     }
+
+    if (action === 'delete') {
+        Swal.fire({
+            html: `      
+            <P>¿Estás seguro de que deseas eliminar el proyecto seleccionado?</P>  
+            <p>¡No podrás revertir esto!</p>
+       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;">
+            <defs>
+                <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#800000" />
+                    <stop offset="100%" stop-color="#e91d53" />
+                </linearGradient>
+            </defs>
+            <path d="M3 6h18M9 6v12M15 6v12M19 6v16H5V6z" />
+        </svg>
+    `,
+            title: 'Confirmación',
+            showCancelButton: true,
+            confirmButtonColor: '#800000',
+            cancelButtonColor: '#C7C8CC',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                actionInput.value = action;
+                form.submit();
+                Swal.fire({
+                            title: "ELiminado!",
+                            text: "El proyecto fue elimando con exito.",
+                            icon: "success",
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#800000'
+    }); 
+            }
+        });
+        return false;
+    }
+
+    if (action === 'pdf' || action === 'excel') {
+        Swal.fire({
+            icon: 'info',
+            title: 'Generando',
+            text: `Generando ${action === 'pdf' ? 'PDF' : 'Excel'}...`,
+            showConfirmButton: false,
+            timer: 2000
+        }).then(() => {
+            actionInput.value = action;
+            form.submit();
+        });
+        return false;
+    }
+    actionInput.value = action;
+    form.submit();
+    return false;
+}
 
     document.getElementById('selectAll').addEventListener('change', function() {
         const checkboxes = document.querySelectorAll('input[name="proyectos[]"]');
