@@ -9,6 +9,8 @@
     'layouts.app'))
 )
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section('title', 'Perfil de Usuario')
 
@@ -29,7 +31,7 @@
             <h5 class="card-title mb-4">
                 <i class="bi bi-person me-2"></i> Información de perfil
             </h5>
-            <form class="d-flex flex-column align-items-center" action="{{route('update_usuario', $usuario->id_usuario)}}" method="POST">
+            <form id="profileForm" class="d-flex flex-column align-items-center" action="{{route('update_usuario', $usuario->id_usuario)}}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="mb-3 w-50">
@@ -48,7 +50,7 @@
                     <p id="rol" class="form-control-plaintext">{{ $usuario->getRoleNames()->first() ?? 'Sin rol' }}</p>
                 </div>
 
-                <button type="submit" class="btn-custom">Aceptar cambios</button>
+                <button type="submit" class="btn-custom" id="btnAcceptChanges">Aceptar cambios</button>
             </form>
         </div>
     </div>
@@ -128,7 +130,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-custom">
+                <button type="submit" class="btn-custom" id="btnUpdatePassword">
                     Actualizar contraseña
                 </button>
             </form>
@@ -136,24 +138,11 @@
     </div>
 </div>
 
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    @foreach ($errors->all() as $error)
-    <div class="toast show mb-2 overflow-hidden border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-        <div class="toast-header bg-danger text-white">
-            <i class="bi bi-exclamation-circle me-2"></i>
-            <strong class="me-auto">Error</strong>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body border-start border-danger border-4">
-            {{ $error }}
-        </div>
-    </div>
-    @endforeach
-</div>
 
 @endsection
 
 @section('scripts')
 
 <script src="{{ asset('js/actpassperfil.js') }}"></script>
+
 @endsection

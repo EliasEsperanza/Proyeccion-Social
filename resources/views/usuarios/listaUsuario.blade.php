@@ -215,7 +215,7 @@
                         form.submit(); 
                         Swal.fire({
                             title: "ELiminado!",
-                            text: "El proyecto fue elimando con exito.",
+                            text: "El Usuario fue elimando con exito.",
                             icon: "success",
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#800000'
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('deleteForm').submit();
                     Swal.fire({
                             title: "ELiminado!",
-                            text: "El proyecto fue elimando con exito.",
+                            text: "El Usuario fue elimando con exito.",
                             icon: "success",
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#800000'
