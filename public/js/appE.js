@@ -56,3 +56,34 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const enlaces = document.querySelectorAll("#barra-lateral .nav-link"); 
+    const currentUrl = window.location.origin + window.location.pathname; 
+    const perfilUrl = "{{ route('perfil_usuario') }}";
+
+    function desactivarTodos() {
+        enlaces.forEach((enlace) => enlace.classList.remove("activo"));
+    }
+
+    function establecerEnlaceActivo() {
+        desactivarTodos(); 
+        if (currentUrl === perfilUrl) {
+            return; 
+        }
+
+        const enlaceActivo = Array.from(enlaces).find((enlace) => enlace.href === currentUrl);
+        if (enlaceActivo) {
+            enlaceActivo.classList.add("activo");
+        }
+    }
+
+    enlaces.forEach((enlace) => {
+        enlace.addEventListener("click", function () {
+            desactivarTodos();
+            this.classList.add("activo");
+        });
+    });
+
+    establecerEnlaceActivo();
+});
+
