@@ -125,6 +125,19 @@
     font-weight: bold;
   }
 
+  /* Fondo con desenfoque para la alerta */
+.custom-swal-popup {
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    background: rgba(255, 255, 255, 0.9); 
+    border-radius: 10px;
+}
+
+.swal2-container {
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px); 
+}
+
 @media (max-width: 500px) {
     .button-group {
         display: flex;
