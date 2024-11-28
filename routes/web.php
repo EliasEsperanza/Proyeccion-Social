@@ -445,6 +445,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('logout', [RegisterYLoginController::class, 'logout'])->name('logout');
 });
 
+
 Route::get('/malisioso', function () {
     return view('Malisioso');
 })->name('Malisioso');
