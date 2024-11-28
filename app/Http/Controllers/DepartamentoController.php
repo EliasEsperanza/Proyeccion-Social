@@ -15,7 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 
 
-class DepartamentoController extends Controller // Cambiamos el nombre de la clase a DepartamentoController
+class DepartamentoController extends Controller 
 {
     /**
      * Muestra una lista de los departamentos.
