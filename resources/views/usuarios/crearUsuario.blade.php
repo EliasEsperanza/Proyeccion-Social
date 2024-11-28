@@ -2,35 +2,28 @@
 
 @section('title', 'Crear Usuario')
 
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
-
 @section('content')
 <div class="container-fluid mt-1">
-
-    <h2 class="text-start mb-4">Registrar Usuario</h2>
+    <h2 class="text-start mb-4">Crear Nuevo Usuario</h2>
 
     <div class="card p-4 shadow-sm">
-        <form action="{{ route('usuarios.store') }}" method="POST">
+        <form id="crearUsuarioForm" action="{{ route('usuarios.store') }}" method="POST">
             @csrf
             <div class="mb-3 row">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" id="nombre" placeholder="Nombre" required>
+                    <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" id="nombre" placeholder="Nombre">
                 </div>
                 <div class="col-md-6">
                     <label for="correo" class="form-label">Correo Electrónico</label>
-                    <input type="email" name="correo" class="form-control @error('correo') is-invalid @enderror" id="correo" placeholder="example@ues.edu.sv" required>
+                    <input type="email" name="correo" class="form-control @error('correo') is-invalid @enderror" id="correo" placeholder="example@ues.edu.sv">
                 </div>
             </div>
             <div class="mb-3 row">
                 <div class="col-md-6">
                     <label for="password" class="form-label">Contraseña</label>
                     <div class="input-group">
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña" required>
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña">
                         <button class="btn btn-outline-secondary" type="button" id="showPassword">
                             <i class="bi bi-eye" id="toggleIcon"></i>
                         </button>
@@ -38,7 +31,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="rol" class="form-label">Rol</label>
-                    <select name="rol" class="form-select @error('rol') is-invalid @enderror" id="rol" required>
+                    <select name="rol" class="form-select @error('rol') is-invalid @enderror" id="rol">
                         <option selected>Seleccionar Rol</option>
                         @if(auth()->check() && auth()->user()->hasRole('Coordinador'))
                         <option value="tutor">tutor</option>
@@ -55,17 +48,17 @@
             <div class="mb-4 row">
                 <div class="col-md-6">
                     <label for="id_seccion" class="form-label">Sección/Departamento</label>
-                    <select name="id_seccion" class="form-select @error('departamento') is-invalid @enderror" id="id_seccion" required>
+                    <select name="id_seccion" class="form-select @error('departamento') is-invalid @enderror" id="id_seccion">
                         <option selected>Seleccionar departamento</option>
                         @foreach($secciones as $seccion)
                         @if (Auth::user()->hasRole('Coordinador'))
                         @php
-                        $seccionId = Auth::user()->getDepartamentoCoordinador(); // Obtenemos el departamento asignado al coordinador
+                        $seccionId = Auth::user()->getDepartamentoCoordinador();
                         @endphp
 
                         @if ($seccion->id_seccion == $seccionId)
                         <option value="{{ $seccion->id_seccion }}">{{ $seccion->nombre_seccion }}</option>
-                        @break <!-- Salimos del bucle porque solo queremos imprimir una vez -->
+                        @break
                         @endif
                         @else
                         <option value="{{ $seccion->id_seccion }}">{{ $seccion->nombre_seccion }}</option>
@@ -76,94 +69,77 @@
                 </div>
             </div>
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary w-100 mb-3 fw-bold ">Crear Usuario</button>
+                <button id="submitButton" type="submit" class="btn btn-primary w-100 mb-3 fw-bold">
+                    Crear Usuario
+                </button>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- validacion de errores -->
-@if ($errors->any())
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto " data-bs-dismiss="toast" aria-label="Close"></button>
+        <!-- Mensaje de éxito -->
+        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+            Usuario creado exitosamente.
         </div>
     </div>
 </div>
-@endif
-@endsection
 
+<!-- Script para manejar el comportamiento -->
 <script>
-/*   document.addEventListener('DOMContentLoaded', () => {
-        // Verificar si existe el mensaje de éxito
-        const successMessageElement = document.getElementById('success-message');
-        if (successMessageElement) {
-            const successMessage = successMessageElement.getAttribute('data-message');
+    document.getElementById('crearUsuarioForm').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Evita el envío normal del formulario
 
-            // Mostrar el modal de SweetAlert automáticamente
-            Swal.fire({
-                html: `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#808080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px;">
-    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a1 1 0 0 1 1 1v5a1 1 0 0 1-2 0v-5a1 1 0 0 1 1-1zm0 10a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-</svg>
-            `,
-                title: '¡Éxito!',
-                text: successMessage,
-                icon: 'success',
-                confirmButtonColor: '#008f39',
-                confirmButtonText: 'Continuar',
-                cancelButtonText: 'Agregar otro',
-                showCancelButton: true,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirigir a la página anterior
-                    window.location.href = '/usuarios';
-                } else {
-                    // Permanecer en la página para agregar otro usuario
-                    window.location.reload();
+        const form = e.target;
+        const rol = document.getElementById('rol').value;
+        const submitButton = document.getElementById('submitButton');
+
+        // Deshabilitar botón y mostrar indicador de carga
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Procesando...
+        `;
+
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             });
+
+            if (response.ok) {
+                // Mostrar mensaje de éxito
+                const successMessage = document.getElementById('successMessage');
+                successMessage.classList.remove('d-none');
+                setTimeout(() => {
+                    successMessage.classList.add('d-none');
+
+                    // Mostrar confirmación para crear otro usuario
+                    if (rol === 'estudiante') {
+                        const confirmCreateAnother = confirm('¿Desea crear otro estudiante?');
+                        if (confirmCreateAnother) {
+                            form.reset(); // Limpia el formulario
+                        } else {
+                            window.location.href = '{{ route("dashboard") }}'; // Redirige al dashboard
+                        }
+                    } else {
+                        window.location.href = '{{ route("dashboard") }}'; // Redirige al dashboard para otros roles
+                    }
+                }, 2000); // Espera 2 segundos antes de mostrar la confirmación
+            } else {
+                const errorText = await response.text();
+                console.error('Error en la respuesta:', errorText);
+                alert('Hubo un problema al crear el usuario. Inténtalo nuevamente.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Ocurrió un error. Por favor, inténtalo más tarde.');
+        } finally {
+            // Rehabilitar botón y restaurar texto
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Crear Usuario';
         }
-    });*/
-    
+    });
 </script>
-
-<style>
-    .page-item.active .page-link {
-        background: #800000 !important;
-        color: white !important;
-        border-color: red;
-    }
-
-    .page-link {
-        color: #6c757d;
-        text-decoration: none;
-    }
-
-    .page-link:hover {
-        color: #495057;
-    }
-
-    /* Fondo con desenfoque para la alerta */
-    .custom-swal-popup {
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
-    }
-
-    .swal2-container {
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-    }
-</style>
+@endsection
