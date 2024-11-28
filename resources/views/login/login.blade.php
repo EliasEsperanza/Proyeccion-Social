@@ -13,12 +13,22 @@
 </head>
 
 <body class="bg-light">
-
-<div id="preloader" class="loader" style="display: none;">
-        <div class="face face1">
-            <div class="circle">
+    <div id="preloader">
+        <div class="loader">
+            <div class="face face1">
+                <div class="circle"></div>
+            </div>
+            <div class="face face2">
+                <div class="circle"></div>
             </div>
         </div>
+    </div>
+    
+    <div id="preloader" class="loader" style="display: none;">
+        <div class="face face1">
+            <div class="circle">
+                </div>
+            </div>
         <div class="face face2">
             <div class="circle">
             </div>
@@ -106,7 +116,8 @@
                     </div>
 
                     <button type="submit"
-                        class="btn btn-primary w-100 mb-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+                        class="btn btn-primary w-100 mb-3 fw-bold d-flex align-items-center justify-content-center gap-2"
+                        onclick="showPreloader()">
                         <span>Iniciar sesión</span>
                         <i class="bi bi-box-arrow-in-right"></i>
                     </button>
@@ -130,5 +141,15 @@
     <script src="{{ asset('js/login.js') }}"></script>
 
 </body>
+
+<script>
+function showPreloader() {
+  document.getElementById('preloader').style.display = 'block';
+}
+
+    window.addEventListener('load', function() {
+        document.getElementById('preloader').style.display = 'none';
+    });
+</script>
 
 </html>
