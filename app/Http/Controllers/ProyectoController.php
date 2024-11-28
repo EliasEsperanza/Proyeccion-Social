@@ -175,6 +175,15 @@ class ProyectoController extends Controller
             ->where('estado', 9)
             ->get();
         return view('proyecto.solicitud-proyecto-coordinador', compact('proyectos'));
+
+
+        //de aqui modifique @Aleman solo comente
+
+        // $user = Auth::user();
+
+        // $departamentoCoordinador = $user->getDepartamentoCoordinador();
+
+
     }
 
     public function retornar_proyectos()
