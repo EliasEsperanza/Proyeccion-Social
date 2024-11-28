@@ -572,7 +572,7 @@ class ProyectoController extends Controller
         return Proyecto::whereBetween('estado', [1, 6])->count();
     }
 
-    public function totalProyectosAsignados()
+    /*public function totalProyectosAsignados()
     {
         $user = Auth::user();
 
@@ -596,7 +596,14 @@ class ProyectoController extends Controller
         }
 
         return $totalProyectosAsignados;
+    }*/
+
+    public function totalProyectosAsignados()
+    {
+        $totalProyectosAsignados = Proyecto::count();
+        return $totalProyectosAsignados;
     }
+
 
     public function obtenerDatosGrafico()
     {
@@ -678,9 +685,6 @@ class ProyectoController extends Controller
 
         return response()->json($data);
     }
-
-
-
 
     //retorna vista gertor de TI
     public function detallesSolicitud($id_proyecto)
