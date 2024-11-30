@@ -205,7 +205,7 @@ class ProyectoController extends Controller
         ]);
 
         $proyectoExistente = Proyecto::where('nombre_proyecto', $validatedData['titulo'])->first();
-            
+
         //validar que no exista el mismo nombre de proyecto
         if ($proyectoExistente) {
             return back()->withErrors(['titulo' => 'Ya existe un proyecto con este nombre.'])->withInput();
@@ -341,6 +341,16 @@ class ProyectoController extends Controller
 
         if (!$proyecto) {
             return redirect()->route('proyectos.index')->with('error', 'Proyecto no encontrado');
+        }
+
+
+        $proyectoExistente = Proyecto::where('nombre_proyecto', $data['nombre_proyecto'])
+            ->where('id', '!=', $id) // oviando el id actual
+            ->first();
+
+        //validar que no exista el mismo nombre de proyecto
+        if ($proyectoExistente) {
+            return back()->withErrors(['titulo' => 'Ya existe un proyecto con este nombre.'])->withInput();
         }
 
         $proyecto->update($data);
@@ -1004,6 +1014,7 @@ class ProyectoController extends Controller
 
     public function update_proyecto(Request $request, $id)
     {
+
         $data = $request->validate([
             'titulo' => 'required|string|max:255',
             'descripcion' => 'required|string|max:1000',
@@ -1014,6 +1025,16 @@ class ProyectoController extends Controller
 
         $proyecto = Proyecto::findOrFail($id);
 
+        // Validar que el nombre no exista
+        $proyectoExistente = Proyecto::where('nombre_proyecto', $data['titulo'])
+            ->where('id_proyecto', '!=', $id) // Excluir actual
+            ->first();
+
+        if ($proyectoExistente) {
+            return back()
+                ->withErrors(['titulo' => 'El nombre del proyecto ya está en uso.'])
+                ->withInput();
+        }
 
         $proyecto->update([
             'nombre_proyecto' => $data['titulo'],
