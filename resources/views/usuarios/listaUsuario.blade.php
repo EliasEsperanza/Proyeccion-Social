@@ -74,7 +74,9 @@
                             <td>{{ $usuario->seccion }}</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('usuarios.editarUsuario', ['id' => $usuario->id_usuario]) }}" class="btn btn-light btn-sm p-2 px-3"><i class="bi bi-pencil text-warning"></i></a>
+                                <a href="{{ route('usuarios.editarUsuario', ['id' => $usuario->id_usuario]) }}?search={{ request('search') }}" class="btn btn-light btn-sm p-2 px-3">
+                                    <i class="bi bi-pencil text-warning"></i>
+                                </a>
                                     <form method="POST" action="{{ route('usuarios.eliminarUsuario', ['id' => $usuario->id_usuario]) }}" style="display: inline-block;">
                                         @csrf
                                         @method('DELETE')
