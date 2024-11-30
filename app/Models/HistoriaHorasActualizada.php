@@ -23,19 +23,16 @@ class HistoriaHorasActualizada extends Model
         'fecha_aceptacion',
     ];
 
-    // Relación con Estudiante
     public function estudiante()
     {
         return $this->belongsTo(Estudiante::class, 'id_estudiante', 'id_estudiante');
     }
 
-    // Relación con Solicitud
     public function solicitud()
     {
         return $this->belongsTo(Solicitud::class, 'id_solicitud', 'solicitud_id');
     }
 
-    // Relación con Proyecto
     public function proyecto()
     {
         return $this->belongsTo(Proyecto::class, 'id_proyecto', 'id_proyecto');
