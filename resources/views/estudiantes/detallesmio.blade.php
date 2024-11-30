@@ -9,7 +9,7 @@
 @section('content')
 
 <div class="container mt-1">
-  <h1 class="card-title mb-4 text-rigth">Detalles del Proyecto</h1>
+  <h1 class="card-title mb-4 text-right">Detalles del Proyecto</h1>
   <div class="card shadow-m">
     <div class="card-body">
 
@@ -77,7 +77,7 @@
           <thead>
             <tr>
               <th>Fecha</th>
-              <th>Horas</th>
+              <th>Horas Aceptadas</th>
             </tr>
           </thead>
           <tbody>
@@ -89,7 +89,7 @@
               @foreach ($historial as $registro)
                 <tr>
                   <td>{{ \Carbon\Carbon::parse($registro->created_at)->format('d \d\e F \d\e Y') }}</td>
-                  <td>{{ $registro->id_horas_actualizadas }}</td>
+                  <td>{{ $registro->horas_aceptadas }} horas</td>
                 </tr>
               @endforeach
             @endif

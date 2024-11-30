@@ -74,12 +74,15 @@
                         </form>
 
                         <!--Boton para aprobar solicitud-->
-                        <form
-                            action="{{ route('aprobarSolicitud', ['id' => $proyecto->id_proyecto, 'solicitud' => $solicitud->solicitud_id]) }}"
-                            method="POST" style="display:inline;">
+                        <form action="{{ route('aprobarSolicitud', ['id' => $proyecto->id_proyecto, 'solicitud' => $solicitud->solicitud_id]) }}" method="POST" style="display:inline;">
                             @csrf
+                            <input type="hidden" name="id_estudiante" value="{{ $usuario->id_estudiante }}">
+                            <input type="hidden" name="horas_aceptadas" value="{{ $solicitud->valor }}">
+                            <input type="hidden" name="fecha_aceptacion" value="{{ now() }}">
+
                             <button type="submit" class="btn boton-principal">Aprobar solicitud</button>
                         </form>
+
 
 
                     </div>

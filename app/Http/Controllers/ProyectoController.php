@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\ProyectosEstudiantes;
+use App\Models\HistoriaHorasActualizada;
 use App\Models\Proyecto;
 use App\Models\Seccion;
 use App\Models\Estudiante;
@@ -1133,7 +1134,7 @@ class ProyectoController extends Controller
     }
 
 
-    public function aprobarSolicitud(string $id, string $solicitudId)
+    /*public function aprobarSolicitud(string $id, string $solicitudId)
     {
         $solicitud = Solicitud::find($solicitudId);
         if (!$solicitud) {
@@ -1169,7 +1170,56 @@ class ProyectoController extends Controller
         return redirect()->route('solicitudesProyectos', [
             'id' => $proyecto->id_proyecto
         ])->with('success', 'Solicitud aprobada correctamente');
+    }*/
+    public function aprobarSolicitud(string $id, string $solicitudId)
+    {
+        $solicitud = Solicitud::find($solicitudId);
+        if (!$solicitud) {
+            return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
+        }
+    
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+        if (!$proyecto) {
+            return redirect()->route('proyecto-g')->with('error', 'Proyecto no encontrado');
+        }
+    
+        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
+        if (!$estudiante) {
+            return redirect()->route('proyecto-g')->with('error', 'Estudiante no encontrado');
+        }
+    
+        // Calcular el nuevo porcentaje de progreso del estudiante
+        $porcentajeNuevo = $proyecto->horas_requeridas > 0
+            ? round((($estudiante->horas_sociales_completadas + $solicitud->valor) / $proyecto->horas_requeridas) * 100, 2)
+            : 0;
+    
+        // Actualizar las horas sociales completadas y el porcentaje
+        $estudiante->horas_sociales_completadas += $solicitud->valor;
+        $estudiante->porcentaje_completado = $porcentajeNuevo; // Asegúrate de que esté actualizando correctamente
+    
+        // Actualizar el estado de la solicitud
+        $solicitud->estado = 10;
+    
+        // Guardar los cambios en Estudiante y Solicitud
+        $estudiante->save();
+        $solicitud->save();
+    
+        // Guardar la información de horas aceptadas en la tabla de historial
+        HistoriaHorasActualizada::create([
+            'id_estudiante' => $estudiante->id_estudiante,
+            'id_solicitud' => $solicitud->solicitud_id,
+            'id_proyecto' => $proyecto->id_proyecto,  // Registrar el id del proyecto
+            'horas_aceptadas' => $solicitud->valor, // Horas aceptadas
+            'fecha_aceptacion' => now(), // Fecha de aceptación
+        ]);
+    
+        // Redirigir con mensaje de éxito
+        return redirect()->route('solicitudesProyectos', [
+            'id' => $proyecto->id_proyecto
+        ])->with('success', 'Solicitud aprobada y horas registradas correctamente');
     }
+    
+
 
     public function denegarSolicitud(string $id, string $solicitudId)
     {

@@ -74,5 +74,27 @@ class HistoriaHorasActualizadaController extends Controller
 
         return view('proyectos.detallesmio', compact('proyecto', 'historial'));
     }
+    public function aceptarHoras(Request $request)
+    {
+        // Valida que los datos necesarios estén presentes
+        $request->validate([
+            'id_estudiante' => 'required|exists:estudiantes,id_estudiante',
+            'id_solicitud' => 'required|exists:solicitudes,solicitud_id',
+            'horas_aceptadas' => 'required|numeric|min:0', // Asegúrate de que sea un valor numérico
+            'fecha_aceptacion' => 'required|date',
+        ]);
+
+        // Guarda las horas aceptadas y la fecha en la tabla de historial
+        HistoriaHorasActualizada::create([
+            'id_estudiante' => $request->id_estudiante,
+            'id_solicitud' => $request->id_solicitud,
+            'horas_aceptadas' => $request->horas_aceptadas,
+            'fecha_aceptacion' => $request->fecha_aceptacion,
+        ]);
+
+        // Retorna una respuesta o redirige según lo necesario
+        return redirect()->route('ruta.donde.redirigir')
+                        ->with('success', 'Horas aceptadas y registradas correctamente.');
+    }
 
 }

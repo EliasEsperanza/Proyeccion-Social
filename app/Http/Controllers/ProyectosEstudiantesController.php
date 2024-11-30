@@ -117,7 +117,6 @@ class ProyectosEstudiantesController extends Controller
         return redirect()->back()->with('success', 'Registros eliminados correctamente.');
     }
 
-
     public function Detalles_proyecto()
     {
         $userId = auth()->user()->id_usuario;
@@ -127,6 +126,7 @@ class ProyectosEstudiantesController extends Controller
             return 'Estudiante no encontrado';
         }
 
+        // Recupera la relación entre el estudiante y su proyecto
         $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)
             ->with('proyecto')
             ->first();
@@ -142,11 +142,14 @@ class ProyectosEstudiantesController extends Controller
             ? round(($horasCompletadas / $horasTotales) * 100, 2)
             : 0;
 
-        $historial = HistoriaHorasActualizada::where('id_solicitud', $proyectoEstudiante->proyecto->id_proyecto)
+        // Obtener historial de horas actualizadas para este proyecto
+        $historial = HistoriaHorasActualizada::where('id_proyecto', $proyectoEstudiante->proyecto->id_proyecto)
+            ->orderBy('created_at', 'desc')  // Opcional: Ordenar por la fecha de actualización
             ->get();
 
         return view('estudiantes.detallesmio', compact('proyectoEstudiante', 'porcentaje', 'horasCompletadas', 'horasTotales', 'historial'));
     }
+
 
 
     //retorna vista solicitud de proyecto
