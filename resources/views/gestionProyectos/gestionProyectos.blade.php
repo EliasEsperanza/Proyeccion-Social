@@ -26,7 +26,132 @@
 </div>
 @endif
 
+<style>
+    #preloader {
+    text-align: center;
+    z-index: 9999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    display: none;
+    border-radius: 15px;
+
+}
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.loader .face {
+    position: absolute;
+    border: 2px solid transparent;
+}
+
+.loader .face.face1 {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: none;
+    border-radius: 50%;
+    border-left: 2px solid #e91d53;
+    border-top: 2px solid #e91d53;
+    animation: animate 3s linear infinite;
+}
+
+.loader .face.face2 {
+    top: 30px;
+    left: 30px;
+    right: 30px;
+    bottom: 30px;
+    background: none;
+    border-radius: 50%;
+    border-right: 2px solid #800000;
+    border-bottom: 2px solid #800000;
+    animation: animate 3s linear reverse infinite;
+}
+
+.loader .face .circle {
+    position: absolute;
+    top: calc(50% - 1px);
+    left: 50%;
+    width: 50%;
+    height: 2px;
+    transform-origin: left;
+}
+
+.loader .face.face1 .circle {
+    transform: rotate(-45deg);
+}
+
+.loader .face.face2 .circle {
+    transform: rotate(-45deg);
+}
+
+.loader .face .circle::before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 10px;
+    border-radius: 50%;
+    background: #800000;
+    top: -4px;
+    right: -6px;
+}
+
+.loader .face.face1 .circle::before {
+
+    background-color: #e91d53;
+    box-shadow: 0 0 20px #e91d53,
+        0 0 40px #e91d53,
+        0 0 60px #e91d53,
+        0 0 80px #e91d53,
+        0 0 100px #e91d53,
+        0 0 0 5px rgba(212, 14, 14, 0.1);
+
+}
+
+.loader .face.face2 .circle::before {
+
+    background-color: #800000;
+    box-shadow: 0 0 20px #800000,
+        0 0 40px #800000,
+        0 0 60px #800000,
+        0 0 80px #800000,
+        0 0 100px #800000,
+        0 0 0 5px rgba(133, 2, 2, 0.1);
+
+}
+
+.loader-size{
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes animate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+</style>
+
 <div class="container ">
+
 
     <div class="container">
         <h1 class="mb-4">Gestión de Proyectos</h1>
@@ -41,16 +166,31 @@
                         <label class="form-label">Sección o Departamento</label>
                         <div class="input-group mb-3">
                             <select name="seccion_id" class="form-select @error('departamento') is-invalid @enderror" id="seccion_id">
-                                <option selected disabled>Seleccionar departamento</option>
-                                @foreach($secciones as $seccion)
-                                <option value="{{$seccion->id_seccion}}">
-                                    {{$seccion->nombre_seccion}}
-                                </option>
-                                @endforeach
                             </select>
                         </div>
                     </div>
 
+                    <div id="preloader" class="loader-size">
+                        <div class="loader">
+                            <div class="face face1">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="face face2">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="preloader" class="loader" style="display: none;">
+                        <div class="face face1">
+                            <div class="circle">
+                                </div>
+                            </div>
+                        <div class="face face2">
+                            <div class="circle">
+                            </div>
+                        </div>
+                    </div>
                     <!-- Sección de Estudiantes -->
         <div class="mb-3">
             <label class="form-label">Estudiantes</label>
@@ -79,7 +219,7 @@
 
                     <div class="mb-3">
                         <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
-                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto" disabled>
+                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto">
                             <option selected disabled>Seleccione un proyecto</option>
                             @foreach($proyectos as $proyecto)
                             <option value="{{$proyecto->id_proyecto}}">{{$proyecto->nombre_proyecto}}</option>
@@ -109,7 +249,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="horas" class="form-label">Horas Requeridas</label>
-                        <input type="text" class="form-control" id="horas" name="horas" >
+                        <input type="text" class="form-control" id="horas" name="horas" readonly>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">

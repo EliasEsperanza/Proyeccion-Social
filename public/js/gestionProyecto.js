@@ -90,7 +90,6 @@ addStudentBtn.addEventListener('click', function () {
 function updateStudentList() {
     // Limpiar la lista visual
     studentList.innerHTML = "";
-    console.log(selectedStudents);
     // Iterar sobre los estudiantes seleccionados y renderizar en la lista
     selectedStudents.forEach((name, id) => {
         const listItem = document.createElement('li');
@@ -127,42 +126,54 @@ function updateStudentList() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const seccionSelect = document.getElementById('seccion_id');
     const proyectoSelect = document.getElementById('nombre_proyecto');
+    const seccionSelect = document.getElementById('seccion_id');
     const idTutor = document.getElementById('idTutor');
+    const lugar = document.getElementById('lugar');
+    const horas = document.getElementById('horas');
+    const fecha_inicio = document.getElementById('fecha_inicio');
+    const fecha_fin = document.getElementById('fecha_fin');
 
     // Inicialmente, deshabilitar selectores dependientes
-    proyectoSelect.disabled = true;
+    seccionSelect.disabled = true;
     estudianteSelect.disabled = true;
     idTutor.disabled = true;
     addStudentBtn.disabled = true;
+    lugar.disabled = true;
+    horas.disabled = true;
+    fecha_inicio.disabled = true;
+    fecha_fin.disabled = true;
 
 
     // Evento: Habilitar selectores al seleccionar una sección
-    seccionSelect.addEventListener('change', function () {
+    proyectoSelect.addEventListener('change', function () {
         const seccionId = this.value;
 
         // Habilitar selectores dependientes
-        proyectoSelect.disabled = false;
         estudianteSelect.disabled = false;
         idTutor.disabled = false;
         addStudentBtn.disabled = false;
+        lugar.disabled = false;
+        horas.disabled = false;
+        fecha_inicio.disabled = false;
+        fecha_fin.disabled = false;
+        seccionSelect.disabled = false;
 
         // Limpiar opciones del select de proyectosestudianteSelect.remove(estudianteSelect.selectedIndex);
-        proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
+        // proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
 
         // Cargar proyectos por sección
-        fetch(`/proyectos-por-seccion/${seccionId}`)
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(proyecto => {
-                    const option = document.createElement('option');
-                    option.value = proyecto.id_proyecto;
-                    option.textContent = proyecto.nombre_proyecto;
-                    proyectoSelect.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Error al cargar proyectos:', error));
+        // fetch(`/proyectos-por-seccion/${seccionId}`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         data.forEach(proyecto => {
+        //             const option = document.createElement('option');
+        //             option.value = proyecto.id_proyecto;
+        //             option.textContent = proyecto.nombre_proyecto;
+        //             proyectoSelect.appendChild(option);
+        //         });
+        //     })
+        //     .catch(error => console.error('Error al cargar proyectos:', error));
     });
 });
 
@@ -171,10 +182,14 @@ const proyectoSelect = document.getElementById('nombre_proyecto');
 const ubicacionInput = document.getElementById('lugar');
 const fechaInicioInput = document.getElementById('fecha_inicio');
 const fechaFinInput = document.getElementById('fecha_fin');
+const horasinInput = document.getElementById('horas');
+const seccionSelect = document.getElementById('seccion_id');
+const preloader = document.getElementById('preloader');
 
 proyectoSelect.addEventListener('change', function () {
     const proyectoId = this.value;
-
+    preloader.style.display = 'block';
+    
     if (proyectoId) {
         fetch(`/proyectos/${proyectoId}`)
             .then(response => response.json())
@@ -184,10 +199,18 @@ proyectoSelect.addEventListener('change', function () {
                     return;
                 }
 
+                preloader.style.display = 'none';
+
                 // Rellenar los campos con los datos del proyecto
                 ubicacionInput.value = data.ubicacion || '';
                 fechaInicioInput.value = data.fecha_inicio || '';
                 fechaFinInput.value = data.fecha_fin || '';
+                horasinInput.value = data.horas_requeridas || '';
+                seccionSelect.innerHTML = '';
+                const option = document.createElement('option');
+                option.value = String(data.seccion.id);
+                option.textContent = data.seccion.nombre;
+                seccionSelect.appendChild(option);
                 // Verificar si hay estudiantes y procesarlos
                 if (data.estudiantes != null) {
                     data.estudiantes.forEach(estudiante => {
@@ -196,8 +219,14 @@ proyectoSelect.addEventListener('change', function () {
                         updateStudentList();
                     });
                 }
+                filtrarTutor();//filtrar los tutores por seccion
+                filtrarEstudiante()//filtrar los estudiantes por seccion
             })
-            .catch(error => console.error('Error al obtener los detalles del proyecto:', error));
+            .catch(error => {
+                console.error('Error al obtener los detalles del proyecto:', error);
+                // Ocultar el preloader incluso si ocurre un error
+                preloader.style.display = 'none';
+            });
     }
 });
 
@@ -247,3 +276,60 @@ document.getElementById('fecha_inicio').addEventListener('change', function () {
         }
     }
 });
+
+function filtrarTutor(){
+    const seccionSelect = document.getElementById('seccion_id');
+    const tutorSelect = document.getElementById('idTutor');
+    const tutores = JSON.parse(tutoresDiv.dataset.tutores);
+
+    const idSeccion = seccionSelect.value;
+
+    // Limpiar las opciones del select
+    tutorSelect.innerHTML = '<option selected disabled>Seleccionar tutor</option>';
+
+    // Filtrar tutores que estén asignados a la sección seleccionada
+    const tutoresFiltrados = tutores.filter(tutor =>
+        tutor.secciones_tutoreadas.some(seccion => seccion.id_seccion == idSeccion) // Verificar si alguna sección coincide
+    );
+
+    // Agregar las opciones de tutores al select
+    tutoresFiltrados.forEach(tutor => {
+        const option = document.createElement('option');
+        option.value = tutor.id_usuario; // ID del tutor
+        option.textContent = tutor.name; // Nombre del tutor
+        tutorSelect.appendChild(option);
+    });
+
+    // Mostrar un mensaje si no hay tutores disponibles
+    if (tutoresFiltrados.length === 0) {
+        const noOption = document.createElement('option');
+        noOption.disabled = true;
+        noOption.textContent = 'No hay tutores disponibles';
+        tutorSelect.appendChild(noOption);
+    }
+}
+function filtrarEstudiante(){
+    const estudiantesDiv = document.getElementById('estudiantes-data');
+    const seccionSelect = document.getElementById('seccion_id');
+    const estudiantesSelect = document.getElementById('idEstudiante'); 
+
+    const estudiantes = JSON.parse(estudiantesDiv.dataset.estudiantes);
+    const idSeccion = seccionSelect.value;
+
+    estudiantesSelect.innerHTML = '<option selected disabled>Seleccionar estudiante</option>';
+    const estudiantesFiltrados = estudiantes.filter(estudiante => estudiante.id_seccion == idSeccion);
+
+    estudiantesFiltrados.forEach(estudiante => {
+        const option = document.createElement('option');
+        option.value = estudiante.id_estudiante;
+        option.textContent = estudiante.usuario.name;
+        estudiantesSelect.appendChild(option);
+    });
+
+    if (estudiantesFiltrados.length === 0) {
+        const noOption = document.createElement('option');
+        noOption.disabled = true;
+        noOption.textContent = 'No hay estudiantes disponibles';
+        estudiantesSelect.appendChild(noOption);
+    }
+}

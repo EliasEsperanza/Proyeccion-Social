@@ -369,7 +369,8 @@ class ProyectoController extends Controller
         return back()->with('success', 'Estudiante asignado correctamente.');
     }
     public function gestionActualizar(Request $request, $id)
-{
+{   
+    
     // Decodificar los estudiantes seleccionados desde el input JSON
     $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
 
@@ -1055,10 +1056,16 @@ class ProyectoController extends Controller
     {
         try {
             $proyecto = Proyecto::with(['estudiantes.usuario'])->findOrFail($id);
+            $primeraSeccion = $proyecto->seccion()->first();
             return response()->json([
                 'ubicacion' => $proyecto->lugar,
                 'fecha_inicio' => $proyecto->fecha_inicio,
                 'fecha_fin' => $proyecto->fecha_fin,
+                'horas_requeridas' => $proyecto->horas_requeridas,
+                'seccion' => $primeraSeccion ? [
+                    'id' => $primeraSeccion->id_seccion,
+                    'nombre' => $primeraSeccion->nombre_seccion,
+                ] : null,
                 'estudiantes' => $proyecto->estudiantes->map(function ($estudiante) {
                     return [
                         'id_estudiante' => $estudiante->id_estudiante,
