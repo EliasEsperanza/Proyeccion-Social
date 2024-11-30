@@ -369,8 +369,7 @@ class ProyectoController extends Controller
         return back()->with('success', 'Estudiante asignado correctamente.');
     }
     public function gestionActualizar(Request $request, $id)
-    {
-
+{
     // Decodificar los estudiantes seleccionados desde el input JSON
     $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
 
@@ -400,9 +399,16 @@ class ProyectoController extends Controller
     }
 
     // Verificar que el tutor exista si se proporciona
-    $tutor = $validatedData['idTutor'] ? User::find($validatedData['idTutor']) : null;
+    $idTutor = $validatedData['idTutor'] ?? null; // Usar coalescencia nula para evitar el error
 
-    if ($validatedData['idTutor'] && !$tutor) {
+    if (!$idTutor) {
+        // Redirigir si no se seleccionó un tutor
+        return redirect()->back()->withErrors(['idTutor' => 'Debe seleccionar un tutor.'])->withInput();
+    }
+
+    $tutor = User::find($idTutor);
+
+    if (!$tutor) {
         return redirect()->back()->withErrors(['idTutor' => 'El tutor ingresado no existe.'])->withInput();
     }
 
@@ -434,6 +440,7 @@ class ProyectoController extends Controller
     // Redirigir con éxito
     return redirect()->route('gestion-proyecto')->with('success', 'Proyecto actualizado correctamente.');
 }
+
 
     public function eliminarEstudiante($proyectoId, $estudianteId)
     {

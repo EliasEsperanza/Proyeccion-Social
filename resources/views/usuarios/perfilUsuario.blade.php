@@ -43,15 +43,7 @@ $role === 'Estudiante' ? 'layouts.appE' :
                 </div>
                 <div class="mb-3 w-50">
                     <label for="correo" class="form-label">Correo Electrónico</label>
-                    <input
-                        type="email"
-                        class="form-control @error('email') is-invalid @enderror"
-                        id="correo"
-                        name="email"
-                        value="{{ old('email', $usuario->email) }}">
-                    @error('email')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <input type="email" class="form-control" id="correo" name="correo" value="{{$usuario->email}}">
                 </div>
                 <div class="mb-3 w-50">
                     <label for="rol" class="form-label">Rol</label>
