@@ -487,7 +487,7 @@ class UserController extends Controller
             'correo.required' => 'El correo es obligatorio.',
             'correo.email' => 'El correo debe tener un formato válido.',
             'correo.max' => 'El correo no puede tener más de 255 caracteres.',
-            'correo.unique' => 'El correo ya está en uso.',
+             'correo.unique' => 'El correo ya está en uso.',
             'correo.ends_with' => 'El correo debe terminar con "@ues.edu.sv".',
         ]);
     } catch (\Illuminate\Validation\ValidationException $e) {

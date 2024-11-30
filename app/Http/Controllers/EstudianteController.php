@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Str;
 use App\Exports\EstudianteExport;
 use App\Models\Asignacion;
 use App\Models\User;
@@ -301,7 +301,7 @@ class EstudianteController extends Controller
         try {
             //Cambiar el nombre del archivo por el id del usuario mas el id del proyecto y la fecha actual
             $nombreArchivo = 'comprobante' . '-' . auth()->user()->name . '-' . $nombreProyecto . '-' . now()->format('Y-m-d') . '.pdf';
-            $rutaDocumento = $request->file('documentos')->storeAs('documentos', $nombreArchivo, 'public');
+            $rutaDocumento = $request->file('documentos')->storeAs('solicitudes', $nombreArchivo);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error al subir el archivo');
         }

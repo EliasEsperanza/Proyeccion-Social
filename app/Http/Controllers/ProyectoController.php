@@ -1106,17 +1106,32 @@ class ProyectoController extends Controller
     {
 
         $solicitud = Solicitud::find($solicitudId);
-        $proyecto = Proyecto::find($solicitud->id_proyecto);
-        $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
-        $usuario = User::find($estudiante->id_usuario);
-        $rutaDocs = 'storage/documentos/';
 
         if (!$solicitud) {
             return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
         }
 
+        $proyecto = Proyecto::find($solicitud->id_proyecto);
+
+        if (!$proyecto) {
+            return redirect()->route('proyecto-g')->with('error', 'Proyecto asociado no encontrado');
+        }
+
+        $estudiante = Estudiante::find($solicitud->id_estudiante);
+
+        if (!$estudiante) {
+            return redirect()->route('proyecto-g')->with('error', 'Estudiante asociado no encontrado');
+        }
+
+        $usuario = User::find($estudiante->id_usuario);
+
+        if (!$usuario) {
+            return redirect()->route('proyecto-g')->with('error', 'Usuario asociado al estudiante no encontrado');
+        }
+        $rutaDocs = 'storage/solicitudes/';
         return view('proyecto.proyecto-solicitudes-revision', compact('solicitud', 'proyecto', 'usuario', 'estudiante', 'rutaDocs'));
     }
+
 
     public function aprobarSolicitud(string $id, string $solicitudId)
     {
