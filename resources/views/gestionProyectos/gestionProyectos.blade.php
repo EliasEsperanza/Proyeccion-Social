@@ -162,6 +162,17 @@
             <div class="card-body">
                 <form action="" method="" id="actualizarProyecto">
                     @csrf
+                    
+                    <div class="mb-3">
+                        <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
+                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto">
+                            <option selected disabled>Seleccione un proyecto</option>
+                            @foreach($proyectos as $proyecto)
+                            <option value="{{$proyecto->id_proyecto}}">{{$proyecto->nombre_proyecto}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label">Sección o Departamento</label>
                         <div class="input-group mb-3">
@@ -216,16 +227,6 @@
             <ul id="estudiantesList">
             </ul>
         </div>
-
-                    <div class="mb-3">
-                        <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
-                        <select class="form-select" id="nombre_proyecto" name="nombre_proyecto">
-                            <option selected disabled>Seleccione un proyecto</option>
-                            @foreach($proyectos as $proyecto)
-                            <option value="{{$proyecto->id_proyecto}}">{{$proyecto->nombre_proyecto}}</option>
-                            @endforeach
-                        </select>
-                    </div>
 
 
                     <!-- Campo oculto para almacenar estudiantes seleccionados -->
