@@ -37,7 +37,7 @@
                
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">Descripción del proyecto</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion">{{ old('descripcion') }}</textarea>
+                    <textarea class="form-control" id="descripcion" name="descripcion" required>{{ old('descripcion') }}</textarea>
                 </div>
                
                 <div class="row">

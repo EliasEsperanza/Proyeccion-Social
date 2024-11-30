@@ -26,21 +26,19 @@
                 <div class="mb-4">
                     <label class="form-label">Estudiantes</label>
                     <div class="input-group mb-3">
-                        <input type="hidden" id="estudiantesIds" name="estudiantes" value="">
+                        <input type="hidden" id="estudiantesIds" name="estudiantes" value="" required>
                         <select class="form-control" id="nombreEstudiante">
                             <option selected disabled>Seleccione un estudiante</option>
                         </select>
 
                         <button type="button" class="btn btn-primary btn-gestion fw-bold" onclick="agregarEstudiante()">Agregar estudiante</button>
                     </div>
-                    <ul class="mt-3" id="estudiantesList">
-                            <!-- Aquí se añadirán los estudiantes -->
-                        </ul>
+                    <ul class="mt-3" id="estudiantesList"><!-- Aquí se añadirán los estudiantes --></ul>
                 </div>
 
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">Descripción del proyecto</label>
-                    <textarea class="form-control" id="descripcion" name="descripcion">{{ old('descripcion') }}</textarea>
+                    <textarea class="form-control" id="descripcion" name="descripcion" required>{{ old('descripcion') }}</textarea>
                 </div>
 
                 <div class="row mb-5">
@@ -54,7 +52,7 @@
                     </div>
                     <div class="col-md-3 mb-4">
                         <label for="fechaFin" class="form-label">Fecha de finalización</label>
-                        <input type="date" class="form-control" id="fechaFin" name="fecha_fin" required>
+                        <input type="date" class="form-control" id="fechaFin" name="fecha_fin" required disabled>
                     </div>
                 </div>
 
@@ -66,6 +64,42 @@
 
 <!-- Scripts de CKEditor -->
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+<script>
+    // Elementos de entrada de fecha
+    const fechaInicio = document.getElementById("fechaInicio");
+    const fechaFin = document.getElementById("fechaFin");
+
+    // Establecer la fecha mínima para el campo de fecha inicial (hoy)
+    const hoy = new Date().toISOString().split("T")[0];
+    fechaInicio.min = hoy;
+
+    // Deshabilitar el campo de fecha final por defecto
+    fechaFin.disabled = true;
+
+    // Evento para habilitar y configurar restricciones en la fecha final
+    fechaInicio.addEventListener("change", function () {
+      if (fechaInicio.value) {
+        const fechaInicialSeleccionada = new Date(fechaInicio.value);
+        
+        // Habilitar el campo de fecha final
+        fechaFin.disabled = false;
+
+        // Calcular la fecha mínima (6 meses después de la fecha inicial)
+        const fechaMin = new Date(fechaInicialSeleccionada);
+        fechaMin.setMonth(fechaMin.getMonth() + 6);
+        fechaFin.min = fechaMin.toISOString().split("T")[0];
+
+        // Calcular la fecha máxima (5 años después de la fecha inicial)
+        const fechaMax = new Date(fechaInicialSeleccionada);
+        fechaMax.setFullYear(fechaMax.getFullYear() + 5);
+        fechaFin.max = fechaMax.toISOString().split("T")[0];
+    } else {
+        // Si no se selecciona una fecha inicial, deshabilitar la fecha final
+        fechaFin.disabled = true;
+    }
+    });
+</script>
+
 <script>
     const idSeccion = {{$proyectoEstudiante->id_seccion}};
     const selectEstudiantes = document.querySelector('#nombreEstudiante');
@@ -150,25 +184,5 @@
     });
 </script>
 
-<script>
-    document.getElementById('fechaInicio').addEventListener('change', function () {
-        const fechaInicio = this.value;
-        const fechaFinInput = document.getElementById('fechaFin');
-
-        if (fechaInicio) {
-            const fechaInicioDate = new Date(fechaInicio);
-            fechaInicioDate.setMonth(fechaInicioDate.getMonth() + 6);
-
-
-            const minFechaFin = fechaInicioDate.toISOString().split('T')[0];
-
-            fechaFinInput.min = minFechaFin;
-
-            if (fechaFinInput.value < minFechaFin) {
-                fechaFinInput.value = '';
-            }
-        }
-    });
-</script>
 
 @endsection

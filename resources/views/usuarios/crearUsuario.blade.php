@@ -12,18 +12,18 @@
             <div class="mb-3 row">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" id="nombre" placeholder="Nombre">
+                    <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" id="nombre" placeholder="Nombre" required>
                 </div>
                 <div class="col-md-6">
                     <label for="correo" class="form-label">Correo Electrónico</label>
-                    <input type="email" name="correo" class="form-control @error('correo') is-invalid @enderror" id="correo" placeholder="example@ues.edu.sv">
+                    <input type="email" name="correo" class="form-control @error('correo') is-invalid @enderror" id="correo" placeholder="example@ues.edu.sv" required>
                 </div>
             </div>
             <div class="mb-3 row">
                 <div class="col-md-6">
                     <label for="password" class="form-label">Contraseña</label>
                     <div class="input-group">
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña">
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Contraseña" required>
                         <button class="btn btn-outline-secondary" type="button" id="showPassword">
                             <i class="bi bi-eye" id="toggleIcon"></i>
                         </button>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="rol" class="form-label">Rol</label>
-                    <select name="rol" class="form-select @error('rol') is-invalid @enderror" id="rol">
+                    <select name="rol" class="form-select @error('rol') is-invalid @enderror" id="rol" required>
                         <option selected>Seleccionar Rol</option>
                         @if(auth()->check() && auth()->user()->hasRole('Coordinador'))
                         <option value="tutor">tutor</option>
@@ -48,7 +48,7 @@
             <div class="mb-4 row">
                 <div class="col-md-6">
                     <label for="id_seccion" class="form-label">Sección/Departamento</label>
-                    <select name="id_seccion" class="form-select @error('departamento') is-invalid @enderror" id="id_seccion">
+                    <select name="id_seccion" class="form-select @error('departamento') is-invalid @enderror" id="id_seccion" required>
                         <option selected>Seleccionar departamento</option>
                         @foreach($secciones as $seccion)
                         @if (Auth::user()->hasRole('Coordinador'))
