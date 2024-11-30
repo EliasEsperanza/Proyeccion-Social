@@ -462,43 +462,46 @@ class UserController extends Controller
         $usuario = Auth::user();
         return view('usuarios.perfilUsuario', compact('usuario'));
     }
-    public function updateusuario(Request $request, $id)
-    {   
-
-        try {
-            $request->validate([
-                'nombre' => [
-                    'required',
-                    'string',
-                    'max:28',
-                    'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/'
-                ],
-                'email' => [
-                    'required',
-                    'string',
-                    'email',
-                    'regex:/@ues\.edu\.sv$/'
-                ],
-            ], [
-                'nombre.required' => 'El nombre es obligatorio.',
-                'nombre.max' => 'El nombre no puede tener más de 28 caracteres.',
-                'nombre.regex' => 'El nombre solo puede contener letras.',
-                'email.required' => 'El correo electrónico es obligatorio.',
-                'email.email' => 'Debe ingresar un correo electrónico válido.',
-                'email.regex' => 'El correo debe ser del dominio @ues.edu.sv.',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return back()->withErrors($e->errors())->withInput();
-        }
-        $usuario = User::findOrFail($id);
-        $usuario->name = $request->nombre;
-        $usuario->email = $request->email;
+    public function updateusuario(Request $request, $id){
+    try {
+        $request->validate([
+            'nombre' => [
+                'required',
+                'string',
+                'max:28',
+                'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
+            ],
+            'correo' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users,email,' . $id, // Ignora el usuario actual en la validación única
+                'ends_with:@ues.edu.sv',   // Verifica que termine con @ues.edu.sv
+            ],
+        ], [
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede tener más de 28 caracteres.',
+            'nombre.regex' => 'El nombre solo puede contener letras.',
     
-        $usuario->save();
-    
-        return redirect()->route('perfil_usuario')->with('success', 'Perfil actualizado correctamente');
+            'correo.required' => 'El correo es obligatorio.',
+            'correo.email' => 'El correo debe tener un formato válido.',
+            'correo.max' => 'El correo no puede tener más de 255 caracteres.',
+            'correo.unique' => 'El correo ya está en uso.',
+            'correo.ends_with' => 'El correo debe terminar con "@ues.edu.sv".',
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return back()->withErrors($e->errors())->withInput();
     }
     
+    $usuario = User::findOrFail($id);
+    $usuario->name = $request->nombre;
+    $usuario->email = $request->correo;
+    $usuario->save();
+    
+    return redirect()->route('perfil_usuario')->with('success', 'Perfil actualizado correctamente');
+    
+    }
 
     public function login(Request $request)
     {
