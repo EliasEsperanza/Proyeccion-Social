@@ -162,7 +162,7 @@
             <div class="card-body">
                 <form action="" method="" id="actualizarProyecto">
                     @csrf
-                    
+
                     <div class="mb-3">
                         <label for="proyectosDisponibles" class="form-label">Proyectos Disponibles</label>
                         <select class="form-select" id="nombre_proyecto" name="nombre_proyecto">
@@ -283,8 +283,8 @@
     </div>
 
     <div id="tutores-data" data-tutores='@json($tutores)'></div>
-    <div id="proyectos-data" data-proyectos='@json($proyectos)'></div>
     <div id="estudiantes-data" data-estudiantes='@json($estudiantes)'></div>
+    <div id="proyectos-data" data-proyectos='@json($proyectos)'></div>
 
     <script src="{{ asset('js/filtrarTutor.js') }}"></script>
     <script src="{{ asset('js/filtrarEstudiantes.js') }}"></script>
