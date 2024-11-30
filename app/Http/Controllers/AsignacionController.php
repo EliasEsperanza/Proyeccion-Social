@@ -72,6 +72,12 @@ class AsignacionController extends Controller
             'id_estudiante' => 'sometimes|integer|min:1',
             'id_tutor' => 'sometimes|integer|min:1',
             'fecha_asignacion' => 'sometimes|date|after_or_equal:today',
+        ] ,[
+            'required' => 'El campo :attribute es obligatorio.',
+            'integer' => 'El campo :attribute debe ser un número entero.',
+            'min' => 'El campo :attribute debe ser al menos :min.',
+            'date' => 'El campo :attribute debe ser una fecha válida.',
+            'after_or_equal' => 'La fecha de asignación debe ser hoy o una fecha futura.',
         ]);
 
         $asignacion->update($request->all());
