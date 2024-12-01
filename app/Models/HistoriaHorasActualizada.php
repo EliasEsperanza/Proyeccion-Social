@@ -14,9 +14,13 @@ class HistoriaHorasActualizada extends Model
     public $incrementing = true;
     protected $keyType = 'int';
     public $timestamps = true;
+
     protected $fillable = [
         'id_estudiante',
         'id_solicitud',
+        'id_proyecto',
+        'horas_aceptadas',
+        'fecha_aceptacion',
     ];
 
     public function estudiante()
@@ -27,5 +31,10 @@ class HistoriaHorasActualizada extends Model
     public function solicitud()
     {
         return $this->belongsTo(Solicitud::class, 'id_solicitud', 'solicitud_id');
+    }
+
+    public function proyecto()
+    {
+        return $this->belongsTo(Proyecto::class, 'id_proyecto', 'id_proyecto');
     }
 }
