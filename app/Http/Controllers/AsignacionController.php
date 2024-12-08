@@ -24,7 +24,7 @@ class AsignacionController extends Controller
             $fechaAsignacion = $request->input('fecha_asignacion');
             $query->where('fecha_asignacion', $fechaAsignacion);
         }
-        
+
         //Paginacion para mostrar 10 resultados por pagina
         $asignaciones = Asignacion::paginate(10);
 
@@ -72,16 +72,27 @@ class AsignacionController extends Controller
             'id_estudiante' => 'sometimes|integer|min:1',
             'id_tutor' => 'sometimes|integer|min:1',
             'fecha_asignacion' => 'sometimes|date|after_or_equal:today',
-        ] ,[
+        ], [
             'required' => 'El campo :attribute es obligatorio.',
             'integer' => 'El campo :attribute debe ser un número entero.',
             'min' => 'El campo :attribute debe ser al menos :min.',
             'date' => 'El campo :attribute debe ser una fecha válida.',
             'after_or_equal' => 'La fecha de asignación debe ser hoy o una fecha futura.',
+        ], [
+            'id_proyecto' => 'proyecto',
+            'id_estudiante' => 'estudiante',
+            'id_tutor' => 'tutor',
+            'fecha_asignacion' => 'fecha de asignación',
         ]);
 
-        $asignacion->update($request->all());
-        return redirect()->route('asignaciones.index')->with('success', 'Asignación actualizada con éxito');
+        try {
+            $asignacion->update($request);
+
+            return redirect()->route('asignaciones.index')->with('success', 'Asignación actualizada con éxito');
+        } catch (\Exception $e) {
+            // Redirigir con mensaje de error en caso de fallo
+            return redirect()->route('asignaciones.index')->with('error', 'Error al actualizar la asignación.');
+        }
     }
 
     public function destroy($id)
@@ -91,15 +102,16 @@ class AsignacionController extends Controller
         return redirect()->route('asignaciones.index')->with('success', 'Asignación eliminada con éxito');
     }
 
-    public function exportExcel() 
+    public function exportExcel()
     {
         return Excel::download(new AsignacionExport, 'asignaciones.xlsx');
     }
 
-    public function exportPDF(){
-        $asignaciones=Asignacion::all();
-       
-        $pdf= Pdf::loadView('exports.asignacionesPDF', ['asignaciones' =>$asignaciones]);
+    public function exportPDF()
+    {
+        $asignaciones = Asignacion::all();
+
+        $pdf = Pdf::loadView('exports.asignacionesPDF', ['asignaciones' => $asignaciones]);
 
         return $pdf->download('asignaciones.pdf');
     }
