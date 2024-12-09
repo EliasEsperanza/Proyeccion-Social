@@ -86,12 +86,8 @@ class DepartamentoController extends Controller // Cambiamos el nombre de la cla
 
         file_put_contents(storage_path('app/public/departamentos.json'), json_encode($data, JSON_PRETTY_PRINT));
 
-        return redirect()->back()->with('success', value: 'Departamento agregado exitosamente.');
-
-        /*
         Departamento::create($request->all());
         return redirect()->route('departamentos.index');
-        */
     }
 
     /**

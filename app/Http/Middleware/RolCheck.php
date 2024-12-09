@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\VarDumper\VarDumper;
 
 class RolCheck
 {
@@ -18,10 +19,10 @@ class RolCheck
     {
         // Rutas a redirigir
         $roleRedirects = [
-            'Estudiante' => 'estudiante.dashboard',
+            'Estudiante' => 'estudiantes.dashboard',
             'Administrador' => 'dashboard',
             'Coordinador' => 'dashboard',
-            'Tutor' => 'dashboard',
+            'tutor' => 'dashboard',
         ];
 
         // Verifica rol
@@ -29,6 +30,7 @@ class RolCheck
             foreach ($roleRedirects as $role => $route) {
 
                 if (Auth::user()->hasRole($role)) {
+                    dd('no tienes permiso');
                     return redirect()->route($route)->with('error', 'No tienes permiso para acceder a este contenido.');
                 }
             }

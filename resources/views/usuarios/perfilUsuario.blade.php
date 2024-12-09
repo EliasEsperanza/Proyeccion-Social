@@ -34,20 +34,37 @@ $role === 'Estudiante' ? 'layouts.appE' :
             <form id="profileForm" class="d-flex flex-column align-items-center" action="{{route('update_usuario', $usuario->id_usuario)}}" method="POST">
                 @csrf
                 @method('PUT')
+
+                <!-- Nombre -->
                 <div class="mb-3 w-50">
-                    <label for="nombre" class="form-label">Nomjghjbre</label>
+                    <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" value="{{$usuario->name}}">
                     @error('nombre')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <!-- Correo Electrónico -->
                 <div class="mb-3 w-50">
                     <label for="correo" class="form-label">Correo Electrónico</label>
                     <input type="email" class="form-control" id="correo" name="correo" value="{{$usuario->email}}">
                 </div>
-                <div class="mb-3 w-50">
-                    <label for="rol" class="form-label">Rol</label>
-                    <p id="rol" class="form-control-plaintext">{{ $usuario->getRoleNames()->first() ?? 'Sin rol' }}</p>
+
+                <!-- Rol y Sección -->
+
+                <div class="mb-3 w-50 d-flex align-items-center justify-content-around">
+                    <!-- Rol -->
+                    <div class="me-3">
+                        <label for="rol" class="form-label mb-0">Rol:</label>
+                        <p id="rol" class="form-control-plaintext d-inline">{{ $usuario->getRoleNames()->first() ?? 'Sin rol' }}</p>
+                    </div>
+                    <!-- Sección -->
+                    @if ($usuario->getRoleNames()->first() != 'Administrador')
+                    <div>
+                        <label for="seccion" class="form-label mb-0">Sección:</label>
+                        <p id="seccion" class="form-control-plaintext d-inline">{{ $usuario->estudiante->seccion->nombre_seccion ?? 'Sin sección' }}</p>
+                    </div>
+                    @endif
                 </div>
 
                 <button type="submit" class="btn-custom" id="btnAcceptChanges">Aceptar cambios</button>

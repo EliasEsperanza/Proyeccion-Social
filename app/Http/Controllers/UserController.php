@@ -37,7 +37,7 @@ class UserController extends Controller
                 )
                 ->where('asignaciones.id_tutor', $user->id_usuario)
                 ->distinct();
-    
+
             if ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('users.name', 'LIKE', "%{$search}%")
@@ -48,7 +48,7 @@ class UserController extends Controller
         } else if ($user->hasRole('Coordinador')) {
             // Lógica para coordinadores
             $departamento = $user->getDepartamentoCoordinador();
-    
+
             if ($departamento) {
                 $query = DB::table('users')
                     ->leftJoin('estudiantes', 'users.id_usuario', '=', 'estudiantes.id_usuario')
@@ -70,7 +70,7 @@ class UserController extends Controller
                         $query->where('secciones.id_seccion', '=', $departamento)
                             ->orWhere('tutor_seccion.id_seccion', '=', $departamento);
                     });
-    
+
                 if ($search) {
                     $query->where(function ($q) use ($search) {
                         $q->where('users.name', 'LIKE', "%{$search}%")
@@ -463,49 +463,65 @@ class UserController extends Controller
         $usuario = Auth::user();
         return view('usuarios.perfilUsuario', compact('usuario'));
     }
-    public function updateusuario(Request $request, $id){
-    try {
-        $request->validate([
-            'nombre' => [
-                'required',
-                'string',
-                'max:28',
-                'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
-            ],
-            'correo' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                'unique:users,email,' . $id, // Ignora el usuario actual en la validación única
-                'ends_with:@ues.edu.sv',   // Verifica que termine con @ues.edu.sv
-            ],
-        ], [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.max' => 'El nombre no puede tener más de 28 caracteres.',
-            'nombre.regex' => 'El nombre solo puede contener letras.',
+    public function updateusuario(Request $request, $id)
+    {
+        try {
+            // Validar los datos del usuario
+            $request->validate([
+                'nombre' => [
+                    'required',
+                    'string',
+                    'max:28',
+                    'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
+                ],
+                'correo' => [
+                    'required',
+                    'string',
+                    'email',
+                    'max:255',
+                    'unique:users,email,' . $id, // Ajustar según la clave primaria
+                    'ends_with:@ues.edu.sv',
+                ],
+            ], [
+                'nombre.required' => 'El nombre es obligatorio.',
+                'nombre.max' => 'El nombre no puede tener más de 28 caracteres.',
+                'nombre.regex' => 'El nombre solo puede contener letras.',
     
-            'correo.required' => 'El correo es obligatorio.',
-            'correo.email' => 'El correo debe tener un formato válido.',
-            'correo.max' => 'El correo no puede tener más de 255 caracteres.',
-             'correo.unique' => 'El correo ya está en uso.',
-            'correo.ends_with' => 'El correo debe terminar con "@ues.edu.sv".',
-        ]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return back()->withErrors($e->errors())->withInput();
+                'correo.required' => 'El correo es obligatorio.',
+                'correo.email' => 'El correo debe tener un formato válido.',
+                'correo.max' => 'El correo no puede tener más de 255 caracteres.',
+                'correo.unique' => 'El correo ya está en uso.',
+                'correo.ends_with' => 'El correo debe terminar con "@ues.edu.sv".',
+            ]);
+    
+            // Actualizar el usuario
+            $usuario = User::findOrFail($id); // Asegúrate de que 'id' existe en la tabla
+            $usuario->name = $request->nombre;
+            $usuario->email = $request->correo;
+            $usuario->save();
+    
+            return redirect()->route('perfil_usuario')->with('success', 'Perfil actualizado correctamente');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ocurrió un error al actualizar el perfil: ' . $e->getMessage())->withInput();
+        }
     }
     
-    $usuario = User::findOrFail($id);
-    $usuario->name = $request->nombre;
-    $usuario->email = $request->correo;
-    $usuario->save();
-    
-    return redirect()->route('perfil_usuario')->with('success', 'Perfil actualizado correctamente');
-    
-    }
 
     public function login(Request $request)
     {
+        // Validar las credenciales de entrada
+        $request->validate([
+            'correo' => 'required|email',
+            'contrasena' => 'required|string|min:6',
+        ], [
+            'correo.required' => 'El correo es obligatorio.',
+            'correo.email' => 'El formato del correo no es válido.',
+            'contrasena.required' => 'La contraseña es obligatoria.',
+            'contrasena.min' => 'La contraseña debe tener al menos 6 caracteres.',
+        ]);
+
         $credentials = $request->only('correo', 'contrasena');
 
         if (Auth::attempt(['email' => $credentials['correo'], 'password' => $credentials['contrasena']])) {
@@ -520,12 +536,13 @@ class UserController extends Controller
             }
 
             // Redireccionamiento por defecto para otros roles
-            return redirect()->intended('/dashboard');
+            return redirect()->route('dashboard');
         }
 
-        return redirect()->route('login')->withErrors([
-            'error' => 'Usuario o contraseña inválidos.',
-        ]);
+
+        return back()->withErrors([
+            'error' => 'Credenciales incorrectas.',
+        ])->withInput();
     }
 
     public function totalTutores()

@@ -38,16 +38,30 @@ class AsignacionController extends Controller
 
     public function store(Request $request)
     {
-        // Validar datos al crear
-        $request->validate([
+        // Validar los datos recibidos
+        $validatedData = $request->validate([
             'id_proyecto' => 'required|integer|min:1',
             'id_estudiante' => 'required|integer|min:1',
             'id_tutor' => 'required|integer|min:1',
             'fecha_asignacion' => 'required|date|after_or_equal:today',
+        ], [
+            'id_proyecto.required' => 'El proyecto es obligatorio.',
+            'id_estudiante.required' => 'El estudiante es obligatorio.',
+            'id_tutor.required' => 'El tutor es obligatorio.',
+            'fecha_asignacion.required' => 'La fecha de asignación es obligatoria.',
+            'fecha_asignacion.after_or_equal' => 'La fecha debe ser hoy o posterior.',
         ]);
 
-        Asignacion::create($request->all());
-        return redirect()->route('asignaciones.index')->with('success', 'Asignación creada con éxito');
+        try {
+
+            Asignacion::create($request->all());
+            return redirect()->route('asignaciones.index')->with('success', 'Asignación creada con éxito');
+        } catch (\Exception $e) {
+            // Manejo de errores en caso de fallo
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Hubo un problema al crear la asignación.');
+        }
     }
 
     public function show($id)

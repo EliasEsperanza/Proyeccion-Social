@@ -29,12 +29,10 @@ class ProyectosEstudiantesController extends Controller
         return view('proyectos_estudiantes.index', compact('proyectos_estudiantes'));
     }
 
-
     public function create()
     {
         return view("proyectos_estudiantes.create");
     }
-
 
     public function store(Request $request)
     {
@@ -47,7 +45,6 @@ class ProyectosEstudiantesController extends Controller
 
         return redirect()->route('proyectos_estudiantes.index')->with('success', 'Asignacion de estudiante a proyecto exitosa');
     }
-
 
     public function show(string $id)
     {
@@ -65,7 +62,6 @@ class ProyectosEstudiantesController extends Controller
         return view("proyectos_estudiantes.edit", compact('proyectos_estudiantes'));
     }
 
-
     public function update(Request $request, string $id)
     {
         $validacion = $request->validate([
@@ -82,7 +78,6 @@ class ProyectosEstudiantesController extends Controller
         $proyectos_estudiantes->update($validacion);
         return redirect()->route('proyectos_estudiantes.index')->with('success', 'Modificacion de asignacion de estudiante a proyecto exitosa');
     }
-
 
     public function destroy(string $id)
     {
@@ -150,8 +145,6 @@ class ProyectosEstudiantesController extends Controller
         return view('estudiantes.detallesmio', compact('proyectoEstudiante', 'porcentaje', 'horasCompletadas', 'horasTotales', 'historial'));
     }
 
-
-
     //retorna vista solicitud de proyecto
     public function Mi_proyecto()
     {
@@ -189,31 +182,29 @@ class ProyectosEstudiantesController extends Controller
         // Obtener el estudiante autenticado
         $estudiante = Estudiante::where('id_usuario', $estudianteId)->first();
 
-        if ($estudiante) {
-            // Verificar si el estudiante ya tiene un proyecto asignado
-            $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)->first();
+        if (!$estudiante) {
+            // Si no se encuentra el estudiante
+            return redirect()->back()->with('error', 'No se encontró al estudiante.');
+        }
+        
+        // Verificar si el estudiante ya tiene un proyecto asignado
+        $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)->first();
 
-            if ($proyectoEstudiante) {
-                // Verificar si el estado del proyecto es 9
-                if ($proyectoEstudiante->estado == 7) {
-                    return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
-                } else {
-                    return redirect()->back()->with('warning', 'No se puede enviar el proyecto, ya enviaste una solicitud.');
-                }
-            }
-
+        if (!$proyectoEstudiante) {
             // Si no tiene un proyecto asignado
             $seccion_id = $estudiante->id_seccion;
             $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
-
+    
             return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
+
         }
-
-        // Si no se encuentra el estudiante
-        return redirect()->back()->with('error', 'No se encontró al estudiante.');
+        // Verificar si el estado del proyecto es 7
+        if ($proyectoEstudiante->estado == 7) {
+            return redirect()->back()->with('warning', 'No se puede enviar el proyecto, ya enviaste una solicitud.');
+        } 
+        
+        return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
     }
-
-
 
     public function Procesos()
     {

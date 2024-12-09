@@ -81,9 +81,9 @@
     </div>
 </div>
 
-<!-- Script para manejar el comportamiento -->
+<script src="{{asset('js/crearUsuarioScript.js')}}"></script>
 <script>
-    document.getElementById('crearUsuarioForm').addEventListener('submit', async function (e) {
+    document.getElementById('crearUsuarioForm').addEventListener('submit', async function(e) {
         e.preventDefault(); // Evita el envío normal del formulario
 
         const form = e.target;

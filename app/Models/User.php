@@ -27,6 +27,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Seccion::class, 'id_coordinador');
     }
 
+    public function estudiante()
+    {
+        return $this->hasOne(Estudiante::class, 'id_usuario', 'id_usuario');
+    }
+
+    public function asignaciones()
+    {
+        return $this->hasMany(Asignacion::class, 'id_tutor', 'id_usuario');
+    }
+
     // Secciones donde es tutor
     public function seccionesTutoreadas()
     {
@@ -150,10 +160,7 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-    public function asignaciones()
-    {
-        return $this->hasMany(Asignacion::class, 'id_tutor', 'id_usuario');
-    }
+
 
     // User.php
     public function getDepartamentoCoordinador()
@@ -166,6 +173,4 @@ class User extends Authenticatable implements JWTSubject
         }
         return null;
     }
-
-    
 }

@@ -22,6 +22,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -31,6 +32,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -40,6 +42,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -49,6 +52,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -58,6 +62,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -67,6 +72,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -76,6 +82,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -85,6 +92,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -94,6 +102,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -103,6 +112,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -112,6 +122,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -121,6 +132,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -130,6 +142,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -139,6 +152,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -148,6 +162,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
@@ -157,6 +172,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="col ultimo-card">
             <div class="card shadow-sm h-100">
                 <div class="card-body">

@@ -39,7 +39,7 @@ socket.on("connect_error", (error) =>
 socket.on("server:nuevoMensaje", (message) => {
     console.log("Mensaje recibido:", message);
     console.log("Chat actual:", selectedChatId);
-    
+
     // Convertir todos los IDs a string para comparación
     const sender = String(message.sender);
     const chatId = String(message.chatId);
@@ -101,10 +101,10 @@ function selectChat(chatId, chatName, chatRole) {
 function handleChatMessages(messages) {
     console.log(messages);
     if (!selectedChatId) return;
-    
+
     const messageContainer = document.getElementById("messageContainer");
     messageContainer.innerHTML = "";
-    
+
     messages.forEach(message => {
         const sender = String(message.sender);
         const chatId = String(message.chatId);
@@ -125,15 +125,15 @@ function handleChatMessages(messages) {
 
 // Renderizar un mensaje individual en el contenedor
 function renderMessage(message) {
-    if(message.sender === null){
+    if (message.sender === null) {
         const messageContainer = document.getElementById("messageContainer");
         const isOwnMessage = message.chatId === String(currentUserId);
 
-    const textToShow = message.text;
-    const messageClass = isOwnMessage ? "sent" : "received";
-    const messageStyle = isOwnMessage 
-        ? 'margin-left: auto; margin-right: 10px; width: 40%;' 
-        : 'margin-right: auto; background-color: #3766fa; margin-left: 10px; width: 40%;';  
+        const textToShow = message.text;
+        const messageClass = isOwnMessage ? "sent" : "received";
+        const messageStyle = isOwnMessage
+            ? 'margin-left: auto; margin-right: 10px; width: 40%;'
+            : 'margin-right: auto; background-color: #3766fa; margin-left: 10px; width: 40%;';
 
         messageContainer.innerHTML += `
             <div class="message ${messageClass}" style="${messageStyle}">
@@ -142,5 +142,6 @@ function renderMessage(message) {
             </div>
         `;
 
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
 }

@@ -24,15 +24,15 @@
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <div>
-                        <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">1</span>
-                        <p>
-                            Formulario No. 1 Hoja de inscripción para realizar servicio social
-                            
-                        </p>
-                    </div>
-                </button>
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <div>
+                            <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">1</span>
+                            <p>
+                                Formulario No. 1 Hoja de inscripción para realizar servicio social
+
+                            </p>
+                        </div>
+                    </button>
                 </h2>
                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
@@ -60,41 +60,41 @@
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">2</span>
-                    <p>Carta No. 1 Asignación de tutor de servicio social</p> 
-                </button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">2</span>
+                        <p>Carta No. 1 Asignación de tutor de servicio social</p>
+                    </button>
                 </h2>
                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                <!---->
-                            <!-- Card 2 -->
-                    <div class="col-12">
-                        <div class="card shadow-sm h-100 card-reducido">
-                            <div class="card-body">
-                                <h5 class="titulo-documento">
-                                    <span class="step-number">2.</span> Asignación de tutor
-                                </h5>
-                                <p class="descripcion-corta">Solicita la asignacion de un tutor para orientarte en el servicio social</p>
-                                <ul class="step-list">
-                                    <li>Rellena la asignacion de tutor</li>
-                                    <li>Entregar la solicitud al coordinador de la subunidad.</li>
-                                </ul>
-                                <a href="{{ route('descargar', ['filename' => 'CARTA ASIGNACION DE TUTOR.docx']) }}" class="btn btn-descargar"><i class="bi bi-download"></i> Descargar Asignación Tutor</a>
+                    <div class="accordion-body">
+                        <!---->
+                        <!-- Card 2 -->
+                        <div class="col-12">
+                            <div class="card shadow-sm h-100 card-reducido">
+                                <div class="card-body">
+                                    <h5 class="titulo-documento">
+                                        <span class="step-number">2.</span> Asignación de tutor
+                                    </h5>
+                                    <p class="descripcion-corta">Solicita la asignacion de un tutor para orientarte en el servicio social</p>
+                                    <ul class="step-list">
+                                        <li>Rellena la asignacion de tutor</li>
+                                        <li>Entregar la solicitud al coordinador de la subunidad.</li>
+                                    </ul>
+                                    <a href="{{ route('descargar', ['filename' => 'CARTA ASIGNACION DE TUTOR.docx']) }}" class="btn btn-descargar"><i class="bi bi-download"></i> Descargar Asignación Tutor</a>
 
+                                </div>
                             </div>
                         </div>
+                        <!---->
                     </div>
-            <!---->
-                </div>
                 </div>
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingThree">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">3</span>
-                    <p>Nota de la institución donde se desarrollarán las horas sociales</p>
-                </button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">3</span>
+                        <p>Nota de la institución donde se desarrollarán las horas sociales</p>
+                    </button>
                 </h2>
                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
@@ -118,66 +118,66 @@
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingFour">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                    <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">4</span>
-                    <p>Constancia de la administración académica del 60% de la carrera</p>
-                </button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">4</span>
+                        <p>Constancia de la administración académica del 60% de la carrera</p>
+                    </button>
                 </h2>
                 <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                <!----->
-                <!-- Card 3 -->
-                <div class="col-12">
-                        <div class="card shadow-sm h-100 card-reducido">
-                            <div class="card-body">
-                                <h5 class="titulo-documento">
-                                    <span class="step-number">4.</span> Constancia del 60% de la carrera
-                                </h5>
-                                <p class="descripcion-corta">Sube la constancia del progreso de tu carrera</p>
-                                <ul class="step-list">
-                                    <li>Acudir a administración academica a solicitar dicho documento.</li>
-                                    <li>Una vez entregado, subelo a tus documentos</li>
-                                </ul>
-                                
+                    <div class="accordion-body">
+                        <!----->
+                        <!-- Card 3 -->
+                        <div class="col-12">
+                            <div class="card shadow-sm h-100 card-reducido">
+                                <div class="card-body">
+                                    <h5 class="titulo-documento">
+                                        <span class="step-number">4.</span> Constancia del 60% de la carrera
+                                    </h5>
+                                    <p class="descripcion-corta">Sube la constancia del progreso de tu carrera</p>
+                                    <ul class="step-list">
+                                        <li>Acudir a administración academica a solicitar dicho documento.</li>
+                                        <li>Una vez entregado, subelo a tus documentos</li>
+                                    </ul>
+
+                                </div>
                             </div>
                         </div>
+                        <!---->
+
                     </div>
-                <!---->
-                
-                </div>
                 </div>
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingFive">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                    <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">5</span>
-                    <p>Carta No. 2 Constancia de aprobación del plan de trabajo del servicio social</p>
-                </button>
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        <span class="badge rounded-circle  circulo-paso" style="width: 30px; height: 30px;">5</span>
+                        <p>Carta No. 2 Constancia de aprobación del plan de trabajo del servicio social</p>
+                    </button>
                 </h2>
                 <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                <!---->
-                <!--card 4-->    
-                <div class="col-12">
-                        <div class="card shadow-sm h-100 card-reducido">
-                            <div class="card-body">
-                                <h5 class="titulo-documento">
-                                    <span class="step-number">5.</span> Autorización y Planificación
-                                </h5>
-                                <p class="descripcion-corta">Obtén la autorización y planifica tu servicio social</p>
-                                <ul class="step-list">
-                                    <li>Recibir carta de autorización para iniciar el servicio social.</li>
-                                    <li>Consultar las opciones de servicio social disponibles.</li>
-                                    <li>Elaborar un plan de trabajo con ayuda del tutor asignado.</li>
-                                    <li>Entregar el plan de trabajo al coordinador de la subunidad.</li>
-                                </ul>
-                                <a href="{{ route('descargar', ['filename' => 'Constancia de aprobación del Plan de Trabajo del Servicio Social.docx']) }}" class="btn btn-descargar">
-                                    <i class="bi bi-download me-2"></i> Descargar plan-trabajo.docx
-                                </a>
+                    <div class="accordion-body">
+                        <!---->
+                        <!--card 4-->
+                        <div class="col-12">
+                            <div class="card shadow-sm h-100 card-reducido">
+                                <div class="card-body">
+                                    <h5 class="titulo-documento">
+                                        <span class="step-number">5.</span> Autorización y Planificación
+                                    </h5>
+                                    <p class="descripcion-corta">Obtén la autorización y planifica tu servicio social</p>
+                                    <ul class="step-list">
+                                        <li>Recibir carta de autorización para iniciar el servicio social.</li>
+                                        <li>Consultar las opciones de servicio social disponibles.</li>
+                                        <li>Elaborar un plan de trabajo con ayuda del tutor asignado.</li>
+                                        <li>Entregar el plan de trabajo al coordinador de la subunidad.</li>
+                                    </ul>
+                                    <a href="{{ route('descargar', ['filename' => 'Constancia de aprobación del Plan de Trabajo del Servicio Social.docx']) }}" class="btn btn-descargar">
+                                        <i class="bi bi-download me-2"></i> Descargar plan-trabajo.docx
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>

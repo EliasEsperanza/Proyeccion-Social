@@ -73,7 +73,7 @@ class DocumentoController extends Controller
         $documento = Documento::find($id);
         $documento->id_proyecto = $request->id_proyecto;
         $documento->tipo_documento = $request->tipo_documento;
-        
+
         // Opcionalmente se puede permitir actualizar el archivo
         if ($request->hasFile('file') && $request->file('file')->isValid()) {
             $request->validate([

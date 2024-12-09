@@ -135,39 +135,48 @@ class ProyectoController extends Controller
     public function store_solicitud_alumno(Request $request)
     {
 
+        $estudiantesSeleccionados = json_decode($request->input('estudiantesSeleccionados'), true);
+        $proyecto = Proyecto::find($request->input('id_proyecto'));
 
-        try {
-            $estudiantesSeleccionados = json_decode($request->input('estudiantesSeleccionados'), true);
-            $proyecto = Proyecto::find($request->input('id_proyecto'));
-            if (is_array($estudiantesSeleccionados)) {
-                $estudianteNotificacion = Estudiante::find($estudiantesSeleccionados[0]);
-                $idCoordinador = $estudianteNotificacion->seccion->id_coordinador;
+        // Verificar si $estudiantesSeleccionados es un array
+        if (is_array($estudiantesSeleccionados)) {
 
-                app(NotificacionController::class)->enviarNotificacion($idCoordinador, 'Hay una nueva aplicacion al proyecto ' . $proyecto->nombre_proyecto);
-                foreach ($estudiantesSeleccionados as $idEstudiante) {
-                    $estudiante = Estudiante::find($idEstudiante);
-                    if ($estudiante) {
-                        // evitar que se aplique al mismo proyecto mas de una vez
-                        $existeRelacion = $proyecto->estudiantes()
-                            ->where('id_estudiante', $estudiante->id_estudiante)
-                            ->exists();
+            $estudianteNotificacion = Estudiante::find($estudiantesSeleccionados[0]);
+            $idCoordinador = $estudianteNotificacion->seccion->id_coordinador;
 
-                        if (!$existeRelacion) {
-                            $proyecto->estudiantes()->attach($estudiante->id_estudiante);
-                        } else {
-                            return redirect()->back()->with('warning', 'El estudiante con Due {$estudiante->id_estudiante} ya está asociado al proyecto.');
-                        }
+            app(NotificacionController::class)->enviarNotificacion(
+                $idCoordinador,
+                'Hay una nueva aplicación al proyecto ' . $proyecto->nombre_proyecto
+            );
+
+            foreach ($estudiantesSeleccionados as $idEstudiante) {
+                $estudiante = Estudiante::find($idEstudiante);
+
+                // Verificar si $estudiante fue encontrado
+                if ($estudiante) {
+                    // Verificar si la relación entre proyecto y estudiante ya existe
+                    $existeRelacion = $proyecto->estudiantes()
+                        ->where('proyectos_estudiantes.id_estudiante', $estudiante->id_estudiante) // Especificar la tabla
+                        ->exists();
+
+                    if (!$existeRelacion) {
+                        $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+                    } else {
+
+                        return redirect()->back()->with(
+                            'warning',
+                            "El estudiante con ID {$estudiante->id_estudiante} ya está asociado al proyecto."
+                        );
                     }
+                } else {
                 }
             }
-
-            return redirect()->back()->with('success', 'Proyecto creado exitosamente.');
-        } catch (\Exception $e) {
-            \Log::error('Error al crear el proyecto: ' . $e->getMessage());
-            \Log::error('Código de error: ' . $e->getCode());
-            return redirect()->back()->withInput()->with('error', 'Hubo un error al crear el proyecto. Por favor, inténtalo de nuevo más tarde.');
+        } else {
         }
+
+        return redirect()->back()->with('success', 'Proyecto creado exitosamente.');
     }
+
 
     public function solicitudes_coordinador()
     {
@@ -1210,33 +1219,33 @@ class ProyectoController extends Controller
         if (!$solicitud) {
             return redirect()->route('proyecto-g')->with('error', 'Solicitud no encontrada');
         }
-    
+
         $proyecto = Proyecto::find($solicitud->id_proyecto);
         if (!$proyecto) {
             return redirect()->route('proyecto-g')->with('error', 'Proyecto no encontrado');
         }
-    
+
         $estudiante = Estudiante::where('id_estudiante', $solicitud->id_estudiante)->first();
         if (!$estudiante) {
             return redirect()->route('proyecto-g')->with('error', 'Estudiante no encontrado');
         }
-    
+
         // Calcular el nuevo porcentaje de progreso del estudiante
         $porcentajeNuevo = $proyecto->horas_requeridas > 0
             ? round((($estudiante->horas_sociales_completadas + $solicitud->valor) / $proyecto->horas_requeridas) * 100, 2)
             : 0;
-    
+
         // Actualizar las horas sociales completadas y el porcentaje
         $estudiante->horas_sociales_completadas += $solicitud->valor;
         $estudiante->porcentaje_completado = $porcentajeNuevo; // Asegúrate de que esté actualizando correctamente
-    
+
         // Actualizar el estado de la solicitud
         $solicitud->estado = 10;
-    
+
         // Guardar los cambios en Estudiante y Solicitud
         $estudiante->save();
         $solicitud->save();
-    
+
         // Guardar la información de horas aceptadas en la tabla de historial
         HistoriaHorasActualizada::create([
             'id_estudiante' => $estudiante->id_estudiante,
@@ -1245,13 +1254,13 @@ class ProyectoController extends Controller
             'horas_aceptadas' => $solicitud->valor, // Horas aceptadas
             'fecha_aceptacion' => now(), // Fecha de aceptación
         ]);
-    
+
         // Redirigir con mensaje de éxito
         return redirect()->route('solicitudesProyectos', [
             'id' => $proyecto->id_proyecto
         ])->with('success', 'Solicitud aprobada y horas registradas correctamente');
     }
-    
+
 
 
     public function denegarSolicitud(string $id, string $solicitudId)

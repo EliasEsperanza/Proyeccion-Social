@@ -3,20 +3,6 @@
 @section('title', 'Crear Estudiante')
 
 @section('content')
-    <!-- <h1></h1>
-    <form action="">
-        <label for="">nombre</label>
-        <input type="text">
-        <label for="">Correo</label>
-        <input type="email">
-        <label for="">Contraseña</label>
-        <input type="password">
-        <label for="">Rol</label>
-        <input type="text">
-        <label for="">Seccion/Departamento</label>
-        <input type="text">
-        <button></button>
-    </form> -->
 
     <form>
         <div class="mb-3">
