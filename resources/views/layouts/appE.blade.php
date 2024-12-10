@@ -17,6 +17,7 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-2">
         <div class="container-fluid d-flex align-items-center">
             <!-- Botón para colapsar menú -->
@@ -125,6 +126,7 @@
 
         <div id="contenido-principal" class="flex-grow-1">
             <main class="container-fluid">
+                @include('components.alertas')
                 @yield('content')
             </main>
         </div>

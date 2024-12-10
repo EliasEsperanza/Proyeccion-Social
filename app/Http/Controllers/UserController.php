@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\RegistroRequest;
+use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 use App\Mail\mailrecuperarpassword;
 use App\Models\CodigosRecuperacion;
+use App\Models\Estudiante;
 use App\Models\User;
 use App\Models\Seccion;
 use Illuminate\Http\Request;
@@ -125,7 +129,6 @@ class UserController extends Controller
         return view('usuarios.listaUsuario', compact('users'));
     }
 
-
     public function buscar(Request $request)
     {
         $search = $request->input('search');
@@ -193,72 +196,38 @@ class UserController extends Controller
         return view("registro.registro", compact("secciones"));
     }
 
-    public function registro(Request $request)
+    public function registro(RegistroRequest $request)
     {
-        try {
-            // Validación de los datos
-            $request->validate([
-                'nombre' => 'required|string|max:255',
-                'correo' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8',
-                'id_seccion' => 'nullable|exists:secciones,id_seccion',
-            ], [
-                'nombre.required' => 'El nombre es obligatorio.',
-                'correo.required' => 'El correo es obligatorio.',
-                'correo.email' => 'El correo debe ser válido.',
-                'correo.unique' => 'Este correo ya está registrado.',
-                'password.required' => 'La contraseña es obligatoria.',
-                'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-                'id_seccion.exists' => 'La sección seleccionada no existe.',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return back()->withErrors($e->errors())->withInput();
-        }
+            \DB::transaction(function () use ($request) {
+                // Crear usuario
+                $user = User::create([
+                    'name' => $request->nombre,
+                    'email' => $request->correo,
+                    'password' => bcrypt($request->password),
+                ]);
 
-        $user = User::create([
-            'name' => $request->nombre,
-            'email' => $request->correo,
-            'password' => bcrypt($request->password),
-        ]);
+                // Asignar rol
+                $user->assignRole('estudiante');
 
-        $user->assignRole('estudiante');
+                // Asociar sección si se proporciona
+                if ($request->filled('id_seccion')) {
+                    Estudiante::create([
+                        'id_usuario' => $user->id_usuario,
+                        'id_seccion' => $request->id_seccion,
+                        'porcentaje_completado' => 0,
+                        'horas_sociales_completadas' => 0,
+                    ]);
+            dd('guds');
 
-        if ($request->filled('id_seccion')) {
-            \DB::table('estudiantes')->insert([
-                'id_usuario' => $user->id_usuario,
-                'id_seccion' => $request->id_seccion,
-                'porcentaje_completado' => 0,
-                'horas_sociales_completadas' => 0,
-            ]);
-        }
+                }
+            });
+            dd('gud');
 
-        return redirect()->route('login')->with('success', 'Usuario creado exitosamente');
+            return redirect()->route('login')->with('success', 'Usuario creado exitosamente');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        try {
-            // Validación de los datos
-            $request->validate([
-                'nombre' => 'required|string|max:255',
-                'correo' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8',
-                'rol' => 'required|string|exists:roles,name',
-                'id_seccion' => 'nullable|exists:secciones,id_seccion',
-            ], [
-                'nombre.required' => 'El nombre es obligatorio.',
-                'correo.required' => 'El correo es obligatorio.',
-                'correo.email' => 'El correo debe ser válido.',
-                'correo.unique' => 'Este correo ya está registrado.',
-                'password.required' => 'La contraseña es obligatoria.',
-                'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-                'rol.required' => 'El rol es obligatorio.',
-                'rol.exists' => 'El rol seleccionado no existe.',
-                'id_seccion.exists' => 'La sección seleccionada no existe.',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return back()->withErrors($e->errors())->withInput();
-        }
 
         $user = User::create([
             'name' => $request->nombre,
@@ -320,22 +289,15 @@ class UserController extends Controller
         $secciones = Seccion::all();
         return view('usuarios.editarUsuario', compact('usuario', 'secciones'));
     }
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         try {
             $request->validate([
-                'nombre' => 'required|string|max:255',
                 'correo' => 'required|email|unique:users,email,' . $id . ',id_usuario',
-                'rol' => 'required|string|exists:roles,name',
-                'id_seccion' => 'nullable|exists:secciones,id_seccion',
             ], [
-                'nombre.required' => 'El nombre es obligatorio.',
                 'correo.required' => 'El correo es obligatorio.',
                 'correo.email' => 'El correo debe ser válido.',
                 'correo.unique' => 'Este correo ya está registrado.',
-                'rol.required' => 'El rol es obligatorio.',
-                'rol.exists' => 'El rol seleccionado no existe.',
-                'id_seccion.exists' => 'La sección seleccionada no existe.',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
@@ -486,20 +448,20 @@ class UserController extends Controller
                 'nombre.required' => 'El nombre es obligatorio.',
                 'nombre.max' => 'El nombre no puede tener más de 28 caracteres.',
                 'nombre.regex' => 'El nombre solo puede contener letras.',
-    
+
                 'correo.required' => 'El correo es obligatorio.',
                 'correo.email' => 'El correo debe tener un formato válido.',
                 'correo.max' => 'El correo no puede tener más de 255 caracteres.',
                 'correo.unique' => 'El correo ya está en uso.',
                 'correo.ends_with' => 'El correo debe terminar con "@ues.edu.sv".',
             ]);
-    
+
             // Actualizar el usuario
             $usuario = User::findOrFail($id); // Asegúrate de que 'id' existe en la tabla
             $usuario->name = $request->nombre;
             $usuario->email = $request->correo;
             $usuario->save();
-    
+
             return redirect()->route('perfil_usuario')->with('success', 'Perfil actualizado correctamente');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return back()->withErrors($e->errors())->withInput();
@@ -507,7 +469,7 @@ class UserController extends Controller
             return back()->with('error', 'Ocurrió un error al actualizar el perfil: ' . $e->getMessage())->withInput();
         }
     }
-    
+
 
     public function login(Request $request)
     {

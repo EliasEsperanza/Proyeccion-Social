@@ -3,6 +3,8 @@
 @section('title', 'Dashboard')
 
 @section('content')
+@include('components.alertas')
+
 
 
 @endsection

@@ -12,7 +12,7 @@
             <div class="mb-3 row">
                 <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" id="nombre" placeholder="Nombre" required>
+                    <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" id="nombre" placeholder="Nombre" >
                 </div>
                 <div class="col-md-6">
                     <label for="correo" class="form-label">Correo Electrónico</label>
@@ -74,72 +74,10 @@
                 </button>
             </div>
         </form>
-        <!-- Mensaje de éxito -->
-        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-            Usuario creado exitosamente.
-        </div>
+
     </div>
 </div>
 
 <script src="{{asset('js/crearUsuarioScript.js')}}"></script>
-<script>
-    document.getElementById('crearUsuarioForm').addEventListener('submit', async function(e) {
-        e.preventDefault(); // Evita el envío normal del formulario
 
-        const form = e.target;
-        const rol = document.getElementById('rol').value;
-        const submitButton = document.getElementById('submitButton');
-
-        // Deshabilitar botón y mostrar indicador de carga
-        submitButton.disabled = true;
-        submitButton.innerHTML = `
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Procesando...
-        `;
-
-        const formData = new FormData(form);
-
-        try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            });
-
-            if (response.ok) {
-                // Mostrar mensaje de éxito
-                const successMessage = document.getElementById('successMessage');
-                successMessage.classList.remove('d-none');
-                setTimeout(() => {
-                    successMessage.classList.add('d-none');
-
-                    // Mostrar confirmación para crear otro usuario
-                    if (rol === 'estudiante') {
-                        const confirmCreateAnother = confirm('¿Desea crear otro estudiante?');
-                        if (confirmCreateAnother) {
-                            form.reset(); // Limpia el formulario
-                        } else {
-                            window.location.href = '{{ route("dashboard") }}'; // Redirige al dashboard
-                        }
-                    } else {
-                        window.location.href = '{{ route("dashboard") }}'; // Redirige al dashboard para otros roles
-                    }
-                }, 2000); // Espera 2 segundos antes de mostrar la confirmación
-            } else {
-                const errorText = await response.text();
-                console.error('Error en la respuesta:', errorText);
-                alert('Hubo un problema al crear el usuario. Inténtalo nuevamente.');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Ocurrió un error. Por favor, inténtalo más tarde.');
-        } finally {
-            // Rehabilitar botón y restaurar texto
-            submitButton.disabled = false;
-            submitButton.innerHTML = 'Crear Usuario';
-        }
-    });
-</script>
 @endsection

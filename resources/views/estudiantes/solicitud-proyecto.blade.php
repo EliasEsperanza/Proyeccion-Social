@@ -8,7 +8,6 @@
 
 @section('content')
 
-@include('components.alertas')
 
 <div class="container mt-4">
     <h1 class="mb-2"><strong>Solicitud de Proyecto</strong></h1>

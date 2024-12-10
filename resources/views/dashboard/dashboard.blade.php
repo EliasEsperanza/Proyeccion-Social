@@ -15,11 +15,11 @@
             <h3>Total Estudiantes</h3>
             <p>
                 @if(Auth::user()->hasRole('Coordinador'))
-                    Todos los estudiantes en la sección del coordinador
+                Todos los estudiantes en la sección del coordinador
                 @elseif(Auth::user()->hasRole('Tutor'))
-                    Estudiantes asignados a este tutor
+                Estudiantes asignados a este tutor
                 @else
-                    Todos los estudiantes registrados en el sistema
+                Todos los estudiantes registrados en el sistema
                 @endif
             </p>
             <h2>{{ $totalEstudiantes }}</h2>
@@ -29,18 +29,18 @@
             <h3>Cantidad de proyectos</h3>
             <p>
                 @if(Auth::user()->hasRole('Tutor'))
-                    Todos los proyectos asignados a este tutor
+                Todos los proyectos asignados a este tutor
                 @elseif(Auth::user()->hasRole('Coordinador'))
-                    Todos los proyectos disponibles para el coordinador
+                Todos los proyectos disponibles para el coordinador
                 @else
-                    Total proyectos registrados en el sistema
+                Total proyectos registrados en el sistema
                 @endif
             </p>
             <h2>{{ $totalProyectosAsignados }}</h2>
         </div>
 
         @if(Auth::user()->hasRole('Tutor'))
-        
+
         @elseif(Auth::user()->hasRole('Coordinador'))
         <div class="informacion__asesores">
             <h3>Coordinadores</h3>
@@ -73,8 +73,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const ctxEstado = document.getElementById('estadoProyectosChart').getContext('2d');
 
         fetch('{{ route("dashboard.datosGrafico") }}')
@@ -90,12 +89,12 @@
                     data: {
                         labels: data.labels,
                         datasets: [{
-                            label: 'Cantidad de Proyectos', 
+                            label: 'Cantidad de Proyectos',
                             data: data.data,
                             backgroundColor: [
                                 '#36A2EB',
                                 '#4BC0C0',
-                                '#FFCE56', 
+                                '#FFCE56',
                                 '#FF6384'
                             ],
                             borderColor: '#fff',
@@ -111,7 +110,7 @@
                                 text: 'Estado de Proyectos'
                             },
                             legend: {
-                                display: false 
+                                display: false
                             }
                         },
                         scales: {
@@ -146,21 +145,20 @@
                 const proyectos = data.map(item => item.total_proyectos);
 
                 new Chart(ctxFecha, {
-                    type: 'bar', 
+                    type: 'bar',
                     data: {
                         labels: fechas,
-                        datasets: [
-                            {
-                                type: 'line', 
+                        datasets: [{
+                                type: 'line',
                                 label: 'Estudiantes',
                                 data: estudiantes,
                                 borderColor: '#8e44ad',
                                 backgroundColor: 'rgba(142, 68, 173, 0.2)',
                                 fill: true,
-                                tension: 0.4 
+                                tension: 0.4
                             },
                             {
-                                type: 'bar', 
+                                type: 'bar',
                                 label: 'Proyectos',
                                 data: proyectos,
                                 backgroundColor: '#1abc9c',

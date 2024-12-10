@@ -1,22 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Gestión de Roles')
 @section('content')
-<style>
-    .btn-custom {
-        background-color: #8B0000;
-        color: white;
-        padding: 0.5rem 1.5rem; 
-    }
-    .container-custom {
-        margin: 0 auto;
-        max-width: 80%;
-    }
-    .card-equal-height {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-</style>
+<link rel="stylesheet" href="{{asset('css/gestionRoles.css')}}">
+
 
 <div class="container container-custom my-5">
     <h2 class="my-4">Crear o Editar Rol</h2>

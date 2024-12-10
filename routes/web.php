@@ -29,7 +29,7 @@ use App\Http\Controllers\AuthController;
 use app\Http\Controllers\SolicitudProyectoController;
 
 //LOGIN/WELCOME-------------------------------------------------------------------------------------------------------------------------------------
-Route::get('/bienvenida', function () {
+Route::get('/', function () {
     return view('Bienvenida');
 })->name('Bienvenida');
 
@@ -40,7 +40,7 @@ Route::get('/malisioso', function () {
     return view('Malisioso');
 })->name('Malisioso');
 
-Route::post('/', [UserController::class, 'login'])->name('login.process');
+Route::post('/log-process', [UserController::class, 'login'])->name('login.process');
 Route::get('/registro', [UserController::class, 'allSeccionRegistro'])->name('registro');
 
 

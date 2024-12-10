@@ -20,6 +20,7 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-2">
         <div class="container-fluid d-flex align-items-center">
             <!-- Botón de Menú -->
@@ -134,11 +135,11 @@
                 @endif
 
                 @if (auth()->user()->hasAnyRole(['Tutor']))
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('proyecto-disponible') }}" onclick="establecerActivo(this)">
-                            <i class="bi bi-person me-2"></i> Proyectos Disponibles
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('proyecto-disponible') }}" onclick="establecerActivo(this)">
+                        <i class="bi bi-person me-2"></i> Proyectos Disponibles
+                    </a>
+                </li>
                 @endif
 
                 <li class="nav-item">
@@ -148,7 +149,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('solicitudes_coordinador') }}" onclick="establecerActivo(this)">
-                    <i class="bi bi-file-earmark-text me-2"></i> Solicitud de Proyectos                    </a>
+                        <i class="bi bi-file-earmark-text me-2"></i> Solicitud de Proyectos </a>
                 </li>
 
                 @endif
@@ -176,23 +177,27 @@
 
         <div id="contenido-principal" class="flex-grow-1">
             <main class="container-fluid">
+                @include('components.alertas')
                 @yield('content')
             </main>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ asset('js/graficos.js') }}"></script>
-    <script src="{{asset(path:'js/mensaje.js') }}"></script>
-    <script src="{{ asset('js/showPassword.js') }}"></script>
-    <script src="{{ asset('js/busqueda.js') }}"></script>
-    <script src="{{ asset('js/notificacion.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!--Yield para scripts en otros blades -->
-    @yield('scripts')
+    <
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+        </script>
+        <script src="{{ asset('js/app.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{{ asset('js/graficos.js') }}"></script>
+        <script src="{{asset(path:'js/mensaje.js') }}"></script>
+        <script src="{{ asset('js/showPassword.js') }}"></script>
+        <script src="{{ asset('js/busqueda.js') }}"></script>
+        <script src="{{ asset('js/notificacion.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!--Yield para scripts en otros blades -->
+        @yield('scripts')
 </body>
 
 </html>
