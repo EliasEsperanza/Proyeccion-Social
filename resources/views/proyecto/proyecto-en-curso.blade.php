@@ -55,7 +55,7 @@
                     @forelse($paginatedProjects as $proyecto)
                     <tr>
                         <td><input type="checkbox" name="proyectos[]" value="{{ $proyecto->id_proyecto }}"></td>
-                        <td>{{ $proyecto->nombre_proyecto }}</td>
+                        <td>{{ $proyecto->id_proyecto }}){{ $proyecto->nombre_proyecto }}</td>
                         <td>
                             @if($proyecto->estudiantes->isNotEmpty())
                             <ul>
@@ -77,7 +77,7 @@
                         <td>
 
                             <!--Boton de solicitudes-->
-                            <a href="{{ route('solicitudesProyectos', ['id' => $proyecto->id_proyecto]) }}"
+                            <a href="{{ route('solicitudes_avance_horas', ['id' => $proyecto->id_proyecto]) }}"
                                 class="btn btn-light btn-sm p-2 px-3 mb-2">
                                 <i class="fa-solid fa-circle-exclamation"></i>
                             </a>

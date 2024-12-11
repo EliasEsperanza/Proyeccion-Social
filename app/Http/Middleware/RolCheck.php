@@ -30,7 +30,6 @@ class RolCheck
             foreach ($roleRedirects as $role => $route) {
 
                 if (Auth::user()->hasRole($role)) {
-                    dd('no tienes permiso');
                     return redirect()->route($route)->with('error', 'No tienes permiso para acceder a este contenido.');
                 }
             }

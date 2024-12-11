@@ -59,7 +59,7 @@
 
                 <div class="row">
                     <div class="col-md-8">
-                        <a href="{{ route('solicitudesProyectos', ['id' => $solicitud->id_proyecto]) }}"
+                        <a href="{{ route('solicitudes_avance_horas', ['id' => $solicitud->id_proyecto]) }}"
                             class="btn boton-secundario">Regresar</a>
                     </div>
 

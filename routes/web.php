@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AuthController;
 use app\Http\Controllers\SolicitudProyectoController;
 
+
 //LOGIN/WELCOME-------------------------------------------------------------------------------------------------------------------------------------
 Route::get('/', function () {
     return view('Bienvenida');
@@ -43,9 +44,11 @@ Route::get('/malisioso', function () {
 Route::post('/log-process', [UserController::class, 'login'])->name('login.process');
 Route::get('/registro', [UserController::class, 'allSeccionRegistro'])->name('registro');
 
+Route::get('/proyectos/{id}', [ProyectoController::class, 'obtenerDetallesProyectoFU']);
 
 //LOGED CHECK-------------------------------------------------------------------------------------------------------------------------------------
 Route::middleware([LogedCheck::class])->group(function () {
+
     Route::get('/curret-user', [AuthController::class, 'Identificador']);
 
     Route::post('/logout', function () {
@@ -64,12 +67,15 @@ Route::middleware([LogedCheck::class])->group(function () {
     Route::put('/perfil_usuario/{id}', [UserController::class, 'updateusuario'])->name('update_usuario');
 
     Route::put('/perfil_usuario', [UserController::class, 'updatepassperfil'])->name('update_password');
+    //Route::get('/hrs', [EstudianteController::class, 'actualizarHorasView'])->name('estudiante.actualizarHorasView');
+
 
     Route::middleware(['App\Http\Middleware\RolCheck:Estudiante'])->group(function () {
         // === Rutas de lectura (GET) ===
         // Visualización de proyectos
+        Route::post('/Avance-horas', [EstudianteController::class, 'Solicitud_avance_horas'])->name('estudiante.Avance_horas');
+        Route::get('/actualizar-horas', [EstudianteController::class, 'actualizarHorasView'])->name('estudiante.actualizarHorasView');
         Route::get('/mi-proyecto', [ProyectosEstudiantesController::class, 'Mi_proyecto'])->name('proyectomio');
-        Route::get('/proyectos/{id}', [ProyectoController::class, 'obtenerDetallesProyectoFU']);
         Route::get('/dashboard/estudiantes', [ProyectoController::class, 'obtenerProyectosDashboard'])->name('estudiantes.dashboard');
         Route::get('/proyectos/{id}/ver', [ProyectoController::class, 'mostrarProyecto'])->name('proyecto.ver');
         Route::get('/detalles-mi-proyecto', [ProyectosEstudiantesController::class, 'Detalles_proyecto'])->name('detallesmio');
@@ -104,7 +110,9 @@ Route::middleware([LogedCheck::class])->group(function () {
 
     Route::middleware(['App\Http\Middleware\RolCheck:Administrador'])->group(function () {
         // Rutas solo accesibles por Administrador
+
         Route::get('/dashboard/estudiantes-proyectos-por-fecha', [ProyectoController::class, 'obtenerEstudiantesYProyectosPorFecha'])->name('dashboard.estudiantesProyectosPorFecha');
+        Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
 
         Route::get('/proyectos-solicitudes', [ProyectoController::class, 'solicitudes_coordinador'])->name('solicitudes_coordinador');
         Route::get('/dashboard/datos-grafico', [ProyectoController::class, 'obtenerDatosGrafico'])->name('dashboard.datosGrafico');
@@ -116,17 +124,13 @@ Route::middleware([LogedCheck::class])->group(function () {
         Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
 
 
-        Route::get('/hrs', function () {
-            return view('estudiantes.actualizar-horas');
-        });
-
         Route::get('/verDetallesSolicitud/{id_proyecto}', [ProyectoController::class, 'detallesSolicitud'])->name('detallesSolicitud');
         Route::post('/proyecto/aceptar/{id_proyecto}', [ProyectoController::class, 'aceptarSolicitud'])->name('proyectos.aceptar');
         Route::post('/proyecto/rechazar/{id_proyecto}', [ProyectosEstudiantesController::class, 'Rechazar_solicitus_destroy'])->name('proyectos.rechazar');
         // -----------------rutas de proyectos---------
         Route::get('/proyectos-en-curso', [ProyectoController::class, 'index'], function () {
             if (Auth::check() && auth()->user()->hasAnyRole(['Administrador', 'Coordinador', 'Tutor'])) {
-                return view('proyecto.proyecto-general');
+                return view('proyecto.proyecto-en-curso');
             }
             return view('dashboard.dashboard');
         })->middleware('auth')->name('proyecto-g');
@@ -198,7 +202,6 @@ Route::middleware([LogedCheck::class])->group(function () {
         Route::delete('/proyectos/{proyecto}/eliminar-estudiante/{estudiante}', [ProyectoController::class, 'eliminarEstudiante'])->name('proyectos.eliminarEstudiante');
         Route::put('/proyectos/{proyecto}/actualizar', [ProyectoController::class, 'actualizar'])->name('proyectos.actualizar');
         Route::post('/proyectos/asignar', [ProyectoController::class, 'asignarProyecto'])->name('proyectos.asignar');
-        Route::post('/proyectos/{proyecto}/gestionActualizar', [ProyectoController::class, 'gestionActualizar'])->name('proyectos.gestionActualizar');
 
         Route::get('/proyectos/{proyecto}/estudiantes', function ($proyectoId) {
             $proyecto = Proyecto::with('estudiantes.usuario')->findOrFail($proyectoId);
@@ -406,10 +409,8 @@ Route::middleware([LogedCheck::class])->group(function () {
 
 
         Route::get('/obtener-tutores-por-seccion/{id}', [ProyectoController::class, 'GetTutoresPorSeccion']);
-        Route::get('/hrs', [EstudianteController::class, 'actualizarHorasView'])->name('estudiante.actualizarHorasView');
-        Route::post('/hrs', [EstudianteController::class, 'actualizarHoras'])->name('estudiante.actualizarHoras');
         Route::get('/proyecto/{id}/solicitudes/{solicitud}', [ProyectoController::class, 'mostrarSolicitud'])->name('RevisionSolicitud');
-        Route::get('/proyecto/{id}/solicitudes', [ProyectoController::class, 'solicitudes_proyectos'])->name('solicitudesProyectos');
+        Route::get('/proyecto/{id}/solicitudes', [ProyectoController::class, 'solicitudes_avance_horas'])->name('solicitudes_avance_horas');
         route::post('/proyecto/{id}/solicitudes/{solicitud}/aprove', [ProyectoController::class, 'aprobarSolicitud'])->name('aprobarSolicitud');
         route::post('/proyecto/{id}/solicitudes/{solicitud}/deny', [ProyectoController::class, 'denegarSolicitud'])->name('denegarSolicitud');
 

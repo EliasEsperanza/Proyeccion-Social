@@ -9,12 +9,6 @@
 @section('content')
     <div class="container contenedor-principal">
 
-        @if (session('success'))
-            <div class="alert alert-success" role="alert">
-                {{ session('success') }}
-            </div>
-        @endif
-
         @if ($proyecto == null)
             <div class="alert alert-danger" role="alert">
                 No tiene un proyecto asignado
@@ -23,6 +17,7 @@
             <!--boton de volver-->
             <a href="{{ route('proyectomio') }}" class="btn boton-secundario">Volver</a>
         @else
+
             <div class="tarjeta">
                 <div class="encabezado-tarjeta">
                     <h2>Actualizar horas del proyecto</h2>
@@ -30,7 +25,7 @@
                     <p>Estudiante: <strong> {{ $horas->nombre }}</strong></p>
                     <p>Tutor: <strong> {{ $tutor->name ?? "Sin asignar aun." }}</strong></p>
                 </div>
-                <form action="{{ route('estudiante.actualizarHoras') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('estudiante.Avance_horas') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="campo-formulario">
                         <label for="horasTrabajadas" class="form-label">Horas trabajadas</label>

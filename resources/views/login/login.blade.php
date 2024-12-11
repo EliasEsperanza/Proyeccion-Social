@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="{{ asset('css/login.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/preloder.css') }}" rel="stylesheet">
+
 </head>
 
 <body class="bg-light">
@@ -23,12 +25,12 @@
             </div>
         </div>
     </div>
-    
+
     <div id="preloader" class="loader" style="display: none;">
         <div class="face face1">
             <div class="circle">
-                </div>
             </div>
+        </div>
         <div class="face face2">
             <div class="circle">
             </div>
@@ -143,9 +145,9 @@
 </body>
 
 <script>
-function showPreloader() {
-  document.getElementById('preloader').style.display = 'block';
-}
+    function showPreloader() {
+        document.getElementById('preloader').style.display = 'block';
+    }
 
     window.addEventListener('load', function() {
         document.getElementById('preloader').style.display = 'none';

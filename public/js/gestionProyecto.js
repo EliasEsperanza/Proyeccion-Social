@@ -5,7 +5,7 @@ function agregarEstudiante() {
     if (nombreEstudiante) {
         const li = document.createElement('li');
         li.textContent = `• ${nombreEstudiante}`;
-        
+
         document.getElementById('listaEstudiantes').appendChild(li);
 
         inputEstudiante.value = '';
@@ -15,7 +15,7 @@ function agregarEstudiante() {
 }
 
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // Obtener referencias a los elementos
     const proyectoSelect = document.getElementById("nombre_proyecto");
     const form = document.getElementById("actualizarProyecto");
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const nombreProyectoInput = document.getElementById("nombreProyecto");
 
     // Escuchar el evento submit del formulario
-    form.addEventListener("submit", function(event) {
+    form.addEventListener("submit", function (event) {
         // Crear un array para recopilar mensajes de error
         const errores = [];
 
@@ -51,18 +51,16 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Escuchar cambios en el select de proyectos
-    proyectoSelect.addEventListener("change", function() {
+    proyectoSelect.addEventListener("change", function () {
         const selectedProyectoId = proyectoSelect.value; // Obtener el ID del proyecto seleccionado
 
         if (selectedProyectoId) {
             // Asignar la URL dinámica y el método POST al formulario
-            form.action = `/proyectos/${selectedProyectoId}/gestionActualizar`;
+            form.action = `/proyectos/${selectedProyectoId}/gestionActualizar`;//////////////////////////////////url
             form.method = "POST"; // Configurar el método como POST
         }
     });
 });
-
-
 
 const estudianteSelect = document.getElementById('idEstudiante');
 const addStudentBtn = document.getElementById('addStudentBtn');
@@ -160,79 +158,91 @@ document.addEventListener('DOMContentLoaded', function () {
         seccionSelect.disabled = false;
 
         // Limpiar opciones del select de proyectosestudianteSelect.remove(estudianteSelect.selectedIndex);
-        // proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
+      ///  proyectoSelect.innerHTML = '<option selected disabled>Seleccionar proyecto</option>';
 
         // Cargar proyectos por sección
-        // fetch(`/proyectos-por-seccion/${seccionId}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         data.forEach(proyecto => {
-        //             const option = document.createElement('option');
-        //             option.value = proyecto.id_proyecto;
-        //             option.textContent = proyecto.nombre_proyecto;
-        //             proyectoSelect.appendChild(option);
-        //         });
-        //     })
-        //     .catch(error => console.error('Error al cargar proyectos:', error));
+        fetch(`/proyectos-por-seccion/${seccionId}`)//////////////////////////////////url
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(proyecto => {
+                    const option = document.createElement('option');
+                    option.value = proyecto.id_proyecto;
+                    option.textContent = proyecto.nombre_proyecto;
+                    proyectoSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error al cargar proyectos:', error));
     });
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-const proyectoSelect = document.getElementById('nombre_proyecto');
-const ubicacionInput = document.getElementById('lugar');
-const fechaInicioInput = document.getElementById('fecha_inicio');
-const fechaFinInput = document.getElementById('fecha_fin');
-const horasinInput = document.getElementById('horas');
-const seccionSelect = document.getElementById('seccion_id');
-const preloader = document.getElementById('preloader');
+    const proyectoSelect = document.getElementById('nombre_proyecto');
+    const ubicacionInput = document.getElementById('lugar');
+    const fechaInicioInput = document.getElementById('fecha_inicio');
+    const fechaFinInput = document.getElementById('fecha_fin');
+    const horasinInput = document.getElementById('horas');
+    const seccionSelect = document.getElementById('seccion_id');
+    const preloader = document.getElementById('preloader');
 
-proyectoSelect.addEventListener('change', function () {
-    const proyectoId = this.value;
-    preloader.style.display = 'block';
-    
-    if (proyectoId) {
-        fetch(`/proyectos/${proyectoId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                    return;
-                }
+    proyectoSelect.addEventListener('change', function () {
+        const proyectoId = this.value; //  id del proyecto
+        preloader.style.display = 'block';
 
-                preloader.style.display = 'none';
 
-                // Rellenar los campos con los datos del proyecto
-                ubicacionInput.value = data.ubicacion || '';
-                fechaInicioInput.value = data.fecha_inicio || '';
-                fechaFinInput.value = data.fecha_fin || '';
-                horasinInput.value = data.horas_requeridas || '';
-                seccionSelect.innerHTML = '';
-                const option = document.createElement('option');
-                option.value = String(data.seccion.id);
-                option.textContent = data.seccion.nombre;
-                seccionSelect.appendChild(option);
-                // Verificar si hay estudiantes y procesarlos
-                if (data.estudiantes != null) {
-                    data.estudiantes.forEach(estudiante => {
-                        const id = String(estudiante.id_estudiante); // Convertir a número
-                        selectedStudents.set(id, estudiante.name);
-                        updateStudentList();
-                    });
-                }
-                filtrarTutor();//filtrar los tutores por seccion
-                filtrarEstudiante()//filtrar los estudiantes por seccion
-            })
-            .catch(error => {
-                console.error('Error al obtener los detalles del proyecto:', error);
-                // Ocultar el preloader incluso si ocurre un error
-                preloader.style.display = 'none';
-            });
-    }
+        if (proyectoId) {
+            fetch(`/proyectos/${proyectoId}`)//////////////////////////////////url
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    preloader.style.display = 'none';
+
+                    alert(`Datos del Proyecto:\n
+                        Ubicación: ${data.ubicacion || 'No disponible'}\n
+                        Fecha de Inicio: ${data.fecha_inicio || 'No disponible'}\n
+                        Fecha de Fin: ${data.fecha_fin || 'No disponible'}\n
+                        Horas Requeridas: ${data.horas_requeridas || 'No disponible'}\n
+                        Sección: ${data.seccion ? data.seccion.nombre : 'No disponible'}\n
+                        Estudiantes: ${data.estudiantes && data.estudiantes.length > 0 ? data.estudiantes.map(est => est.name).join(', ') : 'No estudiantes'}`
+                    );
+
+                    // Rellenar los campos con los datos del proyecto
+                    ubicacionInput.value = data.ubicacion || '';
+                    fechaInicioInput.value = data.fecha_inicio || '';
+                    fechaFinInput.value = data.fecha_fin || '';
+                    horasinInput.value = data.horas_requeridas || '';
+                    seccionSelect.innerHTML = '';
+                    const option = document.createElement('option');
+                    option.value = String(data.seccion.id);
+                    option.textContent = data.seccion.nombre;
+                    seccionSelect.appendChild(option);
+                    // Verificar si hay estudiantes y procesarlos
+                    if (data.estudiantes != null) {
+                        data.estudiantes.forEach(estudiante => {
+                            const id = String(estudiante.id_estudiante); // Convertir a número
+                            selectedStudents.set(id, estudiante.name);
+                            updateStudentList();
+                        });
+                    }
+                    filtrarTutor();//filtrar los tutores por seccion
+                    filtrarEstudiante()//filtrar los estudiantes por seccion
+                })
+                .catch(error => {
+                    console.error('Error al obtener los detalles del proyecto:', error);
+                    alert('Hubo un error al obtener los datos del proyecto. Por favor, inténtelo de nuevo.');
+
+                    // Ocultar el preloader incluso si ocurre un error
+                    preloader.style.display = 'none';
+                });
+        }
+    });
+
+
 });
-
-
-});
-window.onload = function() {
+window.onload = function () {
     const estudianteSelect = document.getElementById('idEstudiante');
     const selectedOption = estudianteSelect.options[estudianteSelect.selectedIndex];
     console.log(selectedOption.textContent);
@@ -277,7 +287,7 @@ document.getElementById('fecha_inicio').addEventListener('change', function () {
     }
 });
 
-function filtrarTutor(){
+function filtrarTutor() {
     const seccionSelect = document.getElementById('seccion_id');
     const tutorSelect = document.getElementById('idTutor');
     const tutores = JSON.parse(tutoresDiv.dataset.tutores);
@@ -308,10 +318,10 @@ function filtrarTutor(){
         tutorSelect.appendChild(noOption);
     }
 }
-function filtrarEstudiante(){
+function filtrarEstudiante() {
     const estudiantesDiv = document.getElementById('estudiantes-data');
     const seccionSelect = document.getElementById('seccion_id');
-    const estudiantesSelect = document.getElementById('idEstudiante'); 
+    const estudiantesSelect = document.getElementById('idEstudiante');
 
     const estudiantes = JSON.parse(estudiantesDiv.dataset.estudiantes);
     const idSeccion = seccionSelect.value;

@@ -11,7 +11,7 @@ class RegistroRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()->hasAnyRole(['Administrador', 'Coordinador']);
     }
 
     public function rules(): array

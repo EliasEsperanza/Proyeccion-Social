@@ -62,6 +62,7 @@
         <p class="card-text"><i class="bi bi-geo-alt-fill"></i>{{ $proyectoEstudiante->proyecto->lugar }}</p>
         <p class="card-text"><i class="bi bi-person-fill"></i>Tutor: {{ $proyectoEstudiante->proyecto->tutorr ? $proyectoEstudiante->proyecto->tutorr->name : 'sin asignar' }}</p>
         <button class="btn-verde btn m-3">{{ $proyectoEstudiante->proyecto->estadoos->nombre_estado }}</button>
+        <a href="{{route('estudiante.actualizarHorasView')}}">Actualizar horas</a>
       </div>
     </div>
   </div>

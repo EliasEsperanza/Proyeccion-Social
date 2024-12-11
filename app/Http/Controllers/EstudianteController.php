@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use App\Exports\EstudianteExport;
+use App\Http\Requests\Estudiante\Solicitud_avance_horasRequest;
 use App\Models\Asignacion;
 use App\Models\User;
 use App\Models\Estudiante;
@@ -267,6 +268,7 @@ class EstudianteController extends Controller
                 'horas' => null,
             ]);
         }
+
         $proyecto = Proyecto::find($proyectoEstudiante->id_proyecto);
         $horas = $Estudiante;
         $horas->nombre = $user->name;
@@ -278,24 +280,8 @@ class EstudianteController extends Controller
         ]);
     }
 
-    public function actualizarHoras(Request $request)
+    public function Solicitud_avance_horas(Solicitud_avance_horasRequest $request)
     {
-
-        $request->validate(
-            [
-                'horasTrabajadas' => 'required|numeric|min:0',
-                'documentos' => 'required|file|mimes:pdf',
-            ],
-            [
-                'horasTrabajadas.required' => 'El campo horas trabajadas es obligatorio',
-                'horasTrabajadas.numeric' => 'El campo horas trabajadas debe ser un número',
-                'horasTrabajadas.min' => 'El campo horas trabajadas debe ser mayor a 0',
-                'documentos.required' => 'El campo documento es obligatorio',
-                'documentos.file' => 'El campo documento debe ser un archivo',
-                'documentos.mimes' => 'El campo documento debe ser un archivo PDF',
-            ]
-        );
-
         $nombreProyecto = Proyecto::find($request->idProyecto)->nombre_proyecto;
 
         try {
@@ -317,6 +303,7 @@ class EstudianteController extends Controller
             'documento' => $nombreArchivo,
             'estado' => 8,
         ]);
+
 
         return redirect()->back()->with('success', 'Solicitud enviada con éxito');
     }
