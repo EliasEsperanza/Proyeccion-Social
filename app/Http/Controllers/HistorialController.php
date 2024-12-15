@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Historial\StoreRequest;
 use App\Models\HistorialEstado;
 use Illuminate\Http\Request;
 
@@ -24,16 +25,10 @@ class HistorialController extends Controller
     * se necesita la tabla para ir guardando el horial delestado
     */
     
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $data = $request->validate([
-            'proyecto_id' => 'required|integer',
-            'estado_anterior' => 'required|string',
-            'estado_nuevo' => 'required|string',
-        ]);
 
-        $this->historialEstado->create($data);
-
+        $this->historialEstado->create($request->all());
         return redirect()->route('historial.index')->with('success', 'Cambio de estado registrado con éxito');
     }
 }

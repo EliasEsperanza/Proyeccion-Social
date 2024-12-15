@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Estado\StoreRequest;
+use App\Http\Requests\Estado\UpdateRequest;
 use App\Models\Estado;
 use App\Models\HistorialEstado;
 use Illuminate\Http\Request;
@@ -49,16 +51,14 @@ class EstadoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+
+    public function store(StoreRequest $request)
     {
-        $data = $request->validate([
-            'nombre_estado' => 'required|string|max:50',
-        ]);
 
         // Estandarización del nombre
-        $data['nombre_estado'] = ucfirst(strtolower($data['nombre_estado']));
+        $request['nombre_estado'] = ucfirst(strtolower($request['nombre_estado']));
 
-        Estado::crearEstado($data);
+        Estado::create($request->all());
         return redirect()->route('estado.index')->with('success', 'Estado creado con éxito');
     }
 
@@ -100,13 +100,15 @@ class EstadoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    //form request a probar
+    public function update(UpdateRequest $request, $id)
     {
         $estado = Estado::find($id);
 
         if (!$estado) {
             return redirect()->route('estado.index')->with('error', 'Estado no encontrado');
         }
+/////////////////////////////
 
         $estadoAnterior = $estado->nombre_estado;
 

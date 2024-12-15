@@ -25,10 +25,10 @@
                     <label for="rol" class="form-label">Rol</label>
                     <select name="rol" class="form-select" id="rol">
                         <option value="" disabled>Seleccionar Rol</option>
-                        <option value="administrador" {{ $usuario->getRoleNames()->first() === 'Administrador' ? 'selected' : '' }}>administrador</option>
-                        <option value="tutor" {{ $usuario->getRoleNames()->first() === 'Tutor' ? 'selected' : '' }}>tutor</option>
-                        <option value="estudiante" {{ $usuario->getRoleNames()->first() === 'Estudiante' ? 'selected' : '' }}>estudiante</option>
-                        <option value="coordinador" {{ $usuario->getRoleNames()->first() === 'Coordinador' ? 'selected' : '' }}>coordinador</option>
+                        <option value="Administrador" {{ $usuario->getRoleNames()->first() === 'Administrador' ? 'selected' : '' }}>administrador</option>
+                        <option value="Tutor" {{ $usuario->getRoleNames()->first() === 'Tutor' ? 'selected' : '' }}>tutor</option>
+                        <option value="Estudiante" {{ $usuario->getRoleNames()->first() === 'Estudiante' ? 'selected' : '' }}>estudiante</option>
+                        <option value="Coordinador" {{ $usuario->getRoleNames()->first() === 'Coordinador' ? 'selected' : '' }}>coordinador</option>
                     </select>
                 </div>
             </div>
@@ -50,23 +50,6 @@
         </div>
     </div>
 
-    <!-- validacion de errores -->
-    @if ($errors->any())
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    @endif
 @endsection
 
 <script>

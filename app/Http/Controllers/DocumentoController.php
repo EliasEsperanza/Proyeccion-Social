@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Documentos\StoreDocumentoRequest;
+use App\Http\Requests\Documentos\UpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Documento;
 use Illuminate\Support\Facades\Storage;
@@ -36,13 +38,8 @@ class DocumentoController extends Controller
     /**
      * Almacenar un nuevo documento con validación de archivo.
      */
-    public function store(Request $request)
+    public function store(StoreDocumentoRequest $request)
     {
-        $request->validate([
-            'file' => 'required|file|mimes:pdf,doc,docx,txt|max:2048', // Máximo 2 MB
-            'id_proyecto' => 'required|integer',
-            'tipo_documento' => 'required|string|max:255',
-        ]);
 
         if ($request->file('file')->isValid()) {
             // Guarda el archivo en el directorio `documentos`
@@ -68,7 +65,7 @@ class DocumentoController extends Controller
         return view('documentos.edit', compact('documento'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $documento = Documento::find($id);
         $documento->id_proyecto = $request->id_proyecto;

@@ -34,13 +34,13 @@
                     <select name="rol" class="form-select @error('rol') is-invalid @enderror" id="rol" required>
                         <option selected>Seleccionar Rol</option>
                         @if(auth()->check() && auth()->user()->hasRole('Coordinador'))
-                        <option value="tutor">tutor</option>
-                        <option value="estudiante">estudiante</option>
+                        <option value="Tutor">Tutor</option>
+                        <option value="Estudiante">Estudiante</option>
                         @else
-                        <option value="tutor">tutor</option>
-                        <option value="estudiante">estudiante</option>
-                        <option value="administrador">administrador</option>
-                        <option value="coordinador">coordinador</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Coordinador">Coordinador</option>
+                        <option value="Tutor">Tutor</option>
+                        <option value="Estudiante">Estudiante</option>
                         @endif
                     </select>
                 </div>

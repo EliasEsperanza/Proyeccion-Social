@@ -114,7 +114,7 @@
                         </div>
                         <div class="col-6">
                             <label for="horas" class="form-label">Horas Requeridas</label>
-                            <input type="text" class="form-control" id="horas" name="horas" readonly>
+                            <input type="text" class="form-control" id="horas" name="horas" >
                         </div>
                     </div>
 
