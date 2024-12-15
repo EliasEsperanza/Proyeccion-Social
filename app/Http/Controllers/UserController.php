@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\DeleteSelectedRequest;
+use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegistroRequest;
 use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdatePassPerfilRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Mail\mailrecuperarpassword;
 use App\Models\CodigosRecuperacion;
@@ -18,7 +21,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
+    //to service
+    //to model
     public function list(Request $request)
     {
         $perPage = $request->input('per_page', 10);
@@ -129,6 +133,8 @@ class UserController extends Controller
         return view('usuarios.listaUsuario', compact('users'));
     }
 
+    //to service
+    //to model
     public function buscar(Request $request)
     {
         $search = $request->input('search');
@@ -182,7 +188,6 @@ class UserController extends Controller
     public function showPerfil($id)
     {
         $usuario = User::findOrFail($id);
-
         return view('perfil.perfilUsuario', compact('usuario'));
     }
     public function allSeccion()
@@ -198,81 +203,75 @@ class UserController extends Controller
 
     public function registro(RegistroRequest $request)
     {
-            \DB::transaction(function () use ($request) {
-                // Crear usuario
-                $user = User::create([
-                    'name' => $request->nombre,
-                    'email' => $request->correo,
-                    'password' => bcrypt($request->password),
+        \DB::transaction(function () use ($request) {
+            // Crear usuario
+            $user = User::create([
+                'name' => $request->nombre,
+                'email' => $request->correo,
+                'password' => bcrypt($request->password),
+            ]);
+
+            // Asignar rol
+            $user->assignRole('estudiante');
+
+            // Asociar sección si se proporciona
+            if ($request->filled('id_seccion')) {
+                Estudiante::create([
+                    'id_usuario' => $user->id_usuario,
+                    'id_seccion' => $request->id_seccion,
+                    'porcentaje_completado' => 0,
+                    'horas_sociales_completadas' => 0,
                 ]);
+                dd('guds');
+            }
+        });
+        dd('gud');
 
-                // Asignar rol
-                $user->assignRole('estudiante');
-
-                // Asociar sección si se proporciona
-                if ($request->filled('id_seccion')) {
-                    Estudiante::create([
-                        'id_usuario' => $user->id_usuario,
-                        'id_seccion' => $request->id_seccion,
-                        'porcentaje_completado' => 0,
-                        'horas_sociales_completadas' => 0,
-                    ]);
-            dd('guds');
-
-                }
-            });
-            dd('gud');
-
-            return redirect()->route('login')->with('success', 'Usuario creado exitosamente');
+        return redirect()->route('login')->with('success', 'Usuario creado exitosamente');
     }
 
     public function store(StoreUserRequest $request)
     {
-
         $user = User::create([
             'name' => $request->nombre,
             'email' => $request->correo,
             'password' => bcrypt($request->password),
         ]);
-
         $user->assignRole($request->rol);
 
         if ($request->filled('id_seccion')) {
             $idSeccion = $request->id_seccion;
 
-            if ($request->rol === 'estudiante') {
+            if ($request->rol === 'Estudiante') {
+
                 \DB::table('estudiantes')->insert([
                     'id_usuario' => $user->id_usuario,
                     'id_seccion' => $idSeccion,
                     'porcentaje_completado' => 0,
                     'horas_sociales_completadas' => 0,
                 ]);
-            } elseif ($request->rol === 'tutor') {
+            } elseif ($request->rol === 'Tutor') {
+
                 \DB::table('seccion_tutor')->insert([
                     'id_tutor' => $user->id_usuario,
                     'id_seccion' => $idSeccion
                 ]);
-            } elseif ($request->rol === 'coordinador') {
+            } elseif ($request->rol === 'Coordinador') {
+
                 \DB::table('secciones')
                     ->where('id_seccion', $idSeccion)
                     ->update(['id_coordinador' => $user->id_usuario]);
             }
         }
 
+
         return redirect()->route('usuarios')->with('success', 'Usuario creado exitosamente');
     }
 
-    public function deleteSelected(Request $request)
+    public function deleteSelected(DeleteSelectedRequest $request)
     {
-        // Validar que se haya seleccionado al menos un usuario
-        $request->validate([
-            'users' => 'required|array',
-            'users.*' => 'exists:users,id_usuario'
-        ]);
-
         // Eliminar los usuarios seleccionados
         User::whereIn('id_usuario', $request->input('users'))->delete();
-
         return redirect()->route('usuarios')->with('success', 'Usuarios eliminados exitosamente.');
     }
     public function destroy($id)
@@ -289,6 +288,7 @@ class UserController extends Controller
         $secciones = Seccion::all();
         return view('usuarios.editarUsuario', compact('usuario', 'secciones'));
     }
+    //###########################################################################################
     public function update(UpdateUserRequest $request, $id)
     {
         try {
@@ -362,6 +362,7 @@ class UserController extends Controller
             return view('auth.recupassword');
         }
     }
+
     public function resetearpassword($idUser)
     {
         return view('auth.resetpassword', compact('idUser'));
@@ -379,30 +380,9 @@ class UserController extends Controller
         CodigosRecuperacion::where('codigo', $request->codigo_verificacion)->delete();
         return redirect('/');
     }
-
-    public function updatepassperfil(Request $request)
+    //###########################################################################################
+    public function updatepassperfil(UpdatePassPerfilRequest $request)
     {
-        $request->validate([
-            'contrasena_actual' => 'required',
-            'nueva_contrasena' => [
-                'required',
-                'string',
-                'min:8', // mínimo 8 caracteres
-                'confirmed', // requiere nueva_contrasena_confirmation
-                'different:contrasena_actual', // debe ser diferente a la actual
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/' // debe contener mayúsculas, minúsculas, números y caracteres especiales
-            ],
-            'nueva_contrasena_confirmation' => 'required'
-        ], [
-            'contrasena_actual.required' => 'La contraseña actual es requerida',
-            'nueva_contrasena.required' => 'La nueva contraseña es requerida',
-            'nueva_contrasena.min' => 'La nueva contraseña debe tener al menos 8 caracteres',
-            'nueva_contrasena.confirmed' => 'Las contraseñas no coinciden',
-            'nueva_contrasena.different' => 'La nueva contraseña debe ser diferente a la actual',
-            'nueva_contrasena.regex' => 'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial',
-            'nueva_contrasena_confirmation.required' => 'Debe confirmar la nueva contraseña'
-        ]);
-
         $user = User::find(Auth::user()->id_usuario);
         if (!Hash::check($request->contrasena_actual, $user->password)) {
             return back()->withErrors([
@@ -425,36 +405,9 @@ class UserController extends Controller
         $usuario = Auth::user();
         return view('usuarios.perfilUsuario', compact('usuario'));
     }
-    public function updateusuario(Request $request, $id)
+    public function updateusuario(UpdateUserRequest $request, $id)
     {
         try {
-            // Validar los datos del usuario
-            $request->validate([
-                'nombre' => [
-                    'required',
-                    'string',
-                    'max:28',
-                    'regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
-                ],
-                'correo' => [
-                    'required',
-                    'string',
-                    'email',
-                    'max:255',
-                    'unique:users,email,' . $id, // Ajustar según la clave primaria
-                    'ends_with:@ues.edu.sv',
-                ],
-            ], [
-                'nombre.required' => 'El nombre es obligatorio.',
-                'nombre.max' => 'El nombre no puede tener más de 28 caracteres.',
-                'nombre.regex' => 'El nombre solo puede contener letras.',
-
-                'correo.required' => 'El correo es obligatorio.',
-                'correo.email' => 'El correo debe tener un formato válido.',
-                'correo.max' => 'El correo no puede tener más de 255 caracteres.',
-                'correo.unique' => 'El correo ya está en uso.',
-                'correo.ends_with' => 'El correo debe terminar con "@ues.edu.sv".',
-            ]);
 
             // Actualizar el usuario
             $usuario = User::findOrFail($id); // Asegúrate de que 'id' existe en la tabla
@@ -470,19 +423,9 @@ class UserController extends Controller
         }
     }
 
-
-    public function login(Request $request)
+    //to service
+    public function login(LoginRequest $request)
     {
-        // Validar las credenciales de entrada
-        $request->validate([
-            'correo' => 'required|email',
-            'contrasena' => 'required|string|min:6',
-        ], [
-            'correo.required' => 'El correo es obligatorio.',
-            'correo.email' => 'El formato del correo no es válido.',
-            'contrasena.required' => 'La contraseña es obligatoria.',
-            'contrasena.min' => 'La contraseña debe tener al menos 6 caracteres.',
-        ]);
 
         $credentials = $request->only('correo', 'contrasena');
 
@@ -494,7 +437,7 @@ class UserController extends Controller
 
             // Verificar si el usuario tiene el rol de Estudiante
             if ($user->hasRole('Estudiante')) {
-                return redirect()->route('estudiantes.dashboard');
+                return to_route('estudiantes.dashboard');
             }
 
             // Redireccionamiento por defecto para otros roles

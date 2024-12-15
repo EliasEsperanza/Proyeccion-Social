@@ -13,7 +13,7 @@ class PermissionController extends Controller
         return view('permisos.gestionpermiso', compact('permissions')); // Pasa la variable a la vista
     }
     
-
+//###########################################################################################
     public function store(Request $request)
     {
         $request->validate([
@@ -28,6 +28,7 @@ class PermissionController extends Controller
     {
         return response()->json($permission); // Para editar
     }
+    //###########################################################################################
 
     public function update(Request $request, Permission $permission)
     {

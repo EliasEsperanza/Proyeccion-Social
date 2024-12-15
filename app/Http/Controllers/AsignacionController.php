@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exports\AsignacionExport;
+use App\Http\Requests\Asignacion\StoreAsignacionRequest;
+use App\Http\Requests\Asignacion\UpdateAsignacionRequest;
+use App\Http\Requests\Proyecto\AsignarProyectoRequest;
 use App\Models\Asignacion;
+use App\Models\Estudiante;
+use App\Models\Proyecto;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -36,26 +42,12 @@ class AsignacionController extends Controller
         return view('asignaciones.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreAsignacionRequest $request)
     {
-        // Validar los datos recibidos
-        $validatedData = $request->validate([
-            'id_proyecto' => 'required|integer|min:1',
-            'id_estudiante' => 'required|integer|min:1',
-            'id_tutor' => 'required|integer|min:1',
-            'fecha_asignacion' => 'required|date|after_or_equal:today',
-        ], [
-            'id_proyecto.required' => 'El proyecto es obligatorio.',
-            'id_estudiante.required' => 'El estudiante es obligatorio.',
-            'id_tutor.required' => 'El tutor es obligatorio.',
-            'fecha_asignacion.required' => 'La fecha de asignación es obligatoria.',
-            'fecha_asignacion.after_or_equal' => 'La fecha debe ser hoy o posterior.',
-        ]);
-
         try {
-
             Asignacion::create($request->all());
             return redirect()->route('asignaciones.index')->with('success', 'Asignación creada con éxito');
+        
         } catch (\Exception $e) {
             // Manejo de errores en caso de fallo
             return redirect()->back()
@@ -76,28 +68,84 @@ class AsignacionController extends Controller
         return view('asignaciones.edit', compact('asignacion'));
     }
 
-    public function update(Request $request, $id)
+    public function eliminarEstudiante($proyectoId, $estudianteId)
+    {
+        // Buscar el proyecto y estudiante en la tabla pivot
+        $proyecto = Proyecto::findOrFail($proyectoId);
+
+        // Verificar si el estudiante está asociado al proyecto
+        $proyecto->estudiantes()->detach($estudianteId);
+
+        return back()->with('success', 'Estudiante eliminado del proyecto exitosamente.');
+    }
+
+    public function gestionActualizar(AsignarProyectoRequest $request, $id)
+    {
+
+        // Decodificar los estudiantes seleccionados desde el input JSON
+        $estudiantesSeleccionados = json_decode($request->input('estudiantes'), true);
+
+        // Validar que existan estudiantes seleccionados
+        if (!$estudiantesSeleccionados || !is_array($estudiantesSeleccionados) || count($estudiantesSeleccionados) === 0) {
+            return redirect()->back()->withErrors(['estudiantes' => 'Debe seleccionar al menos un estudiante.'])->withInput();
+        }
+
+        $tutor = User::find($request['idTutor'] ?? null);
+
+        // Buscar el proyecto
+        $proyecto = Proyecto::findOrFail($id);
+
+        // Limpiar lista de estudiantes asociados al proyecto
+        $proyecto->estudiantes()->detach();
+
+        // Asociar los estudiantes seleccionados al proyecto
+        foreach ($estudiantesSeleccionados as $estudianteId) {
+            $estudiante = Estudiante::find($estudianteId);
+            if ($estudiante) {
+                $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+            }
+        }
+
+/////////////////////////////
+        // Actualizar los datos del proyecto
+        $proyecto->update([
+            'tutor' => $tutor->id_usuario ?? null,
+            'lugar' => $request['lugar'],
+            'fecha_inicio' => $request['fecha_inicio'],
+            'fecha_fin' => $request['fecha_fin'],
+            'estado' => $request['estado'],
+            'seccion_id' => $request['seccion_id'],
+            'horas' => $request['horas'],
+        ]);
+
+        // Redirigir con éxito
+        return redirect()->route('gestion-proyecto')->with('success', 'Proyecto actualizado correctamente.');
+    }
+
+    public function asignarEstudiante(Request $request, $idProyecto)
+    {
+        // Buscar al estudiante por id
+        $estudiante = Estudiante::find($request->idEstudiante);
+
+        if (!$estudiante) {
+            return back()->withErrors(['El estudiante no existe.']);
+        }
+
+        // Buscar el proyecto y asociar al estudiante
+        $proyecto = Proyecto::findOrFail($idProyecto);
+        // // Verificar si el estudiante ya está asignado
+        if (!$proyecto->estudiantes->contains($estudiante->id_estudiante)) {
+            $proyecto->estudiantes()->attach($estudiante->id_estudiante);
+        } else {
+            return back()->withErrors(['El estudiante ya está asignado a este proyecto.']);
+        }
+
+        return back()->with('success', 'Estudiante asignado correctamente.');
+    }
+
+    public function update(UpdateAsignacionRequest $request, $id)
     {
         $asignacion = Asignacion::findOrFail($id);
-
-        // Validar datos al actualizar
-        $request->validate([
-            'id_proyecto' => 'sometimes|integer|min:1',
-            'id_estudiante' => 'sometimes|integer|min:1',
-            'id_tutor' => 'sometimes|integer|min:1',
-            'fecha_asignacion' => 'sometimes|date|after_or_equal:today',
-        ], [
-            'required' => 'El campo :attribute es obligatorio.',
-            'integer' => 'El campo :attribute debe ser un número entero.',
-            'min' => 'El campo :attribute debe ser al menos :min.',
-            'date' => 'El campo :attribute debe ser una fecha válida.',
-            'after_or_equal' => 'La fecha de asignación debe ser hoy o una fecha futura.',
-        ], [
-            'id_proyecto' => 'proyecto',
-            'id_estudiante' => 'estudiante',
-            'id_tutor' => 'tutor',
-            'fecha_asignacion' => 'fecha de asignación',
-        ]);
 
         try {
             $asignacion->update($request);

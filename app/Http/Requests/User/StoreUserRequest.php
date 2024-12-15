@@ -54,6 +54,8 @@ class StoreUserRequest extends FormRequest
 
     public function messages()
     {
+    //dd($this->rol);
+
         return [
             'nombre.required' => 'El nombre es obligatorio.',
             'correo.required' => 'El correo es obligatorio.',
@@ -62,7 +64,7 @@ class StoreUserRequest extends FormRequest
             'password.required' => 'La contraseña es obligatoria.',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'rol.required' => 'El rol es obligatorio.',
-            'rol.exists' => 'El rol seleccionado no existe.',
+            'rol.exists' => 'El rol seleccionado no existe: ' . $this->input('rol'),
             'id_seccion.exists' => 'La sección seleccionada no existe.',
         ];
     }

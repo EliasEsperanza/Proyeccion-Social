@@ -1,9 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Str;
 use App\Exports\EstudianteExport;
+use App\Http\Requests\Estudiante\RegisterRequest;
 use App\Http\Requests\Estudiante\Solicitud_avance_horasRequest;
+use App\Http\Requests\Estudiante\StoreRequest;
+use App\Http\Requests\Estudiante\UpdateRequest;
 use App\Models\Asignacion;
 use App\Models\User;
 use App\Models\Estudiante;
@@ -20,39 +24,36 @@ use Illuminate\Support\Facades\Hash;
 
 class EstudianteController extends Controller
 {
+
+    protected $estudiante;
+    protected $seccion;
+
+    // Inyección de dependencias a través del constructor
+    public function __construct(Estudiante $estudiante, Seccion $seccion)
+    {
+        $this->estudiante = $estudiante;
+        $this->seccion = $seccion;
+    }
+    /***************************************************************************************************************** */
     // Método que maneja la búsqueda de estudiantes
     private function buscarEstudiantes($query)
     {
         if ($query) {
-            return Estudiante::where('nombre', 'LIKE', "%{$query}%")
+            return $this->estudiante::where('nombre', 'LIKE', "%{$query}%")
                 ->orWhereHas('seccion', function ($q) use ($query) {
                     $q->where('nombre', 'LIKE', "%{$query}%");
                 })
                 ->get();
         } else {
-            return Estudiante::all();
+            return $this->estudiante::all();
         }
     }
-    private function validarRegistro(Request $request)
-    {
-        return $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'id_seccion' => 'required|integer|exists:secciones,id',
-        ]);
-    }
 
-    // Método que valida los datos de los estudiantes
-    private function validarEstudiante(Request $request)
+    public function ProgresoGlobal(int $id)
     {
-        return $request->validate([
-            'id_usuario' => 'required|integer|exists:users,id',
-            'id_seccion' => 'required|integer|exists:secciones,id',
-            'porcentaje_completado' => 'required|numeric|min:0|max:100',
-            'horas_sociales_completadas' => 'required|integer|min:0',
-            'nombre' => 'required|string|max:255',
-        ]);
+        $estudiante = Estudiante::find($id);
+
+        return view("estudiantes.ProgresoGlobal", compact("estudiante"));
     }
 
     // Método para mostrar la lista de estudiantes (con o sin búsqueda)
@@ -61,7 +62,6 @@ class EstudianteController extends Controller
         $query = $request->input('query');
         $ListEstudiantes = $this->buscarEstudiantes($query);
         $User = User::all();
-        // dd($ListEstudiantes);
         return view("estudiante.index", compact("ListEstudiantes"));
     }
 
@@ -74,11 +74,10 @@ class EstudianteController extends Controller
     }
 
     // Almacenar un nuevo estudiante en la base de datos
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $data = $this->validarEstudiante($request);
 
-        Estudiante::create($data);
+        Estudiante::create($request->all());
 
         return redirect()->route('estudiantes.index')->with('success', 'Estudiante creado con éxito');
     }
@@ -108,17 +107,11 @@ class EstudianteController extends Controller
     }
 
     // Actualizar los datos de un estudiante existente
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         $estudiante = Estudiante::find($id);
 
-        if (!$estudiante) {
-            return redirect()->route('estudiantes.index')->with('error', 'Estudiante no encontrado');
-        }
-
-        $data = $this->validarEstudiante($request);
-
-        $estudiante->update($data);
+        $estudiante->update($request);
 
         return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado con éxito');
     }
@@ -141,14 +134,14 @@ class EstudianteController extends Controller
     {
         return Excel::download(new EstudianteExport, 'estudiantes.xlsx');
     }
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $data = $this->validarRegistro($request);
+/////////////////////////////
 
         $usuario = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
             'email_verified_at' => now(),
         ]);
         $usuario->assignRole('Estudiante');
@@ -156,8 +149,8 @@ class EstudianteController extends Controller
         // Crear el estudiante
         Estudiante::create([
             'id_usuario' => $usuario->id,
-            'id_seccion' => $data['id_seccion'],
-            'nombre' => $data['name'],
+            'id_seccion' => $request['id_seccion'],
+            'nombre' => $request['name'],
             'porcentaje_completado' => 0,
             'horas_sociales_completadas' => 0,
         ]);
@@ -182,7 +175,7 @@ class EstudianteController extends Controller
 
             // Inicializar la consulta de estudiantes
             $query = Estudiante::query();
-            
+
             // Obtener la sección del coordinador
             $seccion = DB::table('secciones')
                 ->where('id_coordinador', $user->id_usuario)
@@ -208,6 +201,8 @@ class EstudianteController extends Controller
 
     public function seccionesDisponibles()
     {
+/////////////////////////////
+
         $secciones = DB::table('secciones')
             ->join('departamentos', 'secciones.id_departamento', '=', 'departamentos.id_departamento')
             ->select('secciones.id_seccion', 'secciones.nombre_seccion', 'departamentos.nombre_departamento')
@@ -218,6 +213,8 @@ class EstudianteController extends Controller
 
     public function estudiantesPorSeccion($idSeccion)
     {
+/////////////////////////////
+
         $estudiantes = Estudiante::with('usuario')
             ->whereDoesntHave('proyecto')
             ->where('id_seccion', $idSeccion)
@@ -251,6 +248,8 @@ class EstudianteController extends Controller
 
         return response()->json($estudiantes);
     }
+
+/////////////////////////////to service
     public function actualizarHorasView()
     {
         $user = auth()->user();
@@ -291,6 +290,8 @@ class EstudianteController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error al subir el archivo');
         }
+
+/////////////////////////////
 
         $valorHoras = $request->horasTrabajadas;
         $estudiante = $request->idEstudiante_;

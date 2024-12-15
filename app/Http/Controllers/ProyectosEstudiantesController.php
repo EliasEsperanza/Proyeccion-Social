@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProyectosEstudiante\UpdateRequest;
+use App\Http\Requests\ProyectosEstudiantes\StoreRequest;
 use App\Models\Estudiante;
 use App\Models\ProyectosEstudiantes;
 use App\Models\HistoriaHorasActualizada;
@@ -33,15 +35,10 @@ class ProyectosEstudiantesController extends Controller
     {
         return view("proyectos_estudiantes.create");
     }
-
-    public function store(Request $request)
+    
+    public function store(StoreRequest $request)
     {
-        $validacion = $request->validate([
-            'id_proyectos' => 'required|integer',
-            'id_estudiantes' => 'required|integer',
-        ]);
-
-        ProyectosEstudiantes::create($validacion);
+        ProyectosEstudiantes::create($request->all());
 
         return redirect()->route('proyectos_estudiantes.index')->with('success', 'Asignacion de estudiante a proyecto exitosa');
     }
@@ -62,12 +59,8 @@ class ProyectosEstudiantesController extends Controller
         return view("proyectos_estudiantes.edit", compact('proyectos_estudiantes'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
-        $validacion = $request->validate([
-            'id_proyectos' => 'required|integer',
-            'id_estudiantes' => 'required|integer',
-        ]);
 
         $proyectos_estudiantes = ProyectosEstudiantes::find($id);
 
@@ -75,7 +68,7 @@ class ProyectosEstudiantesController extends Controller
             return redirect()->route('proyectos_estudiantes.index')->with('error', 'No se econtró ese Proyecto');
         }
 
-        $proyectos_estudiantes->update($validacion);
+        $proyectos_estudiantes->update($request);
         return redirect()->route('proyectos_estudiantes.index')->with('success', 'Modificacion de asignacion de estudiante a proyecto exitosa');
     }
 
@@ -112,6 +105,7 @@ class ProyectosEstudiantesController extends Controller
         return redirect()->back()->with('success', 'Registros eliminados correctamente.');
     }
 
+    //to service
     public function Detalles_proyecto()
     {
         $userId = auth()->user()->id_usuario;
@@ -186,7 +180,7 @@ class ProyectosEstudiantesController extends Controller
             // Si no se encuentra el estudiante
             return redirect()->back()->with('error', 'No se encontró al estudiante.');
         }
-        
+
         // Verificar si el estudiante ya tiene un proyecto asignado
         $proyectoEstudiante = ProyectosEstudiantes::where('id_estudiante', $estudiante->id_estudiante)->first();
 
@@ -194,15 +188,14 @@ class ProyectosEstudiantesController extends Controller
             // Si no tiene un proyecto asignado
             $seccion_id = $estudiante->id_seccion;
             $proyectoEstudiante = Estudiante::where('id_seccion', $seccion_id)->first();
-    
-            return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
 
+            return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
         }
         // Verificar si el estado del proyecto es 7
         if ($proyectoEstudiante->estado == 7) {
             return redirect()->back()->with('warning', 'No se puede enviar el proyecto, ya enviaste una solicitud.');
-        } 
-        
+        }
+
         return view('estudiantes.solicitud-proyecto', compact('proyectoEstudiante'));
     }
 

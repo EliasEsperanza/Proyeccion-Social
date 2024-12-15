@@ -14,6 +14,7 @@ return new class extends Migration
             $table->text('nombre_proyecto');
             $table->text('descripcion_proyecto');
             $table->integer('horas_requeridas');
+            $table->integer('horas_completadas')->nullable();//agregado
             $table->foreignId('estado')->constrained('estados', 'id_estado')->onDelete('cascade');
             $table->text('periodo');
             $table->text('lugar');

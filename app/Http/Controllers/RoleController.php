@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Role\StoreRequest;
+use App\Http\Requests\Role\UpdateRequest;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -19,14 +21,9 @@ class RoleController extends Controller
     
         return view('layouts.gestion-de-roles', compact('roles', 'permissions'));
     }
-
-    public function store(Request $request)
+//###########################################################################################
+    public function store(StoreRequest $request)
     {
-        // Validar la solicitud
-        $request->validate([
-            'name' => 'required|unique:roles,name',
-            'permissions' => 'array'
-        ]);
 
         // Crear el rol
         $role = Role::create(['name' => $request->name]);
@@ -38,15 +35,9 @@ class RoleController extends Controller
 
         return redirect()->route('layouts.roles')->with('success', 'Rol creado exitosamente.');
     }
-
-    public function update(Request $request, Role $role)
+//###########################################################################################
+    public function update(UpdateRequest $request, Role $role)
     {
-        // Validar la solicitud
-        $request->validate([
-            'name' => 'required|unique:roles,name,' . $role->id,
-            'permissions' => 'array'
-        ]);
-
         // Actualizar el nombre del rol
         $role->update(['name' => $request->name]);
 

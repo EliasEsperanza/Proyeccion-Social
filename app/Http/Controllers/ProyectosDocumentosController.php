@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProyectosDocumentos\StoreRequest;
+use App\Http\Requests\ProyectosDocumentos\UpdateRequest;
 use App\Models\ProyectosDocumentos;
 use Illuminate\Http\Request;
 
@@ -21,7 +23,7 @@ class ProyectosDocumentosController extends Controller
     }
 
     #metodo para guardar
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $request->validate([
             'id_documento' => 'required|integer|exists:documentos,id',
@@ -30,7 +32,7 @@ class ProyectosDocumentosController extends Controller
 
         ProyectosDocumentos::create($request->all());
         return redirect()->route('proyectos_documentos.index')
-                         ->with('success', 'ProyectosDocumentos creado exitosamente.');
+            ->with('success', 'ProyectosDocumentos creado exitosamente.');
     }
 
     #metodo para mostrar un proyecto_documento en una vista
@@ -48,17 +50,12 @@ class ProyectosDocumentosController extends Controller
     }
 
     #metodo para actualizar un proyecto_documento
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        $request->validate([
-            'id_documento' => 'required|integer|exists:documentos,id',
-            'id_proyecto' => 'required|integer|exists:proyectos,id_proyecto',
-        ]);
-
         $ProyectosDocumentos = ProyectosDocumentos::find($id);
         $ProyectosDocumentos->update($request->all());
         return redirect()->route('proyectos_documentos.index')
-                         ->with('success', 'ProyectosDocumentos actualizado exitosamente.');
+            ->with('success', 'ProyectosDocumentos actualizado exitosamente.');
     }
 
     #metodo para eliminar un proyecto_documento
@@ -67,6 +64,6 @@ class ProyectosDocumentosController extends Controller
         $ProyectosDocumentos = ProyectosDocumentos::find($id);
         $ProyectosDocumentos->delete();
         return redirect()->route('proyectos_documentos.index')
-                         ->with('success', 'ProyectosDocumentos eliminado exitosamente.');
+            ->with('success', 'ProyectosDocumentos eliminado exitosamente.');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\HistorialHorasActualizada\AceptarHorasRequest;
+use App\Http\Requests\HistorialHorasActualizada\StoreRequest;
 use App\Models\HistoriaHorasActualizada;
 use App\Models\Proyecto;
 use App\Models\ProyectosEstudiantes;
@@ -20,15 +22,10 @@ class HistoriaHorasActualizadaController extends Controller
         return view('historias_horas_actualizadas.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'id_estudiante' => 'required|exists:estudiantes,id_estudiante',
-            'id_solicitud' => 'required|exists:solicitudes,solicitud_id',
-        ]);
-
         HistoriaHorasActualizada::create($request->all());
-        return redirect()->route('historias_horas_actualizadas.index')->with('success', 'Registro creado con éxito.');
+        return to_route('historias_horas_actualizadas.index')->with('success', 'Registro creado con éxito.');
     }
 
     public function show($id)
@@ -45,21 +42,16 @@ class HistoriaHorasActualizadaController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'id_estudiante' => 'required|exists:estudiantes,id_estudiante',
-            'id_solicitud' => 'required|exists:solicitudes,solicitud_id',
-        ]);
-
         $historia = HistoriaHorasActualizada::findOrFail($id);
         $historia->update($request->all());
-        return redirect()->route('historias_horas_actualizadas.index')->with('success', 'Registro actualizado con éxito.');
+        return to_route('historias_horas_actualizadas.index')->with('success', 'Registro actualizado con éxito.');
     }
 
     public function destroy($id)
     {
         $historia = HistoriaHorasActualizada::findOrFail($id);
         $historia->delete();
-        return redirect()->route('historias_horas_actualizadas.index')->with('success', 'Registro eliminado con éxito.');
+        return to_route('historias_horas_actualizadas.index')->with('success', 'Registro eliminado con éxito.');
     }
 
     public function historial($id)
@@ -67,33 +59,22 @@ class HistoriaHorasActualizadaController extends Controller
         $proyecto = Proyecto::find($id);
 
         if (!$proyecto) {
-            return redirect()->route('proyectos.index')->with('error', 'Proyecto no encontrado.');
+            return to_route('proyectos.index')->with('error', 'Proyecto no encontrado.');
         }
 
         $historial = HistoriaHorasActualizada::where('id_proyecto', $id)->get();
 
         return view('proyectos.detallesmio', compact('proyecto', 'historial'));
     }
-    public function aceptarHoras(Request $request)
+
+    public function aceptarHoras(AceptarHorasRequest $request)
     {
-        // Valida que los datos necesarios estén presentes
-        $request->validate([
-            'id_estudiante' => 'required|exists:estudiantes,id_estudiante',
-            'id_solicitud' => 'required|exists:solicitudes,solicitud_id',
-            'horas_aceptadas' => 'required|numeric|min:0', // Asegúrate de que sea un valor numérico
-            'fecha_aceptacion' => 'required|date',
-        ]);
 
         // Guarda las horas aceptadas y la fecha en la tabla de historial
-        HistoriaHorasActualizada::create([
-            'id_estudiante' => $request->id_estudiante,
-            'id_solicitud' => $request->id_solicitud,
-            'horas_aceptadas' => $request->horas_aceptadas,
-            'fecha_aceptacion' => $request->fecha_aceptacion,
-        ]);
+        HistoriaHorasActualizada::create($request->all());
 
         // Retorna una respuesta o redirige según lo necesario
-        return redirect()->route('ruta.donde.redirigir')
+        return to_route('ruta.donde.redirigir')
                         ->with('success', 'Horas aceptadas y registradas correctamente.');
     }
 

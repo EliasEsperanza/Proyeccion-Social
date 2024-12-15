@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Chat\StoreRequest;
 use App\Models\Chat;
 use App\Services\ChatService;
 use Illuminate\Http\Request;
@@ -24,19 +25,13 @@ class ChatsController extends Controller
     }
 
     // Crear un nuevo mensaje
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $validatedData = $request->validate([
-            'id_emisor' => 'required|exists:users,id',
-            'id_recibidor' => 'required|exists:users,id',
-            'mensaje' => 'required|string|max:255',
-        ]);
-
         // Usa el servicio para enviar y almacenar el mensaje
         $chat = $this->chatService->enviarMensaje(
-            $validatedData['id_emisor'],
-            $validatedData['id_recibidor'],
-            $validatedData['mensaje']
+            $request['id_emisor'],
+            $request['id_recibidor'],
+            $request['mensaje']
         );
 
         return response()->json($chat, 201);

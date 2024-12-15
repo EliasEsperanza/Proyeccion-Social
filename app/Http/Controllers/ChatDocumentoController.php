@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChatDocumento\SerchRequest;
+use App\Http\Requests\ChatDocumento\UpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Chat_Documento;
 use Illuminate\Support\Facades\Validator;
@@ -28,15 +30,15 @@ class ChatDocumentoController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_documentos' => 'required|exists:documentos,id',
-            'id_chats' => 'required|exists:chats,id',
-            'fecha_envio' => 'required|date',
+
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator->errors());
         }
 
+        //////////////////////////////////////////////////
+         
         $chat_documento = new Chat_Documento();
         $chat_documento->id_documentos = $request->id_documentos;
         $chat_documento->id_chats = $request->id_chats;
@@ -50,6 +52,7 @@ class ChatDocumentoController extends Controller
     public function edit($id)
     {
         $chat_documento = Chat_Documento::find($id);
+
         if (!$chat_documento) {
             return redirect()->route('chat_documentos.index')->with('error', 'Documento no encontrado.');
         }
@@ -58,22 +61,10 @@ class ChatDocumentoController extends Controller
             ->with('info', 'Puedes editar el documento seleccionado.');
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'id_documentos' => 'required|exists:documentos,id',
-            'id_chats' => 'required|exists:chats,id',
-            'fecha_envio' => 'required|date',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator->errors());
-        }
-
         $chat_documento = Chat_Documento::find($id);
-        if (!$chat_documento) {
-            return redirect()->route('chat_documentos.index')->with('error', 'Documento no encontrado.');
-        }
+        //////////////////////////////////////////////////
 
         $chat_documento->id_documentos = $request->id_documentos;
         $chat_documento->id_chats = $request->id_chats;
@@ -97,7 +88,7 @@ class ChatDocumentoController extends Controller
             ->with('success', 'Documento eliminado correctamente.');
     }
 
-    public function search(Request $request)
+    public function search(SerchRequest $request)
     {
         $id_documentos = $request->input('id_documentos');
         $id_chats = $request->input('id_chats');

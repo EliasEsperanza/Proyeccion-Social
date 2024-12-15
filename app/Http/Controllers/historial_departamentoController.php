@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\Historial_DepartamentosExport;
+use App\Http\Requests\HistorialDepartamento\StoreRequest;
+use App\Http\Requests\HistorialDepartamento\UpdateRequest;
 use App\Models\Historial_Departamentos;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -29,13 +31,8 @@ class historial_departamentoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'id_departamento' => 'required|exists:departamentos,id_departamento',
-            'accion' => 'required|string|max:255',
-            'nombre_departamento' => 'nullable|string|max:255',
-        ]);
 
         Historial_Departamentos::create($request->all());
 
@@ -62,15 +59,9 @@ class historial_departamentoController extends Controller
 
     /**
      * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+     */ 
+    public function update(UpdateRequest $request, string $id)
     {
-        $request->validate([
-            'id_departamento' => 'required|exists:departamentos,id_departamento',
-            'accion' => 'required|string|max:255', //si se modifica, rechazo o aprobo 
-            'nombre_departamento' => 'nullable|string|max:255',
-        ]);
-
         $historial = Historial_Departamentos::findOrFail($id);
         $historial->update($request->all());
 
